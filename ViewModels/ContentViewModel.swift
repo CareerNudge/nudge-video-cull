@@ -146,11 +146,17 @@ class ContentViewModel: ObservableObject {
         guard let inputURL = inputFolderURL else { return }
 
         if testMode {
-            // In test mode, default to Culled subfolder
+            // In test mode, always use Culled subfolder unless user manually selected different output
+            // Reset to Culled subfolder when switching to test mode
             outputFolderURL = inputURL.appendingPathComponent("Culled", isDirectory: true)
         } else {
-            // In normal mode, default to same as input folder
-            outputFolderURL = inputURL
+            // In normal mode, use user-selected output folder or nil for in-place processing
+            // If no output folder selected, set to nil (process in-place)
+            if outputFolderURL == inputURL.appendingPathComponent("Culled", isDirectory: true) {
+                // Was using Culled subfolder from test mode, reset to nil for in-place
+                outputFolderURL = nil
+            }
+            // Otherwise keep user's manually selected output folder
         }
     }
     

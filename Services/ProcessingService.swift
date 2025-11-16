@@ -73,8 +73,10 @@ class ProcessingService {
             }
         }
 
-        // --- 1. Deletion Phase (Skip in Test Mode) ---
-        if !testMode {
+        // --- 1. Deletion Phase (Only when processing in-place, not in test mode) ---
+        // Only delete files if we're working in-place (no separate output folder)
+        let isDifferentOutputFolder = outputFolder != nil
+        if !testMode && !isDifferentOutputFolder {
             let assetsToDelete = assetsToProcess.filter { $0.isFlaggedForDeletion }
             if !assetsToDelete.isEmpty {
                 statusUpdate("Deleting \(assetsToDelete.count) files...")
@@ -82,9 +84,16 @@ class ProcessingService {
                     await delete(asset: asset)
                 }
             }
+        } else if isDifferentOutputFolder {
+            // When outputting to different folder, simply don't copy flagged files
+            let assetsToSkip = assetsToProcess.filter { $0.isFlaggedForDeletion }
+            if !assetsToSkip.isEmpty {
+                statusUpdate("Skipping \(assetsToSkip.count) flagged files (not copying to output)...")
+            }
         }
 
         // --- 2. Processing Phase ---
+        // Filter out flagged files - they've either been deleted or won't be copied
         let assetsToModify = assetsToProcess.filter { !$0.isFlaggedForDeletion }
         let totalToProcess = assetsToModify.count
 
@@ -128,21 +137,32 @@ class ProcessingService {
                 // No video processing needed, but we have an output folder - copy the file
                 statusUpdate("\(statusPrefix) Copying: \(fileName)")
                 do {
-                    let destinationURL = outputFolder.appendingPathComponent(path.lastPathComponent)
+                    // Determine destination filename (use new name if set, otherwise original)
+                    let destinationFileName: String
+                    if !testMode, let newName = asset.newFileName, !newName.isEmpty {
+                        let fileExtension = path.pathExtension
+                        destinationFileName = newName.hasSuffix(".\(fileExtension)") ? newName : "\(newName).\(fileExtension)"
+                    } else {
+                        destinationFileName = path.lastPathComponent
+                    }
+
+                    let destinationURL = outputFolder.appendingPathComponent(destinationFileName)
                     if FileManager.default.fileExists(atPath: destinationURL.path) {
                         try FileManager.default.removeItem(at: destinationURL)
                     }
                     try FileManager.default.copyItem(at: path, to: destinationURL)
                     currentPath = destinationURL
                     asset.filePath = destinationURL.path
+                    asset.fileName = destinationFileName
+                    asset.newFileName = "" // Clear the newFileName after applying
                 } catch {
                     statusUpdate("\(statusPrefix) Error copying: \(error.localizedDescription)")
                     continue
                 }
             }
 
-            // B. Renaming (Skip in Test Mode)
-            if !testMode, let path = currentPath {
+            // B. Renaming (Only when processing in-place without output folder)
+            if !testMode, outputFolder == nil, let path = currentPath {
                 let needsRename = !(asset.newFileName ?? "").isEmpty
                 if needsRename {
                     statusUpdate("\(statusPrefix) Renaming: \(asset.fileName ?? "file")")
@@ -198,7 +218,15 @@ class ProcessingService {
         let tempOutputURL: URL
         if let outputFolder = outputFolder {
             // Output to specified folder (both test and normal mode with output folder)
-            tempOutputURL = outputFolder.appendingPathComponent(sourceURL.lastPathComponent)
+            // Determine output filename (use new name if set, otherwise original)
+            let outputFileName: String
+            if !testMode, let newName = asset.newFileName, !newName.isEmpty {
+                let fileExtension = sourceURL.pathExtension
+                outputFileName = newName.hasSuffix(".\(fileExtension)") ? newName : "\(newName).\(fileExtension)"
+            } else {
+                outputFileName = sourceURL.lastPathComponent
+            }
+            tempOutputURL = outputFolder.appendingPathComponent(outputFileName)
         } else {
             // No output folder: Use temp directory for in-place replacement
             let tempDir = FileManager.default.temporaryDirectory
@@ -245,9 +273,14 @@ class ProcessingService {
 
             if outputFolder != nil {
                 // Output folder specified: File is already in output folder
+                // Update asset metadata
+                asset.filePath = tempOutputURL.path
+                asset.fileName = tempOutputURL.lastPathComponent
+
                 // Reset asset state after successful export
                 asset.trimStartTime = 0.0
                 asset.trimEndTime = 0.0
+                asset.newFileName = "" // Clear newFileName after applying
                 if bakeLUT {
                     asset.selectedLUTId = ""
                     asset.bakeInLUT = false
