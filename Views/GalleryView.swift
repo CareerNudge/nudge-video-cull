@@ -23,18 +23,22 @@ struct GalleryView: View {
         var estimatedSize = 0.0
 
         for asset in videoAssets {
+            // Always include in original totals (starting point)
             originalDuration += asset.duration
             originalSize += Double(asset.fileSize)
 
-            // Calculate estimated duration after trim
-            let trimStart = asset.trimStartTime
-            let trimEnd = asset.trimEndTime > 0 ? asset.trimEndTime : 1.0
-            let trimmedDuration = asset.duration * (trimEnd - trimStart)
-            estimatedDuration += trimmedDuration
+            // Only include in estimated totals if NOT flagged for deletion
+            if !asset.isFlaggedForDeletion {
+                // Calculate estimated duration after trim
+                let trimStart = asset.trimStartTime
+                let trimEnd = asset.trimEndTime > 0 ? asset.trimEndTime : 1.0
+                let trimmedDuration = asset.duration * (trimEnd - trimStart)
+                estimatedDuration += trimmedDuration
 
-            // Estimate size proportionally to duration
-            let sizeRatio = trimmedDuration / asset.duration
-            estimatedSize += Double(asset.fileSize) * sizeRatio
+                // Estimate size proportionally to duration
+                let sizeRatio = trimmedDuration / asset.duration
+                estimatedSize += Double(asset.fileSize) * sizeRatio
+            }
         }
 
         return (totalClips, originalDuration, estimatedDuration, originalSize, estimatedSize)
