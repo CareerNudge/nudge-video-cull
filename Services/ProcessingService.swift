@@ -20,7 +20,12 @@ class ProcessingService {
     }
 
     @MainActor
-    func processChanges(testMode: Bool = false, outputFolderURL: URL? = nil, statusUpdate: @escaping (String) -> Void) async {
+    func processChanges(
+        testMode: Bool = false,
+        outputFolderURL: URL? = nil,
+        statusUpdate: @escaping (String) -> Void,
+        progressUpdate: @escaping (Int, Int, String) -> Void = { _, _, _ in }
+    ) async {
         let fetchRequest = NSFetchRequest<ManagedVideoAsset>(entityName: "ManagedVideoAsset")
 
         if testMode {
@@ -81,10 +86,16 @@ class ProcessingService {
 
         // --- 2. Processing Phase ---
         let assetsToModify = assetsToProcess.filter { !$0.isFlaggedForDeletion }
+        let totalToProcess = assetsToModify.count
 
         for (index, asset) in assetsToModify.enumerated() {
-            let statusPrefix = "(\(index + 1)/\(assetsToModify.count))"
+            let currentIndex = index + 1
+            let statusPrefix = "(\(currentIndex)/\(totalToProcess))"
+            let fileName = asset.fileName ?? "file"
             var currentPath = asset.fileURL
+
+            // Update progress
+            progressUpdate(currentIndex, totalToProcess, fileName)
 
             // Check if trimming or LUT baking is needed
             let isTrimmed = asset.trimStartTime > 0.001 || (asset.trimEndTime > 0 && asset.trimEndTime < 0.999)
@@ -92,7 +103,7 @@ class ProcessingService {
             let needsVideoProcessing = isTrimmed || shouldBakeLUT
 
             if needsVideoProcessing, let path = currentPath {
-                statusUpdate("\(statusPrefix) Processing: \(asset.fileName ?? "file")")
+                statusUpdate("\(statusPrefix) Processing: \(fileName)")
 
                 do {
                     if let newPath = try await processVideo(
@@ -115,7 +126,7 @@ class ProcessingService {
                 }
             } else if !needsVideoProcessing, let outputFolder = outputFolder, let path = currentPath {
                 // No video processing needed, but we have an output folder - copy the file
-                statusUpdate("\(statusPrefix) Copying: \(asset.fileName ?? "file")")
+                statusUpdate("\(statusPrefix) Copying: \(fileName)")
                 do {
                     let destinationURL = outputFolder.appendingPathComponent(path.lastPathComponent)
                     if FileManager.default.fileExists(atPath: destinationURL.path) {

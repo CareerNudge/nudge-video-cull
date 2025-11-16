@@ -26,6 +26,12 @@ class ContentViewModel: ObservableObject {
     @Published var outputFolderURL: URL?
     @Published var selectedNamingConvention: NamingConvention = .none
 
+    // Progress tracking
+    @Published var processingProgress: Double = 0.0
+    @Published var currentProcessingFile: String = ""
+    @Published var totalFilesToProcess: Int = 0
+    @Published var currentFileIndex: Int = 0
+
     private var viewContext: NSManagedObjectContext
 
     // Services
@@ -152,12 +158,24 @@ class ContentViewModel: ObservableObject {
         Task {
             self.isLoading = true
             self.errorMessage = nil
+            self.processingProgress = 0.0
+            self.currentProcessingFile = ""
+            self.currentFileIndex = 0
+            self.totalFilesToProcess = 0
 
             await processingService.processChanges(
                 testMode: testMode,
                 outputFolderURL: outputFolderURL,
                 statusUpdate: { status in
                     Task { @MainActor in self.loadingStatus = status }
+                },
+                progressUpdate: { current, total, filename in
+                    Task { @MainActor in
+                        self.currentFileIndex = current
+                        self.totalFilesToProcess = total
+                        self.currentProcessingFile = filename
+                        self.processingProgress = total > 0 ? Double(current) / Double(total) : 0.0
+                    }
                 }
             )
 
@@ -171,6 +189,10 @@ class ContentViewModel: ObservableObject {
             Task {
                 try? await Task.sleep(nanoseconds: 5_000_000_000) // 5 seconds
                 self.loadingStatus = "Idle"
+                self.processingProgress = 0.0
+                self.currentProcessingFile = ""
+                self.currentFileIndex = 0
+                self.totalFilesToProcess = 0
             }
 
             self.isLoading = false

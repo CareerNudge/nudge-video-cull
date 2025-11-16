@@ -142,11 +142,38 @@ struct ContentView: View {
                     Spacer()
 
                     if viewModel.isLoading {
-                        ProgressView()
-                            .scaleEffect(0.5)
-                        Text(viewModel.loadingStatus)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                        VStack(spacing: 8) {
+                            if viewModel.totalFilesToProcess > 0 {
+                                // Processing mode - show detailed progress
+                                VStack(alignment: .leading, spacing: 4) {
+                                    HStack {
+                                        Text("Processing: \(viewModel.currentProcessingFile)")
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondary)
+                                            .lineLimit(1)
+                                            .truncationMode(.middle)
+                                        Spacer()
+                                        Text("\(viewModel.currentFileIndex)/\(viewModel.totalFilesToProcess)")
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondary)
+                                    }
+                                    .frame(width: 400)
+
+                                    ProgressView(value: viewModel.processingProgress)
+                                        .frame(width: 400)
+                                        .progressViewStyle(.linear)
+                                }
+                            } else {
+                                // Scanning mode - show spinner
+                                HStack(spacing: 8) {
+                                    ProgressView()
+                                        .scaleEffect(0.5)
+                                    Text(viewModel.loadingStatus)
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                        }
                     }
 
                     Spacer()
