@@ -19,7 +19,7 @@ class FileScannerService {
     @MainActor
     func scan(
         folderURL: URL,
-        statusUpdate: @escaping (String) -> Void
+        statusUpdate: @escaping @Sendable (String) -> Void
     ) async {
         
         // 1. Get a list of all files recursively

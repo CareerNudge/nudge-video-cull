@@ -33,7 +33,7 @@ class ContentViewModel: ObservableObject {
     @Published var currentFileIndex: Int = 0
     @Published var showProcessingModal: Bool = false
 
-    private var viewContext: NSManagedObjectContext
+    nonisolated private let viewContext: NSManagedObjectContext
 
     // Services
     private let scannerService: FileScannerService
@@ -118,7 +118,7 @@ class ContentViewModel: ObservableObject {
 
                 await scannerService.scan(
                     folderURL: url,
-                    statusUpdate: { status in
+                    statusUpdate: { @Sendable status in
                         // Send status updates to the main thread
                         Task { @MainActor in self.loadingStatus = status }
                     }
@@ -174,10 +174,10 @@ class ContentViewModel: ObservableObject {
             await processingService.processChanges(
                 testMode: testMode,
                 outputFolderURL: outputFolderURL,
-                statusUpdate: { status in
+                statusUpdate: { @Sendable status in
                     Task { @MainActor in self.loadingStatus = status }
                 },
-                progressUpdate: { current, total, filename in
+                progressUpdate: { @Sendable current, total, filename in
                     Task { @MainActor in
                         self.currentFileIndex = current
                         self.totalFilesToProcess = total

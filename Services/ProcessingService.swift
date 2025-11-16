@@ -23,8 +23,8 @@ class ProcessingService {
     func processChanges(
         testMode: Bool = false,
         outputFolderURL: URL? = nil,
-        statusUpdate: @escaping (String) -> Void,
-        progressUpdate: @escaping (Int, Int, String) -> Void = { _, _, _ in }
+        statusUpdate: @escaping @Sendable (String) -> Void,
+        progressUpdate: @escaping @Sendable (Int, Int, String) -> Void = { _, _, _ in }
     ) async {
         let fetchRequest = NSFetchRequest<ManagedVideoAsset>(entityName: "ManagedVideoAsset")
 
