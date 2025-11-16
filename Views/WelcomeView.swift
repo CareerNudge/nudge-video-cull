@@ -18,17 +18,16 @@ struct WelcomeView: View {
             // Welcome card
             VStack(spacing: 0) {
                 // Header
-                VStack(spacing: 12) {
+                VStack(spacing: 16) {
                     Image(systemName: "video.badge.waveform.fill")
-                        .font(.system(size: 60))
+                        .font(.system(size: 70))
                         .foregroundColor(.blue)
 
                     Text("Welcome to Nudge Video Cull")
-                        .font(.title)
-                        .fontWeight(.bold)
+                        .font(.system(size: 32, weight: .bold))
 
                     Text("Professional video culling and processing")
-                        .font(.subheadline)
+                        .font(.system(size: 16))
                         .foregroundColor(.secondary)
                 }
                 .padding(.top, 40)
@@ -85,7 +84,7 @@ struct WelcomeView: View {
                     // Don't show again checkbox
                     Toggle(isOn: $hasSeenWelcome) {
                         Text("Don't show this again")
-                            .font(.subheadline)
+                            .font(.system(size: 15))
                     }
                     .toggleStyle(.switch)
                     .padding(.horizontal, 40)
@@ -95,10 +94,10 @@ struct WelcomeView: View {
                         isPresented = false
                     }) {
                         Text("Get Started")
-                            .font(.headline)
+                            .font(.system(size: 18, weight: .semibold))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
+                            .padding(.vertical, 16)
                             .background(
                                 LinearGradient(
                                     gradient: Gradient(colors: [Color.blue, Color.blue.opacity(0.8)]),
@@ -172,17 +171,17 @@ struct WorkflowStep: View {
             )
 
             // Text content
-            VStack(spacing: 6) {
+            VStack(spacing: 8) {
                 Text(title)
-                    .font(.headline)
-                    .fontWeight(.semibold)
+                    .font(.system(size: 18, weight: .semibold))
                     .multilineTextAlignment(.center)
 
                 Text(description)
-                    .font(.caption)
+                    .font(.system(size: 14))
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
+                    .lineSpacing(2)
             }
         }
         .frame(maxWidth: .infinity)
