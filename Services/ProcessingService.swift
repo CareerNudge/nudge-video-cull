@@ -206,7 +206,7 @@ class ProcessingService {
         let timeRange = CMTimeRange(start: startTime, end: endTime)
 
         // --- 2. Determine Export Preset ---
-        let hasFilter = bakeLUT && !(asset.selectedLUTId ?? "").isEmpty
+        let hasFilter = bakeLUT && !(asset.selectedLUTId ?? "").isEmpty && asset.bakeInLUT
         let preset: String = hasFilter ? AVAssetExportPresetHighestQuality : AVAssetExportPresetPassthrough
 
         // --- 3. Create Export Session ---
@@ -254,8 +254,9 @@ class ProcessingService {
                         lutData: lutData
                     )
                 } catch {
-                    print("Failed to create LUT composition: \(error)")
-                    throw error
+                    print("⚠️ Warning: Failed to create LUT composition: \(error)")
+                    print("⚠️ Continuing export without LUT baking")
+                    // Don't throw - continue export without LUT
                 }
             }
         }

@@ -31,6 +31,7 @@ class ContentViewModel: ObservableObject {
     @Published var currentProcessingFile: String = ""
     @Published var totalFilesToProcess: Int = 0
     @Published var currentFileIndex: Int = 0
+    @Published var showProcessingModal: Bool = false
 
     private var viewContext: NSManagedObjectContext
 
@@ -163,6 +164,7 @@ class ContentViewModel: ObservableObject {
     func applyChanges() {
         Task {
             self.isLoading = true
+            self.showProcessingModal = true
             self.errorMessage = nil
             self.processingProgress = 0.0
             self.currentProcessingFile = ""
@@ -193,12 +195,13 @@ class ContentViewModel: ObservableObject {
 
             // Clear status after a delay
             Task {
-                try? await Task.sleep(nanoseconds: 5_000_000_000) // 5 seconds
+                try? await Task.sleep(nanoseconds: 3_000_000_000) // 3 seconds
                 self.loadingStatus = "Idle"
                 self.processingProgress = 0.0
                 self.currentProcessingFile = ""
                 self.currentFileIndex = 0
                 self.totalFilesToProcess = 0
+                self.showProcessingModal = false
             }
 
             self.isLoading = false
