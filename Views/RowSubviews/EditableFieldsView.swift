@@ -41,28 +41,46 @@ struct EditableFieldsView: View {
 
             Divider()
 
-            // 5. LUT Preview Selector
-            VStack(alignment: .leading, spacing: 8) {
-                Text("LUT Preview:")
-                    .font(.caption.bold())
-                    .foregroundColor(.secondary)
+            // 5. Color and LUT Options Container
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Color and LUT Options")
+                    .font(.headline)
+                    .foregroundColor(.primary)
 
-                Picker("", selection: $selectedLUT) {
-                    Text("None").tag(nil as LUT?)
-                    ForEach(lutManager.availableLUTs) { lut in
-                        Text(lut.name).tag(lut as LUT?)
+                VStack(alignment: .leading, spacing: 8) {
+                    // LUT Preview Selector
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("LUT Preview:")
+                            .font(.caption.bold())
+                            .foregroundColor(.secondary)
+
+                        Picker("", selection: $selectedLUT) {
+                            Text("None").tag(nil as LUT?)
+                            ForEach(lutManager.availableLUTs) { lut in
+                                Text(lut.name).tag(lut as LUT?)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .onChange(of: selectedLUT) { newLUT in
+                            asset.selectedLUTId = newLUT?.id.uuidString ?? ""
+                            saveContext()
+                        }
                     }
-                }
-                .frame(maxWidth: .infinity)
-                .onChange(of: selectedLUT) { newLUT in
-                    asset.selectedLUTId = newLUT?.id.uuidString ?? ""
-                    saveContext()
+
+                    // Bake in LUT Toggle
+                    Toggle("Bake in LUT on Export", isOn: $asset.bakeInLUT)
+                        .onChange(of: asset.bakeInLUT) { _ in saveContext() }
                 }
             }
-
-            // 6. Bake in LUT Toggle
-            Toggle("Bake in LUT on Export", isOn: $asset.bakeInLUT)
-                .onChange(of: asset.bakeInLUT) { _ in saveContext() }
+            .padding(12)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color(NSColor.controlBackgroundColor).opacity(0.5))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
+                    )
+            )
         }
         .onAppear {
             // Pre-populate with current filename (without extension) or newFileName if set
