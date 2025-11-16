@@ -23,17 +23,22 @@ struct WaveformView: View {
                     .fill(Color.gray.opacity(0.1))
 
                 // Waveform bars
-                HStack(spacing: 1) {
+                HStack(spacing: 0) {
                     ForEach(0..<waveformSamples.count, id: \.self) { index in
-                        let normalizedStart = Double(index) / Double(waveformSamples.count)
-                        let normalizedEnd = Double(index + 1) / Double(waveformSamples.count)
+                        let barWidth = geometry.size.width / CGFloat(waveformSamples.count)
+                        let barStartPosition = CGFloat(index) * barWidth
+                        let barEndPosition = barStartPosition + barWidth
+
+                        // Calculate normalized position (0.0 to 1.0) for this bar
+                        let normalizedStart = barStartPosition / geometry.size.width
+                        let normalizedEnd = barEndPosition / geometry.size.width
 
                         // Check if this bar overlaps with the trim range
                         let isInRange = normalizedEnd > trimStart && normalizedStart < trimEnd
 
                         Rectangle()
                             .fill(isInRange ? Color.blue.opacity(0.7) : Color.gray.opacity(0.3))
-                            .frame(width: max(1, geometry.size.width / CGFloat(waveformSamples.count)))
+                            .frame(width: barWidth)
                             .frame(height: CGFloat(waveformSamples[index]) * geometry.size.height)
                     }
                 }

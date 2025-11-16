@@ -30,11 +30,9 @@ class ProcessingService {
                 ""
             )
         } else {
-            // Normal Mode: Process everything
-            fetchRequest.predicate = NSPredicate(
-                format: "isFlaggedForDeletion == YES OR newFileName != %@ OR trimStartTime > 0 OR trimEndTime > 0",
-                ""
-            )
+            // Normal Mode: Process ALL files (copy to output, apply changes, delete flagged)
+            // No predicate filter - process everything
+            fetchRequest.predicate = nil
         }
 
         var assetsToProcess: [ManagedVideoAsset] = []
@@ -50,25 +48,23 @@ class ProcessingService {
             return
         }
 
-        // Create output folder if it doesn't exist (in Test Mode)
+        // Create output folder if it doesn't exist
         var outputFolder: URL?
-        if testMode {
-            if let providedOutputURL = outputFolderURL {
-                outputFolder = providedOutputURL
-            } else if let firstAsset = assetsToProcess.first,
-                      let firstFileURL = firstAsset.fileURL {
-                let parentFolder = firstFileURL.deletingLastPathComponent()
-                outputFolder = parentFolder.appendingPathComponent("Culled", isDirectory: true)
-            }
+        if let providedOutputURL = outputFolderURL {
+            outputFolder = providedOutputURL
+        } else if testMode, let firstAsset = assetsToProcess.first,
+                  let firstFileURL = firstAsset.fileURL {
+            let parentFolder = firstFileURL.deletingLastPathComponent()
+            outputFolder = parentFolder.appendingPathComponent("Culled", isDirectory: true)
+        }
 
-            if let outputURL = outputFolder {
-                do {
-                    try FileManager.default.createDirectory(at: outputURL, withIntermediateDirectories: true)
-                    statusUpdate("Created output folder for test exports...")
-                } catch {
-                    statusUpdate("Error: Could not create output folder: \(error.localizedDescription)")
-                    return
-                }
+        if let outputURL = outputFolder {
+            do {
+                try FileManager.default.createDirectory(at: outputURL, withIntermediateDirectories: true)
+                statusUpdate(testMode ? "Created output folder for test exports..." : "Created output folder...")
+            } catch {
+                statusUpdate("Error: Could not create output folder: \(error.localizedDescription)")
+                return
             }
         }
 
@@ -93,8 +89,9 @@ class ProcessingService {
             // Check if trimming or LUT baking is needed
             let isTrimmed = asset.trimStartTime > 0.001 || (asset.trimEndTime > 0 && asset.trimEndTime < 0.999)
             let shouldBakeLUT = asset.bakeInLUT && !(asset.selectedLUTId ?? "").isEmpty
+            let needsVideoProcessing = isTrimmed || shouldBakeLUT
 
-            if (isTrimmed || shouldBakeLUT), let path = currentPath {
+            if needsVideoProcessing, let path = currentPath {
                 statusUpdate("\(statusPrefix) Processing: \(asset.fileName ?? "file")")
 
                 do {
@@ -114,6 +111,21 @@ class ProcessingService {
                     }
                 } catch {
                     statusUpdate("\(statusPrefix) Error: \(error.localizedDescription)")
+                    continue
+                }
+            } else if !needsVideoProcessing, let outputFolder = outputFolder, let path = currentPath {
+                // No video processing needed, but we have an output folder - copy the file
+                statusUpdate("\(statusPrefix) Copying: \(asset.fileName ?? "file")")
+                do {
+                    let destinationURL = outputFolder.appendingPathComponent(path.lastPathComponent)
+                    if FileManager.default.fileExists(atPath: destinationURL.path) {
+                        try FileManager.default.removeItem(at: destinationURL)
+                    }
+                    try FileManager.default.copyItem(at: path, to: destinationURL)
+                    currentPath = destinationURL
+                    asset.filePath = destinationURL.path
+                } catch {
+                    statusUpdate("\(statusPrefix) Error copying: \(error.localizedDescription)")
                     continue
                 }
             }
@@ -173,11 +185,11 @@ class ProcessingService {
 
         // --- 4. Configure Output ---
         let tempOutputURL: URL
-        if testMode, let outputFolder = outputFolder {
-            // Test mode: Output directly to output folder
+        if let outputFolder = outputFolder {
+            // Output to specified folder (both test and normal mode with output folder)
             tempOutputURL = outputFolder.appendingPathComponent(sourceURL.lastPathComponent)
         } else {
-            // Normal mode: Use temp directory
+            // No output folder: Use temp directory for in-place replacement
             let tempDir = FileManager.default.temporaryDirectory
             let tempFileName = "processed_\(UUID().uuidString).\(sourceURL.pathExtension)"
             tempOutputURL = tempDir.appendingPathComponent(tempFileName)
@@ -220,11 +232,18 @@ class ProcessingService {
                 throw NSError(domain: "App", code: 500, userInfo: [NSLocalizedDescriptionKey: "Export completed but file not found"])
             }
 
-            if testMode {
-                // Test mode: File is already in output folder
+            if outputFolder != nil {
+                // Output folder specified: File is already in output folder
+                // Reset asset state after successful export
+                asset.trimStartTime = 0.0
+                asset.trimEndTime = 0.0
+                if bakeLUT {
+                    asset.selectedLUTId = ""
+                    asset.bakeInLUT = false
+                }
                 return tempOutputURL
             } else {
-                // Normal mode: Replace original file
+                // No output folder: Replace original file in place
                 let backupURL = sourceURL.deletingLastPathComponent()
                     .appendingPathComponent("backup_\(sourceURL.lastPathComponent)")
 
