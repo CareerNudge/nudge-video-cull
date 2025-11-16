@@ -2,7 +2,7 @@
 
 ## Files to Add to Xcode Project
 
-The following file has been created but needs to be manually added to the Xcode project:
+The following files have been created but need to be manually added to the Xcode project:
 
 ### 1. ProcessingProgressView.swift
 **Location:** `Views/ProcessingProgressView.swift`
@@ -12,7 +12,18 @@ The following file has been created but needs to be manually added to the Xcode 
 2. Right-click on the "Views" folder in the Project Navigator
 3. Select "Add Files to 'VideoCullingApp'..."
 4. Navigate to and select `ProcessingProgressView.swift`
-5. Make sure "Copy items if needed" is checked
+5. Make sure "Copy items if needed" is **unchecked** (file already exists in folder)
+6. Click "Add"
+
+### 2. WelcomeView.swift
+**Location:** `Views/WelcomeView.swift`
+
+**How to add:**
+1. Open VideoCullingApp.xcodeproj in Xcode
+2. Right-click on the "Views" folder in the Project Navigator
+3. Select "Add Files to 'VideoCullingApp'..."
+4. Navigate to and select `WelcomeView.swift`
+5. Make sure "Copy items if needed" is **unchecked** (file already exists in folder)
 6. Click "Add"
 
 ## Build Warnings to Ignore (Non-Critical)

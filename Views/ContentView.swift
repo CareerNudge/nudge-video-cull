@@ -14,6 +14,8 @@ struct ContentView: View {
     @StateObject private var lutManager = LUTManager.shared
     @State private var showLUTManager = false
     @State private var showPreferences = false
+    @AppStorage("hasSeenWelcome") private var hasSeenWelcome = false
+    @State private var showWelcome = false
 
     init() {
         // Initialize the StateObject with the persistence controller
@@ -200,10 +202,20 @@ struct ContentView: View {
             if viewModel.showProcessingModal {
                 ProcessingProgressView(viewModel: viewModel, isPresented: $viewModel.showProcessingModal)
             }
+
+            // Welcome Modal
+            if showWelcome {
+                WelcomeView(isPresented: $showWelcome)
+            }
         }
         .onAppear {
             // Apply saved appearance preference on first launch
             PreferencesManager.shared.applyAppearance()
+
+            // Show welcome screen on first launch
+            if !hasSeenWelcome {
+                showWelcome = true
+            }
         }
         .sheet(isPresented: $showLUTManager) {
             LUTManagerView(lutManager: lutManager)

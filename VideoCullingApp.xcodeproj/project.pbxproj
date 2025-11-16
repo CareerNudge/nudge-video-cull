@@ -27,6 +27,8 @@
 		A12EFBC62ECA304000C0CA18 /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12EFBC52ECA304000C0CA18 /* WaveformView.swift */; };
 		A12EFBC82ECA305400C0CA18 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12EFBC72ECA305400C0CA18 /* PreferencesView.swift */; };
 		A12EFBCA2ECA34B600C0CA18 /* LUTParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12EFBC92ECA34B600C0CA18 /* LUTParser.swift */; };
+		A12EFBCD2ECA3F2D00C0CA18 /* ProcessingProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12EFBCB2ECA3F2D00C0CA18 /* ProcessingProgressView.swift */; };
+		A12EFBCE2ECA3F2D00C0CA18 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12EFBCC2ECA3F2D00C0CA18 /* WelcomeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +56,8 @@
 		A12EFBC52ECA304000C0CA18 /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		A12EFBC72ECA305400C0CA18 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
 		A12EFBC92ECA34B600C0CA18 /* LUTParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LUTParser.swift; sourceTree = "<group>"; };
+		A12EFBCB2ECA3F2D00C0CA18 /* ProcessingProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingProgressView.swift; sourceTree = "<group>"; };
+		A12EFBCC2ECA3F2D00C0CA18 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +92,8 @@
 		A1000001000000000000003 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A12EFBCB2ECA3F2D00C0CA18 /* ProcessingProgressView.swift */,
+				A12EFBCC2ECA3F2D00C0CA18 /* WelcomeView.swift */,
 				A12EFBC72ECA305400C0CA18 /* PreferencesView.swift */,
 				A12EFBC52ECA304000C0CA18 /* WaveformView.swift */,
 				A1000004000000000000001 /* ContentView.swift */,
@@ -257,6 +263,8 @@
 				A100000F000000000000001 /* PlayerView.swift in Sources */,
 				A1000011000000000000001 /* EditableFieldsView.swift in Sources */,
 				A1000013000000000000001 /* MetadataView.swift in Sources */,
+				A12EFBCD2ECA3F2D00C0CA18 /* ProcessingProgressView.swift in Sources */,
+				A12EFBCE2ECA3F2D00C0CA18 /* WelcomeView.swift in Sources */,
 				A1000015000000000000001 /* StarRatingView.swift in Sources */,
 				A1000017000000000000001 /* FileScannerService.swift in Sources */,
 				A1000019000000000000001 /* ProcessingService.swift in Sources */,
