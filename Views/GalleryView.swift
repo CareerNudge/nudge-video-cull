@@ -54,7 +54,6 @@ struct GalleryView: View {
                         Text("Preview and Trim")
                             .font(.headline)
                             .frame(width: 400, alignment: .leading)
-                            .padding(.leading, 28)
 
                         // Video Import Settings column
                         Text("Video Import Settings")
@@ -68,6 +67,7 @@ struct GalleryView: View {
 
                         Spacer()
                     }
+                    .padding(.horizontal, 16) // Match content padding
                     .padding(.vertical, 12)
                     .background(Color(NSColor.controlBackgroundColor))
 
@@ -150,7 +150,7 @@ struct GalleryView: View {
                                 .foregroundColor(statistics.estimatedSize < statistics.originalSize ? .green : .orange)
                         }
                     }
-                    .padding(.horizontal, 28)
+                    .padding(.horizontal, 16) // Match content padding
                     .padding(.vertical, 12)
                     .background(Color(NSColor.controlBackgroundColor))
                 }
