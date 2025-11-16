@@ -69,7 +69,7 @@ struct WelcomeView: View {
                     // Step 3
                     WorkflowStep(
                         number: 3,
-                        icon: "folder.badge.checkmark",
+                        icon: "folder.badge.video",
                         iconColor: .green,
                         title: "Destination Folder",
                         description: "Process all videos to your chosen output folder with trim, LUT, and rename operations applied"
@@ -145,15 +145,31 @@ struct WorkflowStep: View {
                     .foregroundColor(iconColor)
             }
 
-            // Icon
-            Image(systemName: icon)
-                .font(.system(size: 40))
-                .foregroundColor(iconColor)
-                .frame(width: 70, height: 70)
-                .background(
-                    RoundedRectangle(cornerRadius: 14)
-                        .fill(iconColor.opacity(0.1))
-                )
+            // Icon (with special handling for folder with video)
+            ZStack {
+                if icon == "folder.badge.video" {
+                    // Custom folder with video icon overlay
+                    ZStack {
+                        Image(systemName: "folder.fill")
+                            .font(.system(size: 40))
+                            .foregroundColor(iconColor)
+
+                        Image(systemName: "video.fill")
+                            .font(.system(size: 18))
+                            .foregroundColor(.white)
+                            .offset(y: 2)
+                    }
+                } else {
+                    Image(systemName: icon)
+                        .font(.system(size: 40))
+                        .foregroundColor(iconColor)
+                }
+            }
+            .frame(width: 70, height: 70)
+            .background(
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(iconColor.opacity(0.1))
+            )
 
             // Text content
             VStack(spacing: 6) {
