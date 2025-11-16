@@ -34,8 +34,8 @@ struct WelcomeView: View {
                 .padding(.top, 40)
                 .padding(.bottom, 32)
 
-                // Workflow steps
-                VStack(spacing: 32) {
+                // Workflow steps (horizontal)
+                HStack(spacing: 20) {
                     // Step 1
                     WorkflowStep(
                         number: 1,
@@ -45,10 +45,11 @@ struct WelcomeView: View {
                         description: "Select your input folder containing videos from your camera, SD card, or any storage device"
                     )
 
-                    // Arrow down
-                    Image(systemName: "arrow.down")
-                        .font(.title2)
+                    // Arrow right
+                    Image(systemName: "arrow.right")
+                        .font(.title)
                         .foregroundColor(.secondary)
+                        .frame(width: 40)
 
                     // Step 2
                     WorkflowStep(
@@ -59,10 +60,11 @@ struct WelcomeView: View {
                         description: "Trim unwanted portions, apply color grading LUTs, rename files, and mark clips for deletion"
                     )
 
-                    // Arrow down
-                    Image(systemName: "arrow.down")
-                        .font(.title2)
+                    // Arrow right
+                    Image(systemName: "arrow.right")
+                        .font(.title)
                         .foregroundColor(.secondary)
+                        .frame(width: 40)
 
                     // Step 3
                     WorkflowStep(
@@ -111,7 +113,7 @@ struct WelcomeView: View {
                     .padding(.bottom, 32)
                 }
             }
-            .frame(width: 600)
+            .frame(width: 900)
             .background(
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Color(NSColor.windowBackgroundColor))
@@ -130,45 +132,45 @@ struct WorkflowStep: View {
     let description: String
 
     var body: some View {
-        HStack(alignment: .top, spacing: 16) {
-            // Step number and icon
-            VStack(spacing: 8) {
-                // Step number badge
-                ZStack {
-                    Circle()
-                        .fill(iconColor.opacity(0.2))
-                        .frame(width: 32, height: 32)
+        VStack(alignment: .center, spacing: 12) {
+            // Step number badge
+            ZStack {
+                Circle()
+                    .fill(iconColor.opacity(0.2))
+                    .frame(width: 32, height: 32)
 
-                    Text("\(number)")
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .foregroundColor(iconColor)
-                }
-
-                // Icon
-                Image(systemName: icon)
-                    .font(.system(size: 36))
+                Text("\(number)")
+                    .font(.headline)
+                    .fontWeight(.bold)
                     .foregroundColor(iconColor)
-                    .frame(width: 60, height: 60)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(iconColor.opacity(0.1))
-                    )
             }
 
+            // Icon
+            Image(systemName: icon)
+                .font(.system(size: 40))
+                .foregroundColor(iconColor)
+                .frame(width: 70, height: 70)
+                .background(
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill(iconColor.opacity(0.1))
+                )
+
             // Text content
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(spacing: 6) {
                 Text(title)
                     .font(.headline)
                     .fontWeight(.semibold)
+                    .multilineTextAlignment(.center)
 
                 Text(description)
-                    .font(.subheadline)
+                    .font(.caption)
                     .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 12)
     }
 }
 
