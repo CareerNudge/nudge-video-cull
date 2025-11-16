@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22225" systemVersion="23A344" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="ManagedVideoAsset" representedClassName="ManagedVideoAsset" syncable="YES" codeGenerationType="class">
+        <attribute name="bitrate" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="duration" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="fileName" optional="YES" attributeType="String"/>
+        <attribute name="filePath" optional="YES" attributeType="String"/>
+        <attribute name="fileSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="frameRate" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isFlaggedForDeletion" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="keywords" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="lastEditDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="newFileName" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="trimEndTime" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="trimStartTime" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="userRating" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="selectedLUTId" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="bakeInLUT" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="videoCodec" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="bitDepth" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="audioCodec" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="audioChannels" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="audioSampleRate" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="filePath"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+</model>

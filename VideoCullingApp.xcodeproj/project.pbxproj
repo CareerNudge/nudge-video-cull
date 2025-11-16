@@ -1,0 +1,481 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A1000001000000000000001 /* VideoCullingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000002000000000000001 /* VideoCullingApp.swift */; };
+		A1000003000000000000001 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000004000000000000001 /* ContentView.swift */; };
+		A1000005000000000000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1000006000000000000001 /* Assets.xcassets */; };
+		A1000007000000000000001 /* VideoCullingApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A1000008000000000000001 /* VideoCullingApp.xcdatamodeld */; };
+		A1000009000000000000001 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100000A000000000000001 /* Persistence.swift */; };
+		A100000B000000000000001 /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100000C000000000000001 /* GalleryView.swift */; };
+		A100000D000000000000001 /* VideoAssetRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100000E000000000000001 /* VideoAssetRowView.swift */; };
+		A100000F000000000000001 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000010000000000000001 /* PlayerView.swift */; };
+		A1000011000000000000001 /* EditableFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000012000000000000001 /* EditableFieldsView.swift */; };
+		A1000013000000000000001 /* MetadataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000014000000000000001 /* MetadataView.swift */; };
+		A1000015000000000000001 /* StarRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000016000000000000001 /* StarRatingView.swift */; };
+		A1000017000000000000001 /* FileScannerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000018000000000000001 /* FileScannerService.swift */; };
+		A1000019000000000000001 /* ProcessingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100001A000000000000001 /* ProcessingService.swift */; };
+		A100001B000000000000001 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100001C000000000000001 /* ContentViewModel.swift */; };
+		A100001D000000000000001 /* ManagedVideoAsset+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100001E000000000000001 /* ManagedVideoAsset+Extensions.swift */; };
+		A1000023000000000000001 /* LUTManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000024000000000000001 /* LUTManager.swift */; };
+		A1000025000000000000001 /* LUTManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000026000000000000001 /* LUTManagerView.swift */; };
+		A12EFBC62ECA304000C0CA18 /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12EFBC52ECA304000C0CA18 /* WaveformView.swift */; };
+		A12EFBC82ECA305400C0CA18 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12EFBC72ECA305400C0CA18 /* PreferencesView.swift */; };
+		A12EFBCA2ECA34B600C0CA18 /* LUTParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12EFBC92ECA34B600C0CA18 /* LUTParser.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A1000000000000000000001 /* VideoCullingApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoCullingApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1000002000000000000001 /* VideoCullingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCullingApp.swift; sourceTree = "<group>"; };
+		A1000004000000000000001 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A1000006000000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A1000009000000000000002 /* VideoCullingApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VideoCullingApp.xcdatamodel; sourceTree = "<group>"; };
+		A100000A000000000000001 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		A100000C000000000000001 /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
+		A100000E000000000000001 /* VideoAssetRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoAssetRowView.swift; sourceTree = "<group>"; };
+		A1000010000000000000001 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
+		A1000012000000000000001 /* EditableFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableFieldsView.swift; sourceTree = "<group>"; };
+		A1000014000000000000001 /* MetadataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataView.swift; sourceTree = "<group>"; };
+		A1000016000000000000001 /* StarRatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarRatingView.swift; sourceTree = "<group>"; };
+		A1000018000000000000001 /* FileScannerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileScannerService.swift; sourceTree = "<group>"; };
+		A100001A000000000000001 /* ProcessingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingService.swift; sourceTree = "<group>"; };
+		A100001C000000000000001 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
+		A100001E000000000000001 /* ManagedVideoAsset+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ManagedVideoAsset+Extensions.swift"; sourceTree = "<group>"; };
+		A1000020000000000000001 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A1000021000000000000001 /* ffmpeg */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ffmpeg; sourceTree = "<group>"; };
+		A1000022000000000000001 /* VideoCullingApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VideoCullingApp.entitlements; sourceTree = "<group>"; };
+		A1000024000000000000001 /* LUTManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LUTManager.swift; sourceTree = "<group>"; };
+		A1000026000000000000001 /* LUTManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LUTManagerView.swift; sourceTree = "<group>"; };
+		A12EFBC52ECA304000C0CA18 /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
+		A12EFBC72ECA305400C0CA18 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
+		A12EFBC92ECA34B600C0CA18 /* LUTParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LUTParser.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A1FFFFFF000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A1000001000000000000002 /*  */ = {
+			isa = PBXGroup;
+			children = (
+				A1000002000000000000001 /* VideoCullingApp.swift */,
+				A1000020000000000000001 /* Info.plist */,
+				A1000022000000000000001 /* VideoCullingApp.entitlements */,
+				A1000001000000000000003 /* Views */,
+				A1000001000000000000004 /* ViewModels */,
+				A1000001000000000000005 /* Models */,
+				A1000001000000000000006 /* Services */,
+				A1000001000000000000007 /* Persistence */,
+				A100000100000000000000A /* Resources */,
+				A1000006000000000000001 /* Assets.xcassets */,
+				A1000008000000000000001 /* VideoCullingApp.xcdatamodeld */,
+			);
+			name = "";
+			sourceTree = "<group>";
+		};
+		A1000001000000000000003 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A12EFBC72ECA305400C0CA18 /* PreferencesView.swift */,
+				A12EFBC52ECA304000C0CA18 /* WaveformView.swift */,
+				A1000004000000000000001 /* ContentView.swift */,
+				A100000C000000000000001 /* GalleryView.swift */,
+				A100000E000000000000001 /* VideoAssetRowView.swift */,
+				A1000026000000000000001 /* LUTManagerView.swift */,
+				A1000001000000000000008 /* RowSubviews */,
+				A1000001000000000000009 /* Shared */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A1000001000000000000004 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				A100001C000000000000001 /* ContentViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		A1000001000000000000005 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A100001E000000000000001 /* ManagedVideoAsset+Extensions.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A1000001000000000000006 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A12EFBC92ECA34B600C0CA18 /* LUTParser.swift */,
+				A1000018000000000000001 /* FileScannerService.swift */,
+				A100001A000000000000001 /* ProcessingService.swift */,
+				A1000024000000000000001 /* LUTManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		A1000001000000000000007 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				A100000A000000000000001 /* Persistence.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		A1000001000000000000008 /* RowSubviews */ = {
+			isa = PBXGroup;
+			children = (
+				A1000010000000000000001 /* PlayerView.swift */,
+				A1000012000000000000001 /* EditableFieldsView.swift */,
+				A1000014000000000000001 /* MetadataView.swift */,
+			);
+			path = RowSubviews;
+			sourceTree = "<group>";
+		};
+		A1000001000000000000009 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				A1000016000000000000001 /* StarRatingView.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		A100000100000000000000A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A1000021000000000000001 /* ffmpeg */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A1FFFFFD000000000000001 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1000000000000000000001 /* VideoCullingApp.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A1FFFFFE000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				A1000001000000000000002 /*  */,
+				A1FFFFFD000000000000001 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A1FFFFFC000000000000001 /* VideoCullingApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1FFFFFB000000000000001 /* Build configuration list for PBXNativeTarget "VideoCullingApp" */;
+			buildPhases = (
+				A1FFFFFA000000000000001 /* Sources */,
+				A1FFFFFF000000000000001 /* Frameworks */,
+				A1FFFFF9000000000000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VideoCullingApp;
+			productName = VideoCullingApp;
+			productReference = A1000000000000000000001 /* VideoCullingApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A1FFFFFD000000000000002 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					A1FFFFFC000000000000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = A1FFFFFA000000000000002 /* Build configuration list for PBXProject "VideoCullingApp" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A1FFFFFE000000000000001;
+			productRefGroup = A1FFFFFD000000000000001 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A1FFFFFC000000000000001 /* VideoCullingApp */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A1FFFFF9000000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000005000000000000001 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A1FFFFFA000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000001000000000000001 /* VideoCullingApp.swift in Sources */,
+				A12EFBC62ECA304000C0CA18 /* WaveformView.swift in Sources */,
+				A1000003000000000000001 /* ContentView.swift in Sources */,
+				A12EFBCA2ECA34B600C0CA18 /* LUTParser.swift in Sources */,
+				A1000007000000000000001 /* VideoCullingApp.xcdatamodeld in Sources */,
+				A1000009000000000000001 /* Persistence.swift in Sources */,
+				A100000B000000000000001 /* GalleryView.swift in Sources */,
+				A100000D000000000000001 /* VideoAssetRowView.swift in Sources */,
+				A100000F000000000000001 /* PlayerView.swift in Sources */,
+				A1000011000000000000001 /* EditableFieldsView.swift in Sources */,
+				A1000013000000000000001 /* MetadataView.swift in Sources */,
+				A1000015000000000000001 /* StarRatingView.swift in Sources */,
+				A1000017000000000000001 /* FileScannerService.swift in Sources */,
+				A1000019000000000000001 /* ProcessingService.swift in Sources */,
+				A12EFBC82ECA305400C0CA18 /* PreferencesView.swift in Sources */,
+				A100001B000000000000001 /* ContentViewModel.swift in Sources */,
+				A100001D000000000000001 /* ManagedVideoAsset+Extensions.swift in Sources */,
+				A1000023000000000000001 /* LUTManager.swift in Sources */,
+				A1000025000000000000001 /* LUTManagerView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A1FFFFF7000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = VideoCullingApp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.VideoCullingApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A1FFFFF7000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = VideoCullingApp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.VideoCullingApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		A1FFFFF8000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A1FFFFF8000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A1FFFFFA000000000000002 /* Build configuration list for PBXProject "VideoCullingApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1FFFFF8000000000000001 /* Debug */,
+				A1FFFFF8000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1FFFFFB000000000000001 /* Build configuration list for PBXNativeTarget "VideoCullingApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1FFFFF7000000000000001 /* Debug */,
+				A1FFFFF7000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		A1000008000000000000001 /* VideoCullingApp.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				A1000009000000000000002 /* VideoCullingApp.xcdatamodel */,
+			);
+			currentVersion = A1000009000000000000002 /* VideoCullingApp.xcdatamodel */;
+			path = VideoCullingApp.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = A1FFFFFD000000000000002 /* Project object */;
+}
