@@ -14,6 +14,7 @@ struct EditableFieldsView: View {
     @State private var justLearnedMapping: Bool = false
     @State private var learnedLUTName: String = ""
     @State private var alsoApplyBakingToMatchingFiles: Bool = false
+    @State private var showApplyToAllPrompt: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -119,29 +120,61 @@ struct EditableFieldsView: View {
                     .disabled(asset.isFlaggedForDeletion)
                     .onChange(of: asset.bakeInLUT) { newValue in
                         saveContext()
-                        // Reset the batch checkbox when baking is disabled
-                        if !newValue {
-                            alsoApplyBakingToMatchingFiles = false
+                        // Show prompt when baking is enabled and has matching gamma/colorSpace
+                        if newValue,
+                           selectedLUT != nil,
+                           let gamma = asset.captureGamma, !gamma.isEmpty,
+                           let colorSpace = asset.captureColorPrimaries, !colorSpace.isEmpty {
+                            showApplyToAllPrompt = true
+                        } else {
+                            showApplyToAllPrompt = false
                         }
                     }
                     .padding(.leading, 97) // Align with the picker
 
-                // Conditional checkbox: Apply baking to all matching gamma/colorSpace files
-                if selectedLUT != nil,
+                // Prompt: Apply baking to all matching gamma/colorSpace files
+                if showApplyToAllPrompt,
                    asset.bakeInLUT,
-                   let gamma = asset.captureGamma, !gamma.isEmpty,
-                   let colorSpace = asset.captureColorPrimaries, !colorSpace.isEmpty {
-                    Toggle("Also bake this in for all others with this Gamma (\(gamma)) and Color Space (\(colorSpace))?", isOn: $alsoApplyBakingToMatchingFiles)
-                        .disabled(asset.isFlaggedForDeletion)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .padding(.leading, 97)
-                        .padding(.top, 4)
-                        .onChange(of: alsoApplyBakingToMatchingFiles) { shouldApply in
-                            if shouldApply {
+                   let gamma = asset.captureGamma,
+                   let colorSpace = asset.captureColorPrimaries {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Apply this to all videos with this Gamma/Color-Space?")
+                            .font(.subheadline)
+                            .foregroundColor(.primary)
+
+                        Text("Gamma: \(gamma) | Color Space: \(colorSpace)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+
+                        HStack(spacing: 12) {
+                            Button("Yes") {
                                 applyBakingToMatchingFiles()
+                                showApplyToAllPrompt = false
                             }
+                            .buttonStyle(.borderedProminent)
+                            .tint(.blue)
+                            .controlSize(.small)
+
+                            Button("No") {
+                                showApplyToAllPrompt = false
+                            }
+                            .buttonStyle(.bordered)
+                            .controlSize(.small)
                         }
+                    }
+                    .padding(12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(Color.blue.opacity(0.08))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(Color.blue.opacity(0.3), lineWidth: 1)
+                            )
+                    )
+                    .padding(.leading, 97)
+                    .padding(.top, 8)
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+                    .animation(.easeInOut(duration: 0.3), value: showApplyToAllPrompt)
                 }
 
                 // Learning notification (shown when user selects a LUT for unmapped gamma/colorSpace)
