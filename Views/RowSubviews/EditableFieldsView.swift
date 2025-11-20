@@ -8,6 +8,7 @@ import SwiftUI
 struct EditableFieldsView: View {
     @ObservedObject var asset: ManagedVideoAsset
     @State private var displayFileName: String = ""
+    @State private var keywords: String = ""
     @ObservedObject private var lutManager = LUTManager.shared
     @State private var selectedLUT: LUT?
     @State private var justLearnedMapping: Bool = false
@@ -206,7 +207,7 @@ struct EditableFieldsView: View {
                     .foregroundColor(asset.isFlaggedForDeletion ? .secondary : .primary)
                     .frame(width: 85, alignment: .leading)
 
-                TextEditor(text: asset.keywords_bind)
+                TextEditor(text: $keywords)
                     .font(.body)
                     .disabled(asset.isFlaggedForDeletion)
                     .frame(maxHeight: .infinity)
@@ -217,6 +218,10 @@ struct EditableFieldsView: View {
                         RoundedRectangle(cornerRadius: 4)
                             .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
                     )
+                    .onChange(of: keywords) { newValue in
+                        asset.keywords = newValue
+                        saveContext()
+                    }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .padding(12)
@@ -243,6 +248,11 @@ struct EditableFieldsView: View {
                 }
             }
 
+            // Pre-populate keywords
+            if keywords.isEmpty {
+                keywords = asset.keywords ?? ""
+            }
+
             // Load selected LUT
             if let lutId = asset.selectedLUTId, !lutId.isEmpty,
                let uuid = UUID(uuidString: lutId) {
@@ -255,18 +265,19 @@ struct EditableFieldsView: View {
                 displayFileName = newName
             }
         }
-        .onChange(of: asset.id) { _ in
-            // Reload LUT selection when asset changes (e.g., switching videos or toggling views)
+        .task(id: asset.id) {
+            // Reload all fields when asset changes (e.g., switching videos)
+            // task(id:) is more reliable than onChange for parameter changes
+
+            // Reload LUT selection
             if let lutId = asset.selectedLUTId, !lutId.isEmpty,
                let uuid = UUID(uuidString: lutId) {
                 selectedLUT = lutManager.availableLUTs.first { $0.id == uuid }
-                print("🔄 EditableFieldsView: Reloaded LUT for new asset: \(selectedLUT?.name ?? "nil")")
             } else {
                 selectedLUT = nil
-                print("🔄 EditableFieldsView: Cleared LUT for new asset (no LUT)")
             }
 
-            // Also reload the filename
+            // Reload filename
             if let newName = asset.newFileName, !newName.isEmpty {
                 displayFileName = newName
             } else {
@@ -274,6 +285,9 @@ struct EditableFieldsView: View {
                 let nameWithoutExtension = (currentName as NSString).deletingPathExtension
                 displayFileName = nameWithoutExtension
             }
+
+            // Reload keywords
+            keywords = asset.keywords ?? ""
         }
     }
 

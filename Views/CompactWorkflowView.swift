@@ -341,9 +341,10 @@ struct CompactWorkflowNode: View {
 
     var body: some View {
         VStack(spacing: 4) {
-            // Icon and completion indicator
+            // Icon, title, and stats in horizontal layout
             Button(action: action) {
-                VStack(spacing: 3) {
+                HStack(spacing: 8) {
+                    // Icon with completion indicator
                     ZStack(alignment: .topTrailing) {
                         Image(systemName: icon)
                             .font(.system(size: 26))
@@ -366,34 +367,38 @@ struct CompactWorkflowNode: View {
                         }
                     }
 
-                    Text(title)
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(.primary)
+                    // Title, subtitle, and stats
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(title)
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundColor(.primary)
 
-                    Text(subtitle)
-                        .font(.system(size: 10))
-                        .foregroundColor(isCompleted ? iconColor : .secondary)
-                        .lineLimit(1)
-                        .truncationMode(.middle)
-                        .frame(width: 85)
+                        Text(subtitle)
+                            .font(.system(size: 10))
+                            .foregroundColor(isCompleted ? iconColor : .secondary)
+                            .lineLimit(1)
+                            .truncationMode(.middle)
+
+                        // File count and space inline
+                        if let count = fileCount, let space = spaceGB {
+                            HStack(spacing: 4) {
+                                Text("Files: \(count)")
+                                    .font(.system(size: 9))
+                                    .foregroundColor(.secondary)
+                                Text("Space:")
+                                    .font(.system(size: 9))
+                                    .foregroundColor(.secondary)
+                                Text(String(format: "%.2f GB", space))
+                                    .font(.system(size: 9))
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
                 }
             }
             .buttonStyle(.plain)
             .onHover { hovering in
                 onHover(hovering)
-            }
-
-            // File count and space
-            if let count = fileCount, let space = spaceGB {
-                VStack(spacing: 0) {
-                    Text("Files: \(count)")
-                        .font(.system(size: 9))
-                        .foregroundColor(.secondary)
-                    Text(String(format: "Space: %.2f GB", space))
-                        .font(.system(size: 9))
-                        .foregroundColor(.secondary)
-                }
-                .padding(.top, 3)
             }
 
             // Cleanup button

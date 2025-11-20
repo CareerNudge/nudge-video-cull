@@ -12,7 +12,7 @@ struct GalleryView: View {
     @State private var selectedAssetIndex: Int = 0 // Shared between horizontal and vertical views
     @ObservedObject private var preferences = UserPreferences.shared
     @StateObject private var viewModel: ContentViewModel
-    private let hotkeyManager = HotkeyManager.shared
+    @ObservedObject private var hotkeyManager = HotkeyManager.shared
 
     init() {
         let context = PersistenceController.shared.container.viewContext
@@ -30,9 +30,9 @@ struct GalleryView: View {
     private var sortedAssets: [ManagedVideoAsset] {
         switch viewModel.sortOrder {
         case .newestFirst:
-            return videoAssets.sorted { ($0.filePath ?? "") > ($1.filePath ?? "") }
+            return videoAssets.sorted { ($0.creationDate ?? Date.distantPast) > ($1.creationDate ?? Date.distantPast) }
         case .oldestFirst:
-            return videoAssets.sorted { ($0.filePath ?? "") < ($1.filePath ?? "") }
+            return videoAssets.sorted { ($0.creationDate ?? Date.distantPast) < ($1.creationDate ?? Date.distantPast) }
         }
     }
 
@@ -82,6 +82,18 @@ struct GalleryView: View {
         }
         .onAppear {
             setupHotkeyCallbacks()
+        }
+        .onChange(of: hotkeyManager.navigateNextTrigger) { _ in
+            if selectedAssetIndex < sortedAssets.count - 1 {
+                selectedAssetIndex += 1
+                print("⌨️ Hotkey: Navigate next → index \(selectedAssetIndex)")
+            }
+        }
+        .onChange(of: hotkeyManager.navigatePreviousTrigger) { _ in
+            if selectedAssetIndex > 0 {
+                selectedAssetIndex -= 1
+                print("⌨️ Hotkey: Navigate previous → index \(selectedAssetIndex)")
+            }
         }
     }
 
@@ -223,12 +235,9 @@ struct GalleryView: View {
     // MARK: - Hotkey Setup
 
     private func setupHotkeyCallbacks() {
-        // Note: We can't directly modify @State from closures in structs
-        // Hotkeys will be handled through NotificationCenter instead
-        print("⌨️ Hotkey callbacks setup attempted (struct limitation)")
-
-        // TODO: Implement notification-based hotkey handling
-        // For now, hotkeys only work in PlayerView for the selected row
+        print("⌨️ Hotkey callbacks ready (using Published triggers)")
+        // Hotkeys are now handled through onChange modifiers watching
+        // hotkeyManager.navigateNextTrigger and navigatePreviousTrigger
     }
 
     // MARK: - Play-Through Support
@@ -723,7 +732,7 @@ struct CleanVideoPlayerView: View {
                                         .fill(Color.black.opacity(0.6))
                                         .frame(width: 30, height: 30)
 
-                                    Image(systemName: preferences.orientation == .vertical ? "rectangle.split.3x1" : "rectangle.split.1x3")
+                                    Image(systemName: preferences.orientation == .vertical ? "rectangle.split.3x1" : "rectangle.split.2x1")
                                         .resizable()
                                         .scaledToFit()
                                         .frame(width: 14)

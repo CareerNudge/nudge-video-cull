@@ -14,7 +14,11 @@ class HotkeyManager: ObservableObject {
     private var localMonitor: Any?
     private var preferences = UserPreferences.shared
 
-    // Callback closures for hotkey actions
+    // Published triggers for navigation (for SwiftUI views to observe)
+    @Published var navigateNextTrigger: UUID?
+    @Published var navigatePreviousTrigger: UUID?
+
+    // Callback closures for hotkey actions (for direct callbacks)
     var onNavigateNext: (() -> Void)?
     var onNavigatePrevious: (() -> Void)?
     var onTogglePlayPause: (() -> Void)?
@@ -50,6 +54,7 @@ class HotkeyManager: ObservableObject {
                 // Check against configured hotkeys
                 if keyCode == preferences.hotkeyNavigateNextCode {
                     Task { @MainActor in
+                        self.navigateNextTrigger = UUID()
                         self.onNavigateNext?()
                     }
                     return nil // Consume the event
@@ -57,6 +62,7 @@ class HotkeyManager: ObservableObject {
 
                 if keyCode == preferences.hotkeyNavigatePreviousCode {
                     Task { @MainActor in
+                        self.navigatePreviousTrigger = UUID()
                         self.onNavigatePrevious?()
                     }
                     return nil

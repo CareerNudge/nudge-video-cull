@@ -87,7 +87,7 @@ struct PlayerView: View {
                                         .fill(Color.black.opacity(0.6))
                                         .frame(width: 30, height: 30)
 
-                                    Image(systemName: preferences.orientation == .vertical ? "rectangle.split.3x1" : "rectangle.split.1x3")
+                                    Image(systemName: preferences.orientation == .vertical ? "rectangle.split.3x1" : "rectangle.split.2x1")
                                         .resizable()
                                         .scaledToFit()
                                         .frame(width: 14)
@@ -1007,11 +1007,21 @@ struct TrimRangeSlider: View {
                         .cornerRadius(3)
 
                     // Selected range - spans from start handle center to end handle center
-                    Rectangle()
-                        .fill(Color.blue)
-                        .frame(width: max(0, endX - startX), height: 6)
-                        .position(x: startX + (endX - startX) / 2, y: 10)
-                        .cornerRadius(3)
+                    ZStack {
+                        Rectangle()
+                            .fill(Color.blue)
+                            .frame(width: max(0, endX - startX), height: 6)
+                            .cornerRadius(3)
+
+                        // Show trimmed duration text if trimmed
+                        if localStart > 0.001 || localEnd < 0.999 {
+                            Text(formatTrimmedDuration(duration: duration, start: localStart, end: localEnd))
+                                .font(.system(size: 10, weight: .semibold))
+                                .foregroundColor(.white)
+                                .shadow(color: .black.opacity(0.5), radius: 1, x: 0, y: 0)
+                        }
+                    }
+                    .position(x: startX + (endX - startX) / 2, y: 10)
 
                     // Start handle (triangle pointing right)
                     TriangleShape(direction: .right)
@@ -1107,6 +1117,13 @@ struct TrimRangeSlider: View {
     private func formatTime(_ seconds: Double) -> String {
         let mins = Int(seconds) / 60
         let secs = Int(seconds) % 60
+        return String(format: "%d:%02d", mins, secs)
+    }
+
+    private func formatTrimmedDuration(duration: Double, start: Double, end: Double) -> String {
+        let trimmedSeconds = duration * (end - start)
+        let mins = Int(trimmedSeconds) / 60
+        let secs = Int(trimmedSeconds) % 60
         return String(format: "%d:%02d", mins, secs)
     }
 }

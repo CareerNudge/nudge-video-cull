@@ -58,7 +58,7 @@ class ContentViewModel: ObservableObject {
     }
 
     // Sort order for gallery
-    @Published var sortOrder: SortOrder = .newestFirst
+    @Published var sortOrder: SortOrder = .oldestFirst
 
     enum SortOrder: String, CaseIterable {
         case newestFirst = "Newest First"
@@ -197,9 +197,19 @@ class ContentViewModel: ObservableObject {
             }
         )
 
+        // Keep loading status active while thumbnails generate and UI stabilizes
+        self.loadingStatus = "Loading thumbnails..."
+        print("✓ Scan complete - \(self.totalFilesToProcess) files loaded, generating thumbnails...")
+
+        // Wait for initial thumbnails to generate and UI to stabilize
+        // Scale delay based on file count: min 2s, max 10s
+        let fileCount = Double(self.totalFilesToProcess)
+        let delaySeconds = min(10.0, max(2.0, fileCount * 0.1)) // ~0.1s per file
+        try? await Task.sleep(nanoseconds: UInt64(delaySeconds * 1_000_000_000))
+
         self.isLoading = false
-        self.loadingStatus = "Scan complete"
-        print("✓ Scan complete - \(self.totalFilesToProcess) files loaded")
+        self.loadingStatus = "Ready"
+        print("✓ Loading complete")
     }
 
     // MARK: - Persistent Folder Storage
