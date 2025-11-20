@@ -282,6 +282,23 @@ struct PlayerView: View {
                                     }
                             )
 
+                        // Trimmed Duration Display (centered between trim points)
+                        if localTrimStart > 0.001 || localTrimEnd < 0.999 {
+                            let trimmedDuration = (localTrimEnd - localTrimStart) * asset.duration
+                            let centerX = (trimStartX + trimEndX) / 2
+
+                            Text(formatTime(trimmedDuration))
+                                .font(.system(size: 11, weight: .semibold))
+                                .foregroundColor(.blue)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .fill(Color.white.opacity(0.9))
+                                )
+                                .position(x: centerX, y: -8)
+                        }
+
                         // Playhead handle
                         Circle()
                             .fill(Color.white)
