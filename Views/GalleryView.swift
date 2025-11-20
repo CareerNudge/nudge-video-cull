@@ -714,7 +714,7 @@ struct CleanVideoPlayerView: View {
     @State private var previewImage: NSImage? // For scrubbing preview
     @State private var imageGenerator: AVAssetImageGenerator?
     @State private var ciContext: CIContext? // Hardware-accelerated context for LUT application
-    @State private var previewGenerationTask: Task<Void, Never>? // Track preview generation to allow cancellation
+    @State private var scrubPreviewTask: Task<Void, Never>? // Track scrubbing preview generation (instant cancellation)
     @ObservedObject private var lutManager = LUTManager.shared
     @ObservedObject private var preferences = UserPreferences.shared
     @ObservedObject private var hotkeyManager = HotkeyManager.shared
@@ -931,6 +931,9 @@ struct CleanVideoPlayerView: View {
                                             let newValue = min(max(0, rawValue), localTrimEnd - 0.01)
                                             localTrimStart = newValue
 
+                                            // Don't generate preview during drag - just update position
+                                            // Preview will be generated after drag ends
+
                                             // Update currentPosition if it's now outside the trim range
                                             if currentPosition < newValue {
                                                 currentPosition = newValue
@@ -941,6 +944,12 @@ struct CleanVideoPlayerView: View {
                                             }
                                         }
                                         .onEnded { _ in
+                                            // Cancel all pending tasks immediately
+                                            scrubPreviewTask?.cancel()
+
+                                            // Generate ONE high-quality preview at final position
+                                            generateFinalPreview(at: localTrimStart)
+
                                             // ✅ Save to Core Data only when drag ends (not during drag)
                                             asset.trimStartTime = localTrimStart
                                             if let context = asset.managedObjectContext {
@@ -967,6 +976,9 @@ struct CleanVideoPlayerView: View {
                                             let newValue = min(max(localTrimStart + 0.01, rawValue), 1.0)
                                             localTrimEnd = newValue
 
+                                            // Don't generate preview during drag - just update position
+                                            // Preview will be generated after drag ends
+
                                             // Update currentPosition if it's now outside the trim range
                                             if currentPosition > newValue {
                                                 currentPosition = newValue
@@ -977,6 +989,12 @@ struct CleanVideoPlayerView: View {
                                             }
                                         }
                                         .onEnded { _ in
+                                            // Cancel all pending tasks immediately
+                                            scrubPreviewTask?.cancel()
+
+                                            // Generate ONE high-quality preview at final position
+                                            generateFinalPreview(at: localTrimEnd)
+
                                             // ✅ Save to Core Data only when drag ends (not during drag)
                                             asset.trimEndTime = localTrimEnd
                                             if let context = asset.managedObjectContext {
@@ -1004,11 +1022,21 @@ struct CleanVideoPlayerView: View {
                                             let constrainedPosition = max(localTrimStart, min(localTrimEnd, rawPosition))
                                             currentPosition = constrainedPosition
 
+                                            // Don't generate preview during drag - just update position and seek
+                                            // Preview will be generated after drag ends
+
                                             // Seek video to new position
                                             if let player = player {
                                                 let seekTime = CMTime(seconds: asset.duration * constrainedPosition, preferredTimescale: 600)
                                                 player.seek(to: seekTime)
                                             }
+                                        }
+                                        .onEnded { _ in
+                                            // Cancel all pending tasks immediately
+                                            scrubPreviewTask?.cancel()
+
+                                            // Generate ONE high-quality preview at final position
+                                            generateFinalPreview(at: currentPosition)
                                         }
                                 )
                         }
@@ -1040,9 +1068,9 @@ struct CleanVideoPlayerView: View {
             // ✅ CRITICAL: Comprehensive cleanup to prevent memory leaks
             print("🧹 CleanVideoPlayerView cleaning up for \(asset.fileName ?? "unknown")")
 
-            // Cancel any pending preview generation
-            previewGenerationTask?.cancel()
-            previewGenerationTask = nil
+            // Cancel any pending scrub preview generation
+            scrubPreviewTask?.cancel()
+            scrubPreviewTask = nil
 
             // Remove time observers (prevents retain cycles)
             removeTimeObserver()
@@ -1078,6 +1106,11 @@ struct CleanVideoPlayerView: View {
             loadPlayer()
         }
         .onChange(of: asset.id) { _ in
+            // Cancel all pending preview tasks when switching videos
+            scrubPreviewTask?.cancel()
+            scrubPreviewTask = nil
+            previewImage = nil
+
             // Reload player when asset changes
             removeTimeObserver()
             player?.pause()
@@ -1390,20 +1423,14 @@ struct CleanVideoPlayerView: View {
         }
     }
 
-    // Debounced preview generation - cancels previous task and waits before generating
-    private func generateDebouncedPreview(at normalizedTime: Double, delay: TimeInterval = 0.15) {
+    // Generate high-quality preview after scrubbing/trimming completes
+    // Called only in .onEnded handlers to show final position without task pileup
+    private func generateFinalPreview(at normalizedTime: Double) {
         // Cancel any existing preview generation task
-        previewGenerationTask?.cancel()
+        scrubPreviewTask?.cancel()
 
-        // Create new task with delay
-        previewGenerationTask = Task {
-            // Wait for the delay (allows cancellation if user keeps dragging)
-            try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
-
-            // Check if cancelled during sleep
-            guard !Task.isCancelled else { return }
-
-            // Generate the preview
+        // Generate ONE high-quality preview at final position
+        scrubPreviewTask = Task {
             guard let generator = imageGenerator else { return }
 
             let timeInSeconds = normalizedTime * asset.duration
@@ -1414,14 +1441,15 @@ struct CleanVideoPlayerView: View {
                     return
                 }
 
+                // Generate high-quality preview
                 let cgImage = try await ThumbnailService.shared.generateThumbnail(
                     for: avAsset,
                     at: time,
                     maxSize: CGSize(width: 1920, height: 1080),
-                    immediate: true // High priority for trim preview
+                    immediate: true // Bypass throttling for high-quality preview
                 )
 
-                // Check if cancelled after generation
+                // Check if cancelled (user switched videos or started new drag)
                 guard !Task.isCancelled else { return }
 
                 let finalImage = await applyLUTToImage(cgImage: cgImage)
@@ -1431,7 +1459,7 @@ struct CleanVideoPlayerView: View {
                 }
             } catch {
                 if !Task.isCancelled {
-                    print("Failed to generate debounced preview: \(error)")
+                    print("Failed to generate final preview: \(error)")
                 }
             }
         }
