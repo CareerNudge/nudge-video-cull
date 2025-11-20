@@ -373,6 +373,12 @@ struct HorizontalGalleryView: View {
     @State private var localIsFlaggedForDeletion: Bool = false
     @State private var scrubPosition: Double? = nil // For scrubbing preview
 
+    // Filmstrip height state (resizable)
+    @State private var filmstripHeight: CGFloat = 200 // Default: 200, Min: 60, Max: 400
+
+    // Sidebar width state (resizable)
+    @State private var sidebarWidth: CGFloat = 400 // Default: 400, Min: 300, Max: 600
+
     private var selectedAsset: ManagedVideoAsset? {
         guard !videoAssets.isEmpty, selectedAssetIndex >= 0, selectedAssetIndex < videoAssets.count else { return nil }
         return videoAssets[selectedAssetIndex]
@@ -429,7 +435,37 @@ struct HorizontalGalleryView: View {
                             )
                     }
 
-                    Divider()
+                    // Draggable vertical divider with handle for sidebar
+                    HStack(spacing: 0) {
+                        Rectangle()
+                            .fill(Color.secondary.opacity(0.2))
+                            .frame(width: 8)
+                            .overlay(
+                                // Visual handle indicator
+                                RoundedRectangle(cornerRadius: 2)
+                                    .fill(Color.secondary.opacity(0.5))
+                                    .frame(width: 4, height: 40)
+                            )
+                            .onHover { hovering in
+                                if hovering {
+                                    NSCursor.resizeLeftRight.push()
+                                } else {
+                                    NSCursor.pop()
+                                }
+                            }
+                            .gesture(
+                                DragGesture()
+                                    .onChanged { value in
+                                        // Dragging right decreases width, dragging left increases
+                                        let delta = value.translation.width
+                                        let newWidth = sidebarWidth - delta // Inverted: drag left = wider sidebar
+                                        // Constrain between min (300px) and max (600px)
+                                        sidebarWidth = min(max(newWidth, 300), 600)
+                                    }
+                            )
+
+                        Divider()
+                    }
 
                     // Right side: Compact controls sidebar
                     if let asset = selectedAsset {
@@ -482,12 +518,42 @@ struct HorizontalGalleryView: View {
                             }
                             .padding(16)
                         }
-                        .frame(width: 400)
+                        .frame(width: sidebarWidth)
                         .background(Color(NSColor.windowBackgroundColor))
                     }
                 }
 
-                Divider()
+                // Draggable divider with handle
+                VStack(spacing: 0) {
+                    Rectangle()
+                        .fill(Color.secondary.opacity(0.2))
+                        .frame(height: 8)
+                        .overlay(
+                            // Visual handle indicator
+                            RoundedRectangle(cornerRadius: 2)
+                                .fill(Color.secondary.opacity(0.5))
+                                .frame(width: 40, height: 4)
+                        )
+                        .onHover { hovering in
+                            if hovering {
+                                NSCursor.resizeUpDown.push()
+                            } else {
+                                NSCursor.pop()
+                            }
+                        }
+                        .gesture(
+                            DragGesture()
+                                .onChanged { value in
+                                    // Dragging down increases height, dragging up decreases
+                                    let delta = value.translation.height
+                                    let newHeight = filmstripHeight - delta // Inverted: drag down = taller filmstrip
+                                    // Constrain between min (60px) and max (400px)
+                                    filmstripHeight = min(max(newHeight, 60), 400)
+                                }
+                        )
+
+                    Divider()
+                }
 
                 // Bottom: Thumbnail filmstrip
                 VStack(spacing: 0) {
@@ -503,13 +569,14 @@ struct HorizontalGalleryView: View {
                             }
                             Spacer()
                         }
-                        .frame(height: 200)
+                        .frame(height: filmstripHeight)
                         .background(Color(NSColor.windowBackgroundColor))
                     } else {
                         // Only render filmstrip thumbnails after loading is complete
                         ScrollViewReader { proxy in
+                            let thumbnailScale = filmstripHeight / 200.0 // Scale based on height (base: 200px)
                             ScrollView(.horizontal, showsIndicators: true) {
-                                HStack(spacing: 12) {
+                                HStack(spacing: 12 * thumbnailScale) {
                                     ForEach(Array(videoAssets.enumerated()), id: \.element.id) { index, asset in
                                         ThumbnailCardView(
                                             asset: asset,
@@ -525,16 +592,17 @@ struct HorizontalGalleryView: View {
                                                         localIsFlaggedForDeletion = newAsset.isFlaggedForDeletion
                                                     }
                                                 }
-                                            }
+                                            },
+                                            scale: thumbnailScale
                                         )
                                         .id(asset.id)
                                     }
                                 }
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 12)
+                                .padding(.horizontal, 16 * thumbnailScale)
+                                .padding(.vertical, 12 * thumbnailScale)
                             }
                             .accessibilityIdentifier("videoGallery")
-                            .frame(height: 200)
+                            .frame(height: filmstripHeight)
                             .background(Color(NSColor.windowBackgroundColor))
                             .onChange(of: selectedAssetIndex) { newIndex in
                                 if newIndex < videoAssets.count {
@@ -931,8 +999,8 @@ struct CleanVideoPlayerView: View {
                                             let newValue = min(max(0, rawValue), localTrimEnd - 0.01)
                                             localTrimStart = newValue
 
-                                            // Don't generate preview during drag - just update position
-                                            // Preview will be generated after drag ends
+                                            // Generate preview during drag (with proper task cancellation)
+                                            generateFinalPreview(at: newValue)
 
                                             // Update currentPosition if it's now outside the trim range
                                             if currentPosition < newValue {
@@ -976,8 +1044,8 @@ struct CleanVideoPlayerView: View {
                                             let newValue = min(max(localTrimStart + 0.01, rawValue), 1.0)
                                             localTrimEnd = newValue
 
-                                            // Don't generate preview during drag - just update position
-                                            // Preview will be generated after drag ends
+                                            // Generate preview during drag (with proper task cancellation)
+                                            generateFinalPreview(at: newValue)
 
                                             // Update currentPosition if it's now outside the trim range
                                             if currentPosition > newValue {
@@ -1718,7 +1786,12 @@ struct ThumbnailCardView: View {
     @ObservedObject var asset: ManagedVideoAsset
     let isSelected: Bool
     let onTap: () -> Void
+    let scale: CGFloat // Scale factor based on filmstrip height
     @State private var thumbnail: NSImage?
+
+    // Calculated dimensions based on scale (base: 160×90)
+    private var thumbnailWidth: CGFloat { 160 * scale }
+    private var thumbnailHeight: CGFloat { 90 * scale }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -1728,52 +1801,52 @@ struct ThumbnailCardView: View {
                     Image(nsImage: thumbnail)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(width: 160, height: 90)
+                        .frame(width: thumbnailWidth, height: thumbnailHeight)
                         .clipped()
                 } else {
                     Rectangle()
                         .fill(Color.gray.opacity(0.3))
-                        .frame(width: 160, height: 90)
+                        .frame(width: thumbnailWidth, height: thumbnailHeight)
                         .overlay(
                             ProgressView()
-                                .scaleEffect(0.5)
+                                .scaleEffect(0.5 * scale)
                         )
                 }
 
                 // Duration overlay
                 if asset.duration > 0 {
                     Text(formatDuration(asset.duration))
-                        .font(.caption2)
+                        .font(.system(size: 10 * scale))
                         .fontWeight(.medium)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 3)
+                        .padding(.horizontal, 6 * scale)
+                        .padding(.vertical, 3 * scale)
                         .background(Color.black.opacity(0.7))
                         .foregroundColor(.white)
                         .cornerRadius(4)
-                        .padding(4)
+                        .padding(4 * scale)
                 }
             }
-            .cornerRadius(6)
+            .cornerRadius(6 * scale)
             .overlay(
-                RoundedRectangle(cornerRadius: 6)
-                    .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 3)
+                RoundedRectangle(cornerRadius: 6 * scale)
+                    .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 3 * scale)
             )
 
             // Metadata overlays
-            HStack(spacing: 4) {
+            HStack(spacing: 4 * scale) {
                 // Flagged indicator
                 if asset.isFlaggedForDeletion {
                     Image(systemName: "trash.fill")
-                        .font(.caption2)
+                        .font(.system(size: 10 * scale))
                         .foregroundColor(.red)
                 }
 
                 // Rating
                 if asset.userRating > 0 {
-                    HStack(spacing: 2) {
+                    HStack(spacing: 2 * scale) {
                         ForEach(0..<Int(asset.userRating), id: \.self) { _ in
                             Image(systemName: "star.fill")
-                                .font(.caption2)
+                                .font(.system(size: 10 * scale))
                                 .foregroundColor(.yellow)
                         }
                     }
@@ -1784,26 +1857,26 @@ struct ThumbnailCardView: View {
                 // Resolution
                 if asset.videoWidth > 0 && asset.videoHeight > 0 {
                     Text("\(Int(asset.videoWidth))×\(Int(asset.videoHeight))")
-                        .font(.caption2)
+                        .font(.system(size: 10 * scale))
                         .foregroundColor(.secondary)
                 }
             }
-            .padding(.horizontal, 4)
-            .padding(.top, 4)
+            .padding(.horizontal, 4 * scale)
+            .padding(.top, 4 * scale)
 
             // Filename
             Text(asset.fileName ?? "Unknown")
-                .font(.caption)
+                .font(.system(size: 11 * scale))
                 .lineLimit(1)
                 .truncationMode(.middle)
-                .frame(width: 160)
-                .padding(.horizontal, 4)
-                .padding(.bottom, 4)
+                .frame(width: thumbnailWidth)
+                .padding(.horizontal, 4 * scale)
+                .padding(.bottom, 4 * scale)
         }
-        .frame(width: 160)
+        .frame(width: thumbnailWidth)
         .background(isSelected ? Color.blue.opacity(0.1) : Color(NSColor.controlBackgroundColor))
-        .cornerRadius(8)
-        .shadow(color: Color.black.opacity(isSelected ? 0.2 : 0.1), radius: isSelected ? 4 : 2, x: 0, y: isSelected ? 2 : 1)
+        .cornerRadius(8 * scale)
+        .shadow(color: Color.black.opacity(isSelected ? 0.2 : 0.1), radius: isSelected ? 4 * scale : 2 * scale, x: 0, y: isSelected ? 2 * scale : 1 * scale)
         .onTapGesture {
             onTap()
         }
