@@ -13,7 +13,7 @@ import CoreImage
 
 class ProcessingService {
 
-    private var viewContext: NSManagedObjectContext
+    nonisolated private let viewContext: NSManagedObjectContext
 
     init(context: NSManagedObjectContext) {
         self.viewContext = context
@@ -98,17 +98,36 @@ class ProcessingService {
         let totalToProcess = assetsToModify.count
 
         for (index, asset) in assetsToModify.enumerated() {
+            // Check for cancellation before processing each file
+            if Task.isCancelled {
+                statusUpdate("Processing cancelled by user.")
+                return
+            }
+
             let currentIndex = index + 1
             let statusPrefix = "(\(currentIndex)/\(totalToProcess))"
-            let fileName = asset.fileName ?? "file"
-            var currentPath = asset.fileURL
+
+            // Extract Core Data properties safely before any await calls
+            let (fileName, fileURL, trimStart, trimEnd, bakeLUT, lutId, newFileName) = await viewContext.perform {
+                (
+                    asset.fileName ?? "file",
+                    asset.fileURL,
+                    asset.trimStartTime,
+                    asset.trimEndTime,
+                    asset.bakeInLUT,
+                    asset.selectedLUTId ?? "",
+                    asset.newFileName ?? ""
+                )
+            }
+
+            var currentPath = fileURL
 
             // Update progress
             progressUpdate(currentIndex, totalToProcess, fileName)
 
             // Check if trimming or LUT baking is needed
-            let isTrimmed = asset.trimStartTime > 0.001 || (asset.trimEndTime > 0 && asset.trimEndTime < 0.999)
-            let shouldBakeLUT = asset.bakeInLUT && !(asset.selectedLUTId ?? "").isEmpty
+            let isTrimmed = trimStart > 0.001 || (trimEnd > 0 && trimEnd < 0.999)
+            let shouldBakeLUT = bakeLUT && !lutId.isEmpty
             let needsVideoProcessing = isTrimmed || shouldBakeLUT
 
             if needsVideoProcessing, let path = currentPath {
@@ -124,9 +143,12 @@ class ProcessingService {
                         outputFolder: outputFolder
                     ) {
                         currentPath = newPath
-                        asset.filePath = newPath.path
+                        // Update Core Data property safely
+                        await viewContext.perform {
+                            asset.filePath = newPath.path
+                        }
                     } else {
-                        statusUpdate("\(statusPrefix) Failed to process \(asset.fileName ?? "file")")
+                        statusUpdate("\(statusPrefix) Failed to process \(fileName)")
                         continue
                     }
                 } catch {
@@ -139,9 +161,9 @@ class ProcessingService {
                 do {
                     // Determine destination filename (use new name if set, otherwise original)
                     let destinationFileName: String
-                    if !testMode, let newName = asset.newFileName, !newName.isEmpty {
+                    if !testMode, !newFileName.isEmpty {
                         let fileExtension = path.pathExtension
-                        destinationFileName = newName.hasSuffix(".\(fileExtension)") ? newName : "\(newName).\(fileExtension)"
+                        destinationFileName = newFileName.hasSuffix(".\(fileExtension)") ? newFileName : "\(newFileName).\(fileExtension)"
                     } else {
                         destinationFileName = path.lastPathComponent
                     }
@@ -152,9 +174,13 @@ class ProcessingService {
                     }
                     try FileManager.default.copyItem(at: path, to: destinationURL)
                     currentPath = destinationURL
-                    asset.filePath = destinationURL.path
-                    asset.fileName = destinationFileName
-                    asset.newFileName = "" // Clear the newFileName after applying
+
+                    // Update Core Data properties safely
+                    await viewContext.perform {
+                        asset.filePath = destinationURL.path
+                        asset.fileName = destinationFileName
+                        asset.newFileName = "" // Clear the newFileName after applying
+                    }
                 } catch {
                     statusUpdate("\(statusPrefix) Error copying: \(error.localizedDescription)")
                     continue
@@ -163,13 +189,16 @@ class ProcessingService {
 
             // B. Renaming (Only when processing in-place without output folder)
             if !testMode, outputFolder == nil, let path = currentPath {
-                let needsRename = !(asset.newFileName ?? "").isEmpty
+                let needsRename = !newFileName.isEmpty
                 if needsRename {
-                    statusUpdate("\(statusPrefix) Renaming: \(asset.fileName ?? "file")")
+                    statusUpdate("\(statusPrefix) Renaming: \(fileName)")
                     if let renamedPath = await runRename(asset: asset, currentURL: path) {
-                        asset.filePath = renamedPath.path
-                        asset.fileName = renamedPath.lastPathComponent
-                        asset.newFileName = ""
+                        // Update Core Data properties safely
+                        await viewContext.perform {
+                            asset.filePath = renamedPath.path
+                            asset.fileName = renamedPath.lastPathComponent
+                            asset.newFileName = ""
+                        }
                     } else {
                         statusUpdate("\(statusPrefix) Failed to rename")
                     }
@@ -341,7 +370,7 @@ class ProcessingService {
         }
 
         // Create video composition
-        let composition = AVMutableVideoComposition(asset: asset) { request in
+        let composition = AVMutableVideoComposition(asset: asset) { [filter] request in
             let source = request.sourceImage.clampedToExtent()
             filter.setValue(source, forKey: kCIInputImageKey)
 

@@ -1,0 +1,35 @@
+===========================================
+  UI Layout Tests: 5x Iteration Run
+  Testing ALL screens for layout issues
+===========================================
+
+Source: /Volumes/X10 Pro/CLIP
+Output: /Volumes/X10 Pro/testoutput
+
+
+==========================================
+ Test Iteration 1/5
+==========================================
+[1;34mSetting up test data for run 1...[0m
+✓ Test data ready (6 files via symlinks)
+[1;33m[Layout Tests - Run 1/5][0m
+[0;31m✗ Run 1 FAILED[0m
+Log: LayoutTestResults/layout_test_run_1_20251117_140559.log
+/Users/romanwilson/projects/videocull/VideoCullingApp/UILayoutTests.swift:77: error: -[VideoCullingAppUITests.UILayoutTests testGalleryModeLayout] : XCTAssertTrue failed - Gallery Mode - Button[11] should be clickable
+    t =   250.35s Tear Down
+    t =   250.35s     Terminate com.yourcompany.VideoCullingApp:66304
+--
+/Users/romanwilson/projects/videocull/VideoCullingApp/UILayoutTests.swift:77: error: -[VideoCullingAppUITests.UILayoutTests testMainContentViewLayout] : XCTAssertTrue failed - Main Content View - Button[11] should be clickable
+    t =    97.36s Tear Down
+    t =    97.36s     Terminate com.yourcompany.VideoCullingApp:67919
+--
+/Users/romanwilson/projects/videocull/VideoCullingApp/UILayoutTests.swift:77: error: -[VideoCullingAppUITests.UILayoutTests testVideoRowLayout] : XCTAssertTrue failed - Video Rows - Button[0] should be clickable
+    t =    45.11s Tear Down
+    t =    45.11s     Terminate com.yourcompany.VideoCullingApp:70577
+[1;34mCleaning up test data...[0m
+✓ Cleanup complete
+
+[0;31mStopping due to test failure[0m
+
+Review the log file for details:
+LayoutTestResults/layout_test_run_1_20251117_140559.log

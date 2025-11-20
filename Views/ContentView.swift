@@ -11,11 +11,13 @@ struct ContentView: View {
 
     // 1. View model for handling state and logic
     @StateObject private var viewModel: ContentViewModel
-    @StateObject private var lutManager = LUTManager.shared
+    @ObservedObject private var lutManager = LUTManager.shared
     @State private var showLUTManager = false
     @State private var showPreferences = false
+    @State private var showLoadingProgress = false
     @AppStorage("hasSeenWelcome") private var hasSeenWelcome = false
     @State private var showWelcome = false
+    @State private var showCullInPlaceConfirmation = false
 
     init() {
         // Initialize the StateObject with the persistence controller
@@ -26,104 +28,59 @@ struct ContentView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // --- TOP TOOLBAR (TWO ROWS) ---
+            // --- TOP TOOLBAR ---
             VStack(spacing: 8) {
-                // FIRST ROW: Folder Selection, Naming, and LUT Manager
+                // Compact workflow visualization with process button
                 HStack {
-                    // Input Folder Selector
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Input Folder:")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        HStack(spacing: 8) {
-                            Button(action: viewModel.selectInputFolder) {
-                                Label("Select", systemImage: "folder.badge.plus")
-                            }
-                            .disabled(viewModel.isLoading)
-
-                            if let inputURL = viewModel.inputFolderURL {
-                                Text(inputURL.lastPathComponent)
-                                    .font(.caption)
-                                    .foregroundColor(.primary)
-                                    .lineLimit(1)
-                                    .frame(maxWidth: 120)
-
-                                Button(action: viewModel.closeCurrentFolder) {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .foregroundColor(.secondary)
-                                }
-                                .buttonStyle(.plain)
-                                .help("Close current folder")
-                                .disabled(viewModel.isLoading)
-                            }
-                        }
-                    }
-
-                    Divider()
-                        .frame(height: 40)
-                        .padding(.horizontal, 8)
-
-                    // Output Folder Selector
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Output Folder:")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        HStack(spacing: 8) {
-                            Button(action: viewModel.selectOutputFolder) {
-                                Label("Select", systemImage: "folder")
-                            }
-                            .disabled(viewModel.isLoading)
-
-                            if let outputURL = viewModel.outputFolderURL {
-                                Text(outputURL.lastPathComponent)
-                                    .font(.caption)
-                                    .foregroundColor(.primary)
-                                    .lineLimit(1)
-                                    .frame(maxWidth: 120)
-                            }
-                        }
-                    }
-
-                    Divider()
-                        .frame(height: 40)
-                        .padding(.horizontal, 8)
-
-                    // Naming Convention Selector
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Default Re-Naming:")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Picker("", selection: $viewModel.selectedNamingConvention) {
-                            ForEach(NamingConvention.allCases) { convention in
-                                Text(convention.rawValue).tag(convention)
-                            }
-                        }
-                        .frame(width: 240)
-                        .onChange(of: viewModel.selectedNamingConvention) { newConvention in
-                            viewModel.applyNamingConvention(newConvention)
-                        }
-                    }
-
-                    Divider()
-                        .frame(height: 40)
-                        .padding(.horizontal, 8)
-
-                    // LUT Manager Button
-                    Button(action: {
-                        showLUTManager = true
-                    }) {
-                        Label("LUT Manager", systemImage: "slider.horizontal.3")
-                    }
+                    CompactWorkflowView(viewModel: viewModel)
 
                     Spacer()
+
+                    // Preferences Button (styled to match Process button height)
+                    Button(action: {
+                        showPreferences = true
+                    }) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "gearshape")
+                                .font(.system(size: 20))
+                            Text("Preferences")
+                                .font(.system(size: 14, weight: .medium))
+                        }
+                        .foregroundColor(.primary)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 16)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(10)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Open application preferences")
+                    .keyboardShortcut(",", modifiers: .command)
                 }
                 .padding(.horizontal)
                 .padding(.top, 8)
 
                 Divider()
 
-                // SECOND ROW: Global LUT, Status, Test Mode, Apply
+                // SECOND ROW: Sort Order, Global LUT, Status
                 HStack {
+                    // Sort Order Picker
+                    HStack(spacing: 8) {
+                        Text("Sort Order:")
+                            .font(.subheadline)
+
+                        Picker("", selection: $viewModel.sortOrder) {
+                            ForEach(ContentViewModel.SortOrder.allCases, id: \.self) { order in
+                                Text(order.rawValue).tag(order)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        .frame(width: 200)
+                    }
+
+                    Divider()
+                        .frame(height: 24)
+                        .padding(.horizontal, 8)
+
                     // Global LUT Selector
                     HStack(spacing: 8) {
                         Text("Preview all videos with LUT:")
@@ -143,6 +100,7 @@ struct ContentView: View {
 
                     Spacer()
 
+                    // --- PROCESSING STATUS LOGIC ---
                     if viewModel.isLoading && !viewModel.showProcessingModal {
                         // Only show inline spinner for scanning mode
                         HStack(spacing: 8) {
@@ -152,39 +110,16 @@ struct ContentView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                         }
+                    } else if !viewModel.loadingStatus.isEmpty && viewModel.loadingStatus != "Idle" {
+                        // Show status when not idle or processing
+                        Text(viewModel.loadingStatus)
+                            .font(.subheadline)
+                            .foregroundColor(viewModel.processingComplete ? .green : .secondary)
+                            .fontWeight(viewModel.processingComplete ? .medium : .regular)
                     }
+                    // --- END PROCESSING LOGIC ---
 
                     Spacer()
-
-                    // Test Mode Toggle
-                    Toggle(isOn: $viewModel.testMode) {
-                        HStack(spacing: 4) {
-                            Image(systemName: viewModel.testMode ? "testtube.2" : "testtube.2")
-                                .foregroundColor(viewModel.testMode ? .orange : .secondary)
-                            Text("Test Mode")
-                                .font(.subheadline)
-                        }
-                    }
-                    .toggleStyle(.switch)
-                    .help("When enabled, exports videos to a 'Culled' subfolder instead of replacing originals")
-                    .onChange(of: viewModel.testMode) { _ in
-                        viewModel.updateOutputFolder()
-                    }
-
-                    Divider()
-                        .frame(height: 20)
-                        .padding(.horizontal, 8)
-
-                    Button(action: viewModel.closeCurrentFolder) {
-                        Label("Close Current Folder/Project", systemImage: "folder.badge.minus")
-                    }
-                    .disabled(viewModel.isLoading || viewModel.inputFolderURL == nil)
-
-                    Button(action: viewModel.applyChanges) {
-                        Label(viewModel.testMode ? "Test Export" : "Process Video Culling Job", systemImage: "checkmark.circle.fill")
-                    }
-                    .tint(viewModel.testMode ? .orange : .blue)
-                    .disabled(viewModel.isLoading)
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 8)
@@ -196,7 +131,7 @@ struct ContentView: View {
             // --- MAIN GALLERY ---
             GalleryView()
         }
-        .frame(minWidth: 1200, minHeight: 700)
+        .frame(minWidth: 1400, minHeight: 700)
         .overlay {
             // Processing Progress Modal
             if viewModel.showProcessingModal {
@@ -205,16 +140,30 @@ struct ContentView: View {
 
             // Welcome Modal
             if showWelcome {
-                WelcomeView(isPresented: $showWelcome)
+                WelcomeView(isPresented: $showWelcome, viewModel: viewModel)
             }
         }
         .onAppear {
-            // Apply saved appearance preference on first launch
-            PreferencesManager.shared.applyAppearance()
+            // Apply theme preference
+            applyTheme()
 
-            // Show welcome screen on first launch
-            if !hasSeenWelcome {
-                showWelcome = true
+            // Always show welcome screen to configure workflow
+            showWelcome = true
+        }
+        .onChange(of: UserPreferences.shared.theme) { _ in
+            // Apply theme when it changes
+            applyTheme()
+        }
+        .onChange(of: showWelcome) { isShowing in
+            // When welcome popup is dismissed (and it was shown), highlight the input folder button
+            if !isShowing && !hasSeenWelcome {
+                viewModel.highlightInputFolderButton = true
+
+                // Auto-dismiss highlight after 8 seconds
+                Task {
+                    try? await Task.sleep(nanoseconds: 8_000_000_000)
+                    viewModel.highlightInputFolderButton = false
+                }
             }
         }
         .sheet(isPresented: $showLUTManager) {
@@ -223,6 +172,10 @@ struct ContentView: View {
         .sheet(isPresented: $showPreferences) {
             PreferencesView()
         }
+        .sheet(isPresented: $showLoadingProgress) {
+            LoadingProgressView(viewModel: viewModel, isPresented: $showLoadingProgress)
+        }
+        // Note: Removed automatic loading progress modal - progress now shown in welcome screen
         .alert("Error", isPresented: $viewModel.showError) {
             Button("OK", role: .cancel) {
                 viewModel.showError = false
@@ -231,6 +184,132 @@ struct ContentView: View {
             if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
             }
+        }
+        .alert("External Media Detected", isPresented: $viewModel.showExternalMediaAlert) {
+            Button("No - Work off external media", role: .cancel) {
+                viewModel.proceedWithoutStaging()
+            }
+            Button("Yes - Stage locally", role: .none) {
+                viewModel.proceedWithStaging()
+            }
+            Button("Don't ask any more") {
+                UserPreferences.shared.askAboutStaging = false
+                viewModel.proceedWithoutStaging()
+            }
+        } message: {
+            Text("Previewing and editing directly from external media may result in a choppy experience. Would you like to first stage the media locally as a pre-step?")
+        }
+        .overlay {
+            // Staging progress modal
+            if viewModel.isStaging {
+                ZStack {
+                    Color.black.opacity(0.4)
+                        .ignoresSafeArea()
+
+                    VStack(spacing: 24) {
+                        Text("Staging Media Locally")
+                            .font(.title)
+                            .fontWeight(.bold)
+
+                        Divider()
+
+                        Text(viewModel.stagingStatus)
+                            .font(.body)
+                            .foregroundColor(.secondary)
+
+                        ProgressView(value: viewModel.stagingProgress)
+                            .progressViewStyle(.linear)
+
+                        Text("\(Int(viewModel.stagingProgress * 100))%")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(40)
+                    .frame(width: 500)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color(NSColor.windowBackgroundColor))
+                            .shadow(radius: 30)
+                    )
+                }
+            }
+        }
+    }
+
+    // MARK: - Helper Functions
+
+    private func canProcess() -> Bool {
+        // Must have input folder
+        guard viewModel.inputFolderURL != nil else {
+            return false
+        }
+
+        // In import mode, must also have output folder
+        if viewModel.workflowMode == .importMode {
+            return viewModel.outputFolderURL != nil
+        }
+
+        // In cull in place mode, only need input folder
+        return true
+    }
+
+    private func processButtonTooltip() -> String {
+        if viewModel.inputFolderURL == nil {
+            return "Select an input folder first"
+        }
+
+        if viewModel.workflowMode == .importMode && viewModel.outputFolderURL == nil {
+            return "Import mode requires selecting an output folder"
+        }
+
+        return viewModel.testMode ? "Run test export to output folder" : "Process all videos with selected settings"
+    }
+
+    private func processButtonText() -> String {
+        if viewModel.testMode {
+            return "Test Export"
+        }
+
+        switch viewModel.workflowMode {
+        case .importMode:
+            return "Process and Import Videos"
+        case .cullInPlace:
+            return "Delete Flagged Files"
+        }
+    }
+
+    private func processButtonIcon() -> String {
+        switch viewModel.workflowMode {
+        case .importMode:
+            return "play.circle.fill"
+        case .cullInPlace:
+            return "trash.circle.fill"
+        }
+    }
+
+    private func processButtonTint() -> Color {
+        if viewModel.testMode {
+            return .orange
+        }
+
+        switch viewModel.workflowMode {
+        case .importMode:
+            return .green
+        case .cullInPlace:
+            return .red
+        }
+    }
+
+    private func applyTheme() {
+        let preferences = UserPreferences.shared
+
+        switch preferences.theme {
+        case .dark:
+            NSApp.appearance = NSAppearance(named: .darkAqua)
+        case .light:
+            NSApp.appearance = NSAppearance(named: .aqua)
+        case .followSystem:
+            NSApp.appearance = nil  // Use system setting
         }
     }
 }

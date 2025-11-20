@@ -1,0 +1,164 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test -project VideoCullingApp.xcodeproj -scheme VideoCullingApp -destination platform=macOS "-only-testing:VideoCullingAppUITests/VideoCullingAppUITests" TEST_MODE=true "TEST_INPUT_PATH=/Volumes/X10 Pro/CLIP" "TEST_OUTPUT_PATH=/Volumes/X10 Pro/testoutput"
+
+Build settings from command line:
+    TEST_INPUT_PATH = /Volumes/X10 Pro/CLIP
+    TEST_MODE = true
+    TEST_OUTPUT_PATH = /Volumes/X10 Pro/testoutput
+
+2025-11-17 16:10:45.763 xcodebuild[6529:5381496]  DVTDeviceOperation: Encountered a build number "" that is incompatible with DVTBuildVersion.
+2025-11-17 16:10:45.764 xcodebuild[6529:5381399] [MT] DVTDeviceOperation: Encountered a build number "" that is incompatible with DVTBuildVersion.
+2025-11-17 16:10:45.898 xcodebuild[6529:5381399] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00006031-001229A926E1001C, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00006031-001229A926E1001C, name:My Mac }
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (3 targets)
+    Target 'VideoCullingAppTests' in project 'VideoCullingApp'
+        ➜ Explicit dependency on target 'VideoCullingApp' in project 'VideoCullingApp'
+    Target 'VideoCullingAppUITests' in project 'VideoCullingApp'
+        ➜ Explicit dependency on target 'VideoCullingApp' in project 'VideoCullingApp'
+    Target 'VideoCullingApp' in project 'VideoCullingApp' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/momc --dry-run --action generate --swift-version 5.0 --sdkroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk --macosx-deployment-target 13.0 --module VideoCullingApp /Users/romanwilson/projects/videocull/VideoCullingApp/VideoCullingApp.xcdatamodeld /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/DerivedSources/CoreDataGenerated/VideoCullingApp
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: 01c5197aa02c90e479768ada4122385a
+Build description path: /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/XCBuildData/01c5197aa02c90e479768ada4122385a.xcbuilddata
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk /Users/romanwilson/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.1-25B74-3ae1261907bdadc328169391a47051a6.sdkstatcache
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp/VideoCullingApp.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk -o /Users/romanwilson/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.1-25B74-3ae1261907bdadc328169391a47051a6.sdkstatcache
+
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/SLog3_SGamut3Cine 3/4_SGamut3CineSLog3_To_Cine+709.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/AppleLog/AppleLogToRec709-v1.0.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/S-Gamut_Slog2/Look_profile_for_resolve_S-Gamut_Slog2/From_SLog2SGumut_To_SLog2-709_.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/S-Gamut_Slog2/Look_profile_for_resolve_S-Gamut_Slog2/From_SLog2SGumut_To_Cine+709.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/AppleLog/AppleLogToLin-v1.0.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/S-Gamut_Slog2/Look_profile_for_resolve_S-Gamut_Slog2/From_SLog2SGumut_To_LC-709_.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/SLog3_SGamut3Cine 3/2_SGamut3CineSLog3_To_LC-709TypeA.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/SLog3_SGamut3Cine 3/3_SGamut3CineSLog3_To_SLog2-709.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/SLog3_SGamut3Cine 3/1_SGamut3CineSLog3_To_LC-709.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/S-Gamut_Slog2/Look_profile_for_resolve_S-Gamut_Slog2/From_SLog2SGumut_To_LC-709TypeA_.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+ProcessInfoPlistFile /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/Info.plist /Users/romanwilson/projects/videocull/VideoCullingApp/Info.plist (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-infoPlistUtility /Users/romanwilson/projects/videocull/VideoCullingApp/Info.plist -producttype com.apple.product-type.application -genpkginfo /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PkgInfo -expandbuildsettings -platform macosx -additionalcontentfile /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/assetcatalog_generated_info.plist -o /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/Info.plist
+
+ProcessInfoPlistFile /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/Info.plist /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/empty-VideoCullingAppTests.plist (in target 'VideoCullingAppTests' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-infoPlistUtility /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/empty-VideoCullingAppTests.plist -producttype com.apple.product-type.bundle.unit-test -expandbuildsettings -platform macosx -o /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/Info.plist
+
+ProcessInfoPlistFile /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest/Contents/Info.plist /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppUITests.build/empty-VideoCullingAppUITests.plist (in target 'VideoCullingAppUITests' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-infoPlistUtility /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppUITests.build/empty-VideoCullingAppUITests.plist -producttype com.apple.product-type.bundle.ui-testing -expandbuildsettings -platform macosx -additionalcontentfile /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppUITests.build/ProductTypeInfoPlistAdditions.plist -o /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest/Contents/Info.plist
+
+2025-11-17 16:10:52.124156-0500 VideoCullingAppUITests-Runner[6690:5382072] [Default] Running tests...
+Test Suite 'Selected tests' started at 2025-11-17 16:10:52.347.
+Test Suite 'VideoCullingAppUITests.xctest' started at 2025-11-17 16:10:52.347.
+Test Suite 'VideoCullingAppUITests' started at 2025-11-17 16:10:52.347.
+Test Case '-[VideoCullingAppUITests.VideoCullingAppUITests testGalleryModeToggle]' started.
+    t =     0.00s Start Test at 2025-11-17 16:10:52.348
+    t =     0.25s Set Up
+    t =     0.25s     Open com.yourcompany.VideoCullingApp
+    t =     0.25s         Activate com.yourcompany.VideoCullingApp
+    t =     0.26s             Wait for com.yourcompany.VideoCullingApp to idle
+    t =    68.30s Checking existence of `"galleryModeButton" Button`
+    t =    68.30s     Requesting snapshot of accessibility hierarchy for app with pid 93279
+    t =   129.37s Checking existence of `"galleryModeButton" Button` (retry 1)
+    t =   129.37s     Requesting snapshot of accessibility hierarchy for app with pid 93279
+    t =   190.44s Checking existence of `"galleryModeButton" Button` (retry 2)
+    t =   190.44s     Requesting snapshot of accessibility hierarchy for app with pid 93279
+/Users/romanwilson/projects/videocull/VideoCullingApp/VideoCullingAppUITests.swift:57: error: -[VideoCullingAppUITests.VideoCullingAppUITests testGalleryModeToggle] : Failed to get matching snapshots: Timed out snapshotting 'Unknown process name', app is either unresponsive or taking too long to snapshot.
+    t =   271.93s Tear Down
+    t =   271.93s     Terminate com.yourcompany.VideoCullingApp:93279
+Test Case '-[VideoCullingAppUITests.VideoCullingAppUITests testGalleryModeToggle]' failed (332.215 seconds).
+Test Case '-[VideoCullingAppUITests.VideoCullingAppUITests testLaunchPerformance]' started.
+    t =     0.00s Start Test at 2025-11-17 16:16:24.564
+    t =     0.35s Set Up
+    t =     0.35s         Open com.yourcompany.VideoCullingApp
+    t =     0.35s             Launch com.yourcompany.VideoCullingApp
+    t =     1.31s                 Wait for accessibility to load
+    t =     1.69s                 Setting up automation session
+    t =     1.69s                 Wait for com.yourcompany.VideoCullingApp to idle
+    t =     6.75s     Open com.yourcompany.VideoCullingApp
+    t =     6.75s         Launch com.yourcompany.VideoCullingApp
+    t =     6.75s             Terminate com.yourcompany.VideoCullingApp:9938
+    t =     8.20s             Wait for accessibility to load
+    t =     8.44s             Setting up automation session
+    t =     8.46s             Wait for com.yourcompany.VideoCullingApp to idle
+    t =    13.37s     Open com.yourcompany.VideoCullingApp
+    t =    13.37s         Launch com.yourcompany.VideoCullingApp
+    t =    13.37s             Terminate com.yourcompany.VideoCullingApp:10006
+    t =    14.78s             Wait for accessibility to load
+    t =    14.96s             Setting up automation session
+    t =    14.97s             Wait for com.yourcompany.VideoCullingApp to idle
+    t =    16.64s     Open com.yourcompany.VideoCullingApp
+    t =    16.64s         Launch com.yourcompany.VideoCullingApp
+    t =    16.64s             Terminate com.yourcompany.VideoCullingApp:10140
+    t =    18.17s             Wait for accessibility to load
+    t =    18.41s             Setting up automation session
+    t =    18.42s             Wait for com.yourcompany.VideoCullingApp to idle
+    t =    19.89s     Open com.yourcompany.VideoCullingApp
+    t =    19.89s         Launch com.yourcompany.VideoCullingApp
+    t =    19.89s             Terminate com.yourcompany.VideoCullingApp:10144
+    t =    21.47s             Wait for accessibility to load
+    t =    21.67s             Setting up automation session
+    t =    21.68s             Wait for com.yourcompany.VideoCullingApp to idle
+    t =    22.92s     Open com.yourcompany.VideoCullingApp
+    t =    22.92s         Launch com.yourcompany.VideoCullingApp
+    t =    22.92s             Terminate com.yourcompany.VideoCullingApp:10147
+    t =    24.36s             Wait for accessibility to load
+    t =    24.56s             Setting up automation session
+    t =    24.56s             Wait for com.yourcompany.VideoCullingApp to idle
+    t =    25.57s     Open com.yourcompany.VideoCullingApp
+    t =    25.57s         Launch com.yourcompany.VideoCullingApp
+    t =    25.57s             Terminate com.yourcompany.VideoCullingApp:10152
+    t =    27.02s             Wait for accessibility to load
+    t =    27.21s             Setting up automation session
+    t =    27.21s             Wait for com.yourcompany.VideoCullingApp to idle
+/Users/romanwilson/projects/videocull/VideoCullingApp/VideoCullingAppUITests.swift:80: Test Case '-[VideoCullingAppUITests.VideoCullingAppUITests testLaunchPerformance]' measured [Duration (ApplicationLaunch), s] average: 0.489, relative standard deviation: 9.549%, values: [0.477158, 0.539597, 0.548170, 0.441210, 0.439753], performanceMetricID:com.apple.dt.XCTMetric_ApplicationLaunch-ApplicationLaunch.duration, baselineName: "", baselineAverage: , polarity: prefers smaller, maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.000, maxStandardDeviation: 0.000
+    t =    28.13s Tear Down
+    t =    28.13s         Terminate com.yourcompany.VideoCullingApp:10157
+Test Case '-[VideoCullingAppUITests.VideoCullingAppUITests testLaunchPerformance]' passed (29.446 seconds).
+Test Suite 'VideoCullingAppUITests' failed at 2025-11-17 16:16:54.010.
+	 Executed 2 tests, with 1 failure (0 unexpected) in 361.662 (361.663) seconds
+Test Suite 'VideoCullingAppUITests.xctest' failed at 2025-11-17 16:16:54.011.
+	 Executed 2 tests, with 1 failure (0 unexpected) in 361.662 (361.664) seconds
+Test Suite 'Selected tests' failed at 2025-11-17 16:16:54.012.
+	 Executed 2 tests, with 1 failure (0 unexpected) in 361.662 (361.665) seconds
+2025-11-17 16:17:03.527 xcodebuild[6529:5381399] [MT] IDETestOperationsObserverDebug: 375.624 elapsed -- Testing started completed.
+2025-11-17 16:17:03.527 xcodebuild[6529:5381399] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2025-11-17 16:17:03.527 xcodebuild[6529:5381399] [MT] IDETestOperationsObserverDebug: 375.624 sec, +375.624 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Logs/Test/Test-VideoCullingApp-2025.11.17_16-10-45--0500.xcresult
+
+** TEST FAILED **
+
+Testing started
+Test suite 'Selected tests' started on 'My Mac - VideoCullingAppUITests-Runner (6690)'
+Test suite 'VideoCullingAppUITests.xctest' started on 'My Mac - VideoCullingAppUITests-Runner (6690)'
+Test suite 'VideoCullingAppUITests' started on 'My Mac - VideoCullingAppUITests-Runner (6690)'
+Test case 'VideoCullingAppUITests.testGalleryModeToggle()' failed on 'My Mac - VideoCullingAppUITests-Runner (6690)' (332.215 seconds)
+Test case 'VideoCullingAppUITests.testLaunchPerformance()' passed on 'My Mac - VideoCullingAppUITests-Runner (6690)' (29.446 seconds)

@@ -1,0 +1,63 @@
+===========================================
+  Complete Test Cycle Runner (5x)
+  Testing All Recent UI Fixes
+===========================================
+
+Source: /Volumes/X10 Pro/CLIP
+Output: /Volumes/X10 Pro/testoutput
+
+
+==========================================
+ TEST CYCLE 1/5
+==========================================
+
+[1;34m[Preparing test environment...][0m
+✓ Cleaned output folder
+✓ Test data ready (48 video files)
+
+[1;33m[Running UI Layout Tests - Cycle 1][0m
+[0;31m✗ Layout tests failed[0m
+  See log: test_results/cycle_1_layout.log
+
+[1;33m[Running App UI Tests - Cycle 1][0m
+[0;31m✗ App UI tests failed[0m
+  See log: test_results/cycle_1_app.log
+
+[0;31m==========================================
+  CYCLE 1: ✗ SOME TESTS FAILED
+==========================================\033[0m
+
+==========================================
+ TEST CYCLE 2/5
+==========================================
+
+[1;34m[Preparing test environment...][0m
+✓ Cleaned output folder
+✓ Test data ready (48 video files)
+
+[1;33m[Running UI Layout Tests - Cycle 2][0m
+[0;31m✗ Layout tests failed[0m
+  See log: test_results/cycle_2_layout.log
+
+[1;33m[Running App UI Tests - Cycle 2][0m
+[0;31m✗ App UI tests failed[0m
+  See log: test_results/cycle_2_app.log
+
+[0;31m==========================================
+  CYCLE 2: ✗ SOME TESTS FAILED
+==========================================\033[0m
+
+==========================================
+ TEST CYCLE 3/5
+==========================================
+
+[1;34m[Preparing test environment...][0m
+✓ Cleaned output folder
+✓ Test data ready (48 video files)
+
+[1;33m[Running UI Layout Tests - Cycle 3][0m
+./run_complete_test_cycles.sh: line 38:  6164 Killed: 9               xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination "$DESTINATION" -only-testing:VideoCullingAppUITests/UILayoutTests TEST_MODE=true TEST_INPUT_PATH="$SOURCE_PATH" TEST_OUTPUT_PATH="$OUTPUT_PATH" > "$LAYOUT_LOG" 2>&1
+[0;31m✗ Layout tests failed[0m
+  See log: test_results/cycle_3_layout.log
+
+[1;33m[Running App UI Tests - Cycle 3][0m

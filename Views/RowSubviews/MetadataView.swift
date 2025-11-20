@@ -28,58 +28,89 @@ struct MetadataView: View {
 
             // --- Dynamic Metadata ---
 
-            Group {
-                // Duration - show original + estimated
-                if isTrimmed {
-                    MetadataRowWithEstimate(
-                        label: "Duration",
-                        originalValue: formattedDuration(asset.duration),
-                        estimatedValue: formattedDuration(estimatedDuration)
-                    )
-                } else {
-                    MetadataRow(label: "Duration", value: formattedDuration(asset.duration))
+            // Duration - show original + estimated
+            if isTrimmed {
+                MetadataRowWithEstimate(
+                    label: "Duration",
+                    originalValue: formattedDuration(asset.duration),
+                    estimatedValue: formattedDuration(estimatedDuration)
+                )
+            } else {
+                MetadataRow(label: "Duration", value: formattedDuration(asset.duration))
+            }
+
+            // Size - show original + estimated
+            if isTrimmed {
+                MetadataRowWithEstimate(
+                    label: "Size",
+                    originalValue: formattedSize(asset.fileSize),
+                    estimatedValue: formattedSize(estimatedSize)
+                )
+            } else {
+                MetadataRow(label: "Size", value: formattedSize(asset.fileSize))
+            }
+
+            MetadataRow(label: "Bitrate", value: formattedBitrate(asset.bitrate))
+                .font(.subheadline)
+
+            // Framerate with slow motion indicator
+            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                Text("Framerate:")
+                    .frame(width: 80, alignment: .leading)
+                    .font(.caption.bold())
+                    .foregroundColor(.secondary)
+
+                Text(String(format: "%.2f FPS", asset.frameRate))
+
+                // Show slow motion indicator if capture FPS differs from playback framerate
+                if let captureFpsString = asset.captureFps {
+                    // Clean the string by removing 'p' suffix and any whitespace
+                    let cleanedString = captureFpsString.replacingOccurrences(of: "p", with: "").trimmingCharacters(in: .whitespaces)
+                    if let captureFps = Double(cleanedString),
+                       captureFps > 0 && abs(captureFps - asset.frameRate) > 0.1 {
+                        let slowMotionFactor = captureFps / asset.frameRate
+                        Text(String(format: "(%.0fx Slow Motion)", slowMotionFactor))
+                            .font(.caption)
+                            .foregroundColor(.blue)
+                    }
                 }
-
-                // Size - show original + estimated
-                if isTrimmed {
-                    MetadataRowWithEstimate(
-                        label: "Size",
-                        originalValue: formattedSize(asset.fileSize),
-                        estimatedValue: formattedSize(estimatedSize)
-                    )
-                } else {
-                    MetadataRow(label: "Size", value: formattedSize(asset.fileSize))
-                }
-
-                MetadataRow(label: "Bitrate", value: formattedBitrate(asset.bitrate))
-
-                MetadataRow(label: "Framerate", value: String(format: "%.2f FPS", asset.frameRate))
-
-                Divider().padding(.vertical, 2)
-
-                // Video codec information
-                MetadataRow(label: "Video Codec", value: asset.videoCodec ?? "Unknown")
-
-                MetadataRow(label: "Bit Depth", value: asset.bitDepth ?? "Unknown")
-
-                Divider().padding(.vertical, 2)
-
-                // Audio information
-                MetadataRow(label: "Audio Codec", value: asset.audioCodec ?? "Unknown")
-
-                MetadataRow(label: "Channels", value: asset.audioChannels ?? "Unknown")
-
-                if asset.audioSampleRate > 0 {
-                    MetadataRow(label: "Sample Rate", value: String(format: "%.1f kHz", Float(asset.audioSampleRate) / 1000.0))
-                }
-
-                Divider().padding(.vertical, 2)
-
-                MetadataRow(label: "Created", value: formattedDate(asset.creationDate))
-
-                MetadataRow(label: "Edited", value: formattedDate(asset.lastEditDate))
             }
             .font(.subheadline)
+
+            Divider().padding(.vertical, 2)
+
+            // Video resolution/dimensions
+            MetadataRow(label: "Resolution", value: formattedResolution(width: asset.videoWidth, height: asset.videoHeight))
+                .font(.subheadline)
+
+            // Video codec information
+            MetadataRow(label: "Video Codec", value: asset.videoCodec ?? "Unknown")
+                .font(.subheadline)
+
+            MetadataRow(label: "Bit Depth", value: asset.bitDepth ?? "Unknown")
+                .font(.subheadline)
+
+            Divider().padding(.vertical, 2)
+
+            // Audio information
+            MetadataRow(label: "Audio Codec", value: asset.audioCodec ?? "Unknown")
+                .font(.subheadline)
+
+            MetadataRow(label: "Channels", value: asset.audioChannels ?? "Unknown")
+                .font(.subheadline)
+
+            if asset.audioSampleRate > 0 {
+                MetadataRow(label: "Sample Rate", value: String(format: "%.1f kHz", Float(asset.audioSampleRate) / 1000.0))
+                    .font(.subheadline)
+            }
+
+            Divider().padding(.vertical, 2)
+
+            MetadataRow(label: "Created", value: formattedDate(asset.creationDate))
+                .font(.subheadline)
+
+            MetadataRow(label: "Edited", value: formattedDate(asset.lastEditDate))
+                .font(.subheadline)
 
         }
     }
@@ -112,6 +143,30 @@ struct MetadataView: View {
         formatter.dateStyle = .short
         formatter.timeStyle = .short
         return formatter.string(from: date)
+    }
+
+    private func formattedResolution(width: Int32, height: Int32) -> String {
+        guard width > 0 && height > 0 else { return "Unknown" }
+
+        let resolutionString = "\(width)x\(height)"
+
+        // Add common resolution names
+        switch (width, height) {
+        case (3840, 2160):
+            return "\(resolutionString) (4K UHD)"
+        case (4096, 2160):
+            return "\(resolutionString) (4K DCI)"
+        case (1920, 1080):
+            return "\(resolutionString) (1080p)"
+        case (1280, 720):
+            return "\(resolutionString) (720p)"
+        case (7680, 4320):
+            return "\(resolutionString) (8K)"
+        case (2560, 1440):
+            return "\(resolutionString) (1440p)"
+        default:
+            return resolutionString
+        }
     }
 }
 

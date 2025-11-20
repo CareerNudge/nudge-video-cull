@@ -1,0 +1,1278 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test -project VideoCullingApp.xcodeproj -scheme VideoCullingApp -destination platform=macOS "-only-testing:VideoCullingAppUITests/UILayoutTests"
+
+2025-11-17 14:23:07.096 xcodebuild[76862:5054263]  DVTDeviceOperation: Encountered a build number "" that is incompatible with DVTBuildVersion.
+2025-11-17 14:23:07.098 xcodebuild[76862:5054196] [MT] DVTDeviceOperation: Encountered a build number "" that is incompatible with DVTBuildVersion.
+2025-11-17 14:23:07.218 xcodebuild[76862:5054196] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00006031-001229A926E1001C, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00006031-001229A926E1001C, name:My Mac }
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (3 targets)
+    Target 'VideoCullingAppTests' in project 'VideoCullingApp'
+        ➜ Explicit dependency on target 'VideoCullingApp' in project 'VideoCullingApp'
+    Target 'VideoCullingAppUITests' in project 'VideoCullingApp'
+        ➜ Explicit dependency on target 'VideoCullingApp' in project 'VideoCullingApp'
+    Target 'VideoCullingApp' in project 'VideoCullingApp' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/momc --dry-run --action generate --swift-version 5.0 --sdkroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk --macosx-deployment-target 13.0 --module VideoCullingApp /Users/romanwilson/projects/videocull/VideoCullingApp/VideoCullingApp.xcdatamodeld /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/DerivedSources/CoreDataGenerated/VideoCullingApp
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: fc92d693ad48802b3238cb8ce7b4916f
+Build description path: /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/XCBuildData/fc92d693ad48802b3238cb8ce7b4916f.xcbuilddata
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk /Users/romanwilson/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.1-25B74-3ae1261907bdadc328169391a47051a6.sdkstatcache
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp/VideoCullingApp.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk -o /Users/romanwilson/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.1-25B74-3ae1261907bdadc328169391a47051a6.sdkstatcache
+
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/SLog3_SGamut3Cine 3/4_SGamut3CineSLog3_To_Cine+709.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/AppleLog/AppleLogToRec709-v1.0.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/S-Gamut_Slog2/Look_profile_for_resolve_S-Gamut_Slog2/From_SLog2SGumut_To_SLog2-709_.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/S-Gamut_Slog2/Look_profile_for_resolve_S-Gamut_Slog2/From_SLog2SGumut_To_Cine+709.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/AppleLog/AppleLogToLin-v1.0.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/S-Gamut_Slog2/Look_profile_for_resolve_S-Gamut_Slog2/From_SLog2SGumut_To_LC-709_.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/SLog3_SGamut3Cine 3/2_SGamut3CineSLog3_To_LC-709TypeA.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/SLog3_SGamut3Cine 3/3_SGamut3CineSLog3_To_SLog2-709.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/SLog3_SGamut3Cine 3/1_SGamut3CineSLog3_To_LC-709.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/S-Gamut_Slog2/Look_profile_for_resolve_S-Gamut_Slog2/From_SLog2SGumut_To_LC-709TypeA_.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+SwiftDriver VideoCullingApp normal arm64 com.apple.xcode.tools.swift.compiler (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name VideoCullingApp -Onone -enforce-exclusivity\=checked @/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk -target arm64-apple-macos13.0 -g -module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -enable-testing -index-store-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug -F /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug -emit-localized-strings -emit-localized-strings-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64 -c -j16 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/romanwilson/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.1-25B74-3ae1261907bdadc328169391a47051a6.sdkstatcache -output-file-map /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp_const_extract_protocols.json -Xcc -iquote -Xcc /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp-generated-files.hmap -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp-own-target-headers.hmap -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp-all-target-headers.hmap -Xcc -iquote -Xcc /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp-project-headers.hmap -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/include -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/DerivedSources-normal/arm64 -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/DerivedSources/arm64 -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp-Swift.h -working-directory /Users/romanwilson/projects/videocull/VideoCullingApp -experimental-emit-module-separately -disable-cmo
+
+ProcessInfoPlistFile /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/Info.plist /Users/romanwilson/projects/videocull/VideoCullingApp/Info.plist (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-infoPlistUtility /Users/romanwilson/projects/videocull/VideoCullingApp/Info.plist -producttype com.apple.product-type.application -genpkginfo /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PkgInfo -expandbuildsettings -platform macosx -additionalcontentfile /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/assetcatalog_generated_info.plist -o /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/Info.plist
+
+SwiftCompile normal arm64 Compiling\ WelcomeView.swift /Users/romanwilson/projects/videocull/VideoCullingApp/Views/WelcomeView.swift (in target 'VideoCullingApp' from project 'VideoCullingApp')
+
+SwiftCompile normal arm64 /Users/romanwilson/projects/videocull/VideoCullingApp/Views/WelcomeView.swift (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ VideoCullingApp (in target 'VideoCullingApp' from project 'VideoCullingApp')
+
+EmitSwiftModule normal arm64 (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    
+/Users/romanwilson/projects/videocull/VideoCullingApp/Views/PlayerView.swift:752:9: warning: sendability of function types in property 'sourcePixelBufferAttributes' does not match requirement in protocol 'AVVideoCompositing'; this is an error in the Swift 6 language mode
+    var sourcePixelBufferAttributes: [String : Any]? = [
+        ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVVideoCompositing.h:123:91: note: expected sendability to match requirement here
+@property (nonatomic, readonly, nullable) NSDictionary<NSString *, id> NS_SWIFT_SENDABLE *sourcePixelBufferAttributes;
+                                                                                          ^
+/Users/romanwilson/projects/videocull/VideoCullingApp/Views/PlayerView.swift:757:9: warning: sendability of function types in property 'requiredPixelBufferAttributesForRenderContext' does not match requirement in protocol 'AVVideoCompositing'; this is an error in the Swift 6 language mode
+    var requiredPixelBufferAttributesForRenderContext: [String : Any] = [
+        ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVVideoCompositing.h:130:81: note: expected sendability to match requirement here
+@property (nonatomic, readonly) NSDictionary<NSString *, id> NS_SWIFT_SENDABLE *requiredPixelBufferAttributesForRenderContext;
+                                                                                ^
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for VideoCullingApp (in target 'VideoCullingApp' from project 'VideoCullingApp')
+
+SwiftDriver\ Compilation\ Requirements VideoCullingApp normal arm64 com.apple.xcode.tools.swift.compiler (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name VideoCullingApp -Onone -enforce-exclusivity\=checked @/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk -target arm64-apple-macos13.0 -g -module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -enable-testing -index-store-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug -F /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug -emit-localized-strings -emit-localized-strings-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64 -c -j16 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/romanwilson/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.1-25B74-3ae1261907bdadc328169391a47051a6.sdkstatcache -output-file-map /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp_const_extract_protocols.json -Xcc -iquote -Xcc /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp-generated-files.hmap -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp-own-target-headers.hmap -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp-all-target-headers.hmap -Xcc -iquote -Xcc /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp-project-headers.hmap -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/include -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/DerivedSources-normal/arm64 -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/DerivedSources/arm64 -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp-Swift.h -working-directory /Users/romanwilson/projects/videocull/VideoCullingApp -experimental-emit-module-separately -disable-cmo
+
+Copy /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp.swiftsourceinfo (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp.swiftsourceinfo /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo
+
+Copy /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.swiftmodule/arm64-apple-macos.abi.json /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp.abi.json (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp.abi.json /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.swiftmodule/arm64-apple-macos.abi.json
+
+Copy /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.swiftmodule/arm64-apple-macos.swiftmodule /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp.swiftmodule (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp.swiftmodule /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.swiftmodule/arm64-apple-macos.swiftmodule
+
+SwiftDriver VideoCullingAppTests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'VideoCullingAppTests' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name VideoCullingAppTests -Onone -enforce-exclusivity\=checked @/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests.SwiftFileList -DDEBUG -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-bare-slash-regex -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk -target arm64-apple-macos15.7 -g -module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -enable-testing -index-store-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -c -j16 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/romanwilson/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.1-25B74-3ae1261907bdadc328169391a47051a6.sdkstatcache -output-file-map /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests_const_extract_protocols.json -Xcc -iquote -Xcc /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/VideoCullingAppTests-generated-files.hmap -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/VideoCullingAppTests-own-target-headers.hmap -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/VideoCullingAppTests-all-target-headers.hmap -Xcc -iquote -Xcc /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/VideoCullingAppTests-project-headers.hmap -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/include -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/DerivedSources-normal/arm64 -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/DerivedSources/arm64 -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests-Swift.h -working-directory /Users/romanwilson/projects/videocull/VideoCullingApp -experimental-emit-module-separately -disable-cmo
+
+SwiftDriver\ Compilation VideoCullingAppTests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'VideoCullingAppTests' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name VideoCullingAppTests -Onone -enforce-exclusivity\=checked @/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests.SwiftFileList -DDEBUG -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-bare-slash-regex -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk -target arm64-apple-macos15.7 -g -module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -enable-testing -index-store-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -c -j16 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/romanwilson/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.1-25B74-3ae1261907bdadc328169391a47051a6.sdkstatcache -output-file-map /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests_const_extract_protocols.json -Xcc -iquote -Xcc /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/VideoCullingAppTests-generated-files.hmap -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/VideoCullingAppTests-own-target-headers.hmap -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/VideoCullingAppTests-all-target-headers.hmap -Xcc -iquote -Xcc /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/VideoCullingAppTests-project-headers.hmap -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/include -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/DerivedSources-normal/arm64 -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/DerivedSources/arm64 -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests-Swift.h -working-directory /Users/romanwilson/projects/videocull/VideoCullingApp -experimental-emit-module-separately -disable-cmo
+
+SwiftDriver\ Compilation\ Requirements VideoCullingAppTests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'VideoCullingAppTests' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name VideoCullingAppTests -Onone -enforce-exclusivity\=checked @/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests.SwiftFileList -DDEBUG -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-bare-slash-regex -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk -target arm64-apple-macos15.7 -g -module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -enable-testing -index-store-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -c -j16 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/romanwilson/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.1-25B74-3ae1261907bdadc328169391a47051a6.sdkstatcache -output-file-map /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests_const_extract_protocols.json -Xcc -iquote -Xcc /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/VideoCullingAppTests-generated-files.hmap -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/VideoCullingAppTests-own-target-headers.hmap -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/VideoCullingAppTests-all-target-headers.hmap -Xcc -iquote -Xcc /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/VideoCullingAppTests-project-headers.hmap -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/include -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/DerivedSources-normal/arm64 -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/DerivedSources/arm64 -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests-Swift.h -working-directory /Users/romanwilson/projects/videocull/VideoCullingApp -experimental-emit-module-separately -disable-cmo
+
+SwiftDriverJobDiscovery normal arm64 Compiling WelcomeView.swift (in target 'VideoCullingApp' from project 'VideoCullingApp')
+
+SwiftDriver\ Compilation VideoCullingApp normal arm64 com.apple.xcode.tools.swift.compiler (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name VideoCullingApp -Onone -enforce-exclusivity\=checked @/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk -target arm64-apple-macos13.0 -g -module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -enable-testing -index-store-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug -F /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug -emit-localized-strings -emit-localized-strings-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64 -c -j16 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/romanwilson/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.1-25B74-3ae1261907bdadc328169391a47051a6.sdkstatcache -output-file-map /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/romanwilson/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp_const_extract_protocols.json -Xcc -iquote -Xcc /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp-generated-files.hmap -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp-own-target-headers.hmap -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp-all-target-headers.hmap -Xcc -iquote -Xcc /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp-project-headers.hmap -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/include -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/DerivedSources-normal/arm64 -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/DerivedSources/arm64 -Xcc -I/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp-Swift.h -working-directory /Users/romanwilson/projects/videocull/VideoCullingApp -experimental-emit-module-separately -disable-cmo
+
+Ld /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/MacOS/VideoCullingApp.debug.dylib normal (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk -O0 -L/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -L/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug -F/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -F/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug -filelist /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp.LinkFileList -install_name @rpath/VideoCullingApp.debug.dylib -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @executable_path/../Frameworks -Xlinker -object_path_lto -Xlinker /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp_lto.o -rdynamic -Xlinker -no_deduplicate -Xlinker -debug_variant -Xlinker -dependency_info -Xlinker /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp_dependency_info.dat -fobjc-link-runtime -fprofile-instr-generate -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp.swiftmodule @/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp-linker-args.resp -Xlinker -alias -Xlinker _main -Xlinker ___debug_main_executable_dylib_entry_point -Xlinker -no_adhoc_codesign -o /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/MacOS/VideoCullingApp.debug.dylib
+
+ConstructStubExecutorLinkFileList /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp-ExecutorLinkFileList-normal-arm64.txt (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    construct-stub-executor-link-file-list /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/MacOS/VideoCullingApp.debug.dylib /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libPreviewsJITStubExecutor_no_swift_entry_point.a /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libPreviewsJITStubExecutor.a --output /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp-ExecutorLinkFileList-normal-arm64.txt
+note: Using stub executor library with Swift entry point. (in target 'VideoCullingApp' from project 'VideoCullingApp')
+
+Ld /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/MacOS/VideoCullingApp normal (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk -O0 -L/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug -F/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug -Xlinker -rpath -Xlinker @executable_path -Xlinker -rpath -Xlinker @executable_path/../Frameworks -rdynamic -Xlinker -no_deduplicate -Xlinker -debug_variant -e ___debug_blank_executor_main -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_dylib -Xlinker /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp-DebugDylibPath-normal-arm64.txt -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_instlnm -Xlinker /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp-DebugDylibInstallName-normal-arm64.txt -Xlinker -filelist -Xlinker /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp-ExecutorLinkFileList-normal-arm64.txt /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/MacOS/VideoCullingApp.debug.dylib -Xlinker -no_adhoc_codesign -o /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/MacOS/VideoCullingApp
+
+CopySwiftLibs /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/MacOS/VideoCullingApp.debug.dylib --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/Frameworks --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/Library/SystemExtensions --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/Extensions --platform macosx --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+
+ExtractAppIntentsMetadata (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name VideoCullingApp --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk --xcode-version 17B100 --platform-family macOS --deployment-target 13.0 --bundle-identifier com.yourcompany.VideoCullingApp --output /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/Resources --target-triple arm64-apple-macos13.0 --binary-file /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/MacOS/VideoCullingApp --dependency-file /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp_dependency_info.dat --stringsdata-file /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp.SwiftFileList --metadata-file-list /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp.DependencyMetadataFileList --static-metadata-file-list /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp.DependencyStaticMetadataFileList --swift-const-vals-list /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/Objects-normal/arm64/VideoCullingApp.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --validate-assistant-intents --no-app-shortcuts-localization
+2025-11-17 14:23:10.307 appintentsmetadataprocessor[76884:5054557] Starting appintentsmetadataprocessor export
+2025-11-17 14:23:10.309 appintentsmetadataprocessor[76884:5054557] warning: Metadata extraction skipped. No AppIntents.framework dependency found.
+
+ProcessInfoPlistFile /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/Info.plist /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/empty-VideoCullingAppTests.plist (in target 'VideoCullingAppTests' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-infoPlistUtility /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/empty-VideoCullingAppTests.plist -producttype com.apple.product-type.bundle.unit-test -expandbuildsettings -platform macosx -o /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/Info.plist
+
+Ld /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/MacOS/VideoCullingAppTests normal (in target 'VideoCullingAppTests' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos15.7 -bundle -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk -O0 -L/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -L/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug -L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -F/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug -iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -filelist /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests.LinkFileList -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @loader_path/../Frameworks -Xlinker -rpath -Xlinker @executable_path/../Frameworks -bundle_loader /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/MacOS/VideoCullingApp -Xlinker -object_path_lto -Xlinker /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests_lto.o -rdynamic -Xlinker -no_deduplicate -Xlinker -debug_variant -Xlinker -dependency_info -Xlinker /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests_dependency_info.dat -fobjc-link-runtime -fprofile-instr-generate -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests.swiftmodule @/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests-linker-args.resp -Xlinker -needed_framework -Xlinker XCTest -framework XCTest -Xlinker -needed-lXCTestSwiftSupport -lXCTestSwiftSupport /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/MacOS/VideoCullingApp.debug.dylib -Xlinker -no_adhoc_codesign -o /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/MacOS/VideoCullingAppTests
+
+CopySwiftLibs /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest (in target 'VideoCullingAppTests' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-swiftStdLibTool --copy --verbose --sign 5D50E1DA8DB15D100ECD7DD6AD1CAF0F03C3D96B --scan-executable /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/MacOS/VideoCullingAppTests --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/Frameworks --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/PlugIns --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/Library/SystemExtensions --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/Extensions --platform macosx --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/Frameworks --strip-bitcode --scan-executable /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libXCTestSwiftSupport.dylib --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+
+ExtractAppIntentsMetadata (in target 'VideoCullingAppTests' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name VideoCullingAppTests --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk --xcode-version 17B100 --platform-family macOS --deployment-target 15.7 --bundle-identifier ai.careernudge.VideoCullingAppTests --output /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/Resources --target-triple arm64-apple-macos15.7 --binary-file /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/MacOS/VideoCullingAppTests --dependency-file /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests_dependency_info.dat --stringsdata-file /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests.SwiftFileList --metadata-file-list /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/VideoCullingAppTests.DependencyMetadataFileList --static-metadata-file-list /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/VideoCullingAppTests.DependencyStaticMetadataFileList --swift-const-vals-list /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/Objects-normal/arm64/VideoCullingAppTests.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --validate-assistant-intents --no-app-shortcuts-localization
+2025-11-17 14:23:10.576 appintentsmetadataprocessor[76887:5054591] Starting appintentsmetadataprocessor export
+2025-11-17 14:23:10.577 appintentsmetadataprocessor[76887:5054591] warning: Metadata extraction skipped. No AppIntents.framework dependency found.
+
+CodeSign /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest (in target 'VideoCullingAppTests' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    
+    Signing Identity:     "Apple Development: Roman Wilson (PTVTR5ZBZF)"
+    
+    /usr/bin/codesign --force --sign 5D50E1DA8DB15D100ECD7DD6AD1CAF0F03C3D96B --timestamp\=none --generate-entitlement-der /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest
+
+CodeSign /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/MacOS/VideoCullingApp.debug.dylib (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/MacOS/VideoCullingApp.debug.dylib
+
+CodeSign /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/MacOS/__preview.dylib (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/MacOS/__preview.dylib
+/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/MacOS/__preview.dylib: replacing existing signature
+
+CodeSign /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --entitlements /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/VideoCullingApp.app.xcent --timestamp\=none --generate-entitlement-der /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app
+
+Validate /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-validationUtility /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app -no-validate-extension -infoplist-subpath Contents/Info.plist
+
+RegisterWithLaunchServices /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    /System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister -f -R -trusted /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app
+
+ProcessInfoPlistFile /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest/Contents/Info.plist /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppUITests.build/empty-VideoCullingAppUITests.plist (in target 'VideoCullingAppUITests' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-infoPlistUtility /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppUITests.build/empty-VideoCullingAppUITests.plist -producttype com.apple.product-type.bundle.ui-testing -expandbuildsettings -platform macosx -additionalcontentfile /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppUITests.build/ProductTypeInfoPlistAdditions.plist -o /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest/Contents/Info.plist
+
+CopySwiftLibs /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest (in target 'VideoCullingAppUITests' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-swiftStdLibTool --copy --verbose --sign 5D50E1DA8DB15D100ECD7DD6AD1CAF0F03C3D96B --scan-executable /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest/Contents/MacOS/VideoCullingAppUITests --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest/Contents/Frameworks --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest/Contents/PlugIns --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest/Contents/Library/SystemExtensions --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest/Contents/Extensions --platform macosx --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest/Contents/Frameworks --strip-bitcode --scan-executable /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libXCTestSwiftSupport.dylib --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppUITests.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+
+2025-11-17 14:23:11.396073-0500 VideoCullingAppUITests-Runner[76898:5054694] [Default] Running tests...
+Test Suite 'Selected tests' started at 2025-11-17 14:23:11.620.
+Test Suite 'VideoCullingAppUITests.xctest' started at 2025-11-17 14:23:11.621.
+Test Suite 'UILayoutTests' started at 2025-11-17 14:23:11.621.
+Test Case '-[VideoCullingAppUITests.UILayoutTests testComprehensiveLayoutCheck]' started.
+    t =     0.00s Start Test at 2025-11-17 14:23:11.621
+    t =     0.21s Set Up
+    t =     0.22s     Open com.yourcompany.VideoCullingApp
+    t =     0.22s         Launch com.yourcompany.VideoCullingApp
+    t =     0.61s             Wait for accessibility to load
+    t =     1.00s             Setting up automation session
+    t =     1.01s             Wait for com.yourcompany.VideoCullingApp to idle
+Running comprehensive layout check...
+    t =     6.03s Checking existence of `Window (First Match)`
+    t =     6.17s Get number of matches for: Descendants matching type StaticText
+  Found 117 Static Texts
+    t =     6.33s Checking existence of `StaticText (Element at index 0)`
+    t =     6.63s Find the StaticText (Element at index 0)
+    t =     7.35s Checking existence of `StaticText (Element at index 1)`
+    t =     7.43s Find the StaticText (Element at index 1)
+    t =     7.75s Checking existence of `StaticText (Element at index 2)`
+    t =     7.78s Find the StaticText (Element at index 2)
+    t =     8.56s Checking existence of `StaticText (Element at index 3)`
+    t =     8.89s Find the StaticText (Element at index 3)
+    t =     9.64s Checking existence of `StaticText (Element at index 4)`
+    t =     9.75s Find the StaticText (Element at index 4)
+    t =    10.77s Get number of matches for: Descendants matching type Button
+  Found 22 Buttons
+    t =    10.86s Checking existence of `Button (Element at index 0)`
+    t =    11.19s Find the Button (Element at index 0)
+    t =    11.96s Checking existence of `Button (Element at index 1)`
+    t =    12.10s Find the Button (Element at index 1)
+    t =    12.88s Checking existence of `Button (Element at index 2)`
+    t =    13.02s Find the Button (Element at index 2)
+    t =    13.23s Checking existence of `Button (Element at index 3)`
+    t =    13.37s Find the Button (Element at index 3)
+    t =    13.57s Checking existence of `Button (Element at index 4)`
+    t =    13.71s Find the Button (Element at index 4)
+    t =    13.92s Get number of matches for: Descendants matching type TextField
+  Found 2 Text Fields
+    t =    14.08s Checking existence of `TextField (Element at index 0)`
+    t =    14.24s Find the TextField (Element at index 0)
+    t =    14.42s Checking existence of `TextField (Element at index 1)`
+    t =    14.47s Find the TextField (Element at index 1)
+    t =    14.68s Get number of matches for: Descendants matching type Image
+  Found 45 Images
+    t =    14.84s Checking existence of `Image (Element at index 0)`
+    t =    15.00s Find the Image (Element at index 0)
+    t =    15.18s Checking existence of `Image (Element at index 1)`
+    t =    15.23s Find the Image (Element at index 1)
+    t =    15.43s Checking existence of `Image (Element at index 2)`
+    t =    15.59s Find the Image (Element at index 2)
+    t =    15.81s Checking existence of `Image (Element at index 3)`
+    t =    15.96s Find the Image (Element at index 3)
+    t =    16.18s Checking existence of `Image (Element at index 4)`
+    t =    16.33s Find the Image (Element at index 4)
+    t =    16.55s Get number of matches for: Descendants matching type Slider
+  Found 1 Sliders
+    t =    16.69s Checking existence of `Slider (Element at index 0)`
+    t =    16.88s Find the Slider (Element at index 0)
+    t =    17.07s Tear Down
+    t =    17.07s     Terminate com.yourcompany.VideoCullingApp:76902
+Test Case '-[VideoCullingAppUITests.UILayoutTests testComprehensiveLayoutCheck]' passed (18.381 seconds).
+Test Case '-[VideoCullingAppUITests.UILayoutTests testGalleryModeLayout]' started.
+    t =     0.00s Start Test at 2025-11-17 14:23:30.004
+    t =     0.24s Set Up
+    t =     0.24s     Open com.yourcompany.VideoCullingApp
+    t =     0.24s         Launch com.yourcompany.VideoCullingApp
+    t =     0.53s             Wait for accessibility to load
+    t =     0.94s             Setting up automation session
+    t =     0.94s             Wait for com.yourcompany.VideoCullingApp to idle
+Testing Gallery Mode layout...
+    t =     5.96s Checking existence of `"galleryModeButton" Button`
+    t =     6.81s Find the "galleryModeButton" Button
+    t =     9.52s Click "galleryModeButton" Button
+    t =     9.52s     Wait for com.yourcompany.VideoCullingApp to idle
+    t =     9.52s     Find the "galleryModeButton" Button
+    t =    13.27s     Check for interrupting elements affecting "galleryModeButton" Button
+    t =    21.03s     Found 1 interrupting element:
+    t =    21.03s Window at {{2128.0, 1265.0}, {400.0, 143.0}} from Application 'com.microsoft.Outlook'
+    t =    21.03s     Invoking UI interruption monitors for Window at {{2128.0, 1265.0}, {400.0, 143.0}} from Application 'com.microsoft.Outlook'
+    t =    21.03s Checking for user permission dialogs...
+    t =    21.03s             Checking existence of `StaticText (Elements matching predicate 'value MATCHES[c] ".+ would like ((to|full) access|to find) .+"')`
+    t =    21.22s             Checking existence of `StaticText (Elements matching predicate 'title CONTAINS[c] "Trust This "')`
+    t =    21.34s Checking for Bluetooth Setup Assistant...
+    t =    21.34s             Find the Window at {{2128.0, 1265.0}, {400.0, 143.0}}
+    t =    21.43s Checking for Notification Center Banners...
+    t =    21.44s Checking for basic alerts
+    t =    21.54s             Checking existence of `"1 Reminder" Window`
+    t =    21.64s             Find the "1 Reminder" Window
+    t =    21.74s             Find the "1 Reminder" Window
+    t =    21.85s No monitors handled UI interruption, checking to see if element still exists...
+    t =    21.85s             Checking existence of `"1 Reminder" Window`
+    t =    21.96s     Open com.yourcompany.VideoCullingApp
+    t =    21.96s         Activate com.yourcompany.VideoCullingApp
+    t =    21.98s             Wait for com.yourcompany.VideoCullingApp to idle
+    t =    22.17s Did not handle the interruption, but will attempt to continue…
+    t =    23.00s     Synthesize event
+    t =    25.62s     Wait for com.yourcompany.VideoCullingApp to idle
+    t =    27.88s Get all elements bound by index for: Descendants matching type StaticText
+    t =    28.15s Checking existence of `StaticText (Element at index 0)`
+    t =    28.23s Find the StaticText (Element at index 0)
+    t =    29.08s Checking existence of `"Nudge Video Cull" StaticText`
+    t =    29.34s Find the "Nudge Video Cull" StaticText
+    t =    30.39s Find the "Nudge Video Cull" StaticText
+    t =    31.27s Checking existence of `StaticText (Element at index 1)`
+    t =    31.53s Find the StaticText (Element at index 1)
+    t =    32.39s Checking existence of `"Input Folder:" StaticText`
+    t =    32.65s Find the "Input Folder:" StaticText
+    t =    33.76s Find the "Input Folder:" StaticText
+    t =    35.43s Checking existence of `StaticText (Element at index 2)`
+    t =    36.36s Find the StaticText (Element at index 2)
+    t =    39.20s Checking existence of `"Output Folder:" StaticText`
+    t =    40.16s Find the "Output Folder:" StaticText
+    t =    43.97s Find the "Output Folder:" StaticText
+    t =    48.82s Checking existence of `StaticText (Element at index 3)`
+    t =    49.75s Find the StaticText (Element at index 3)
+    t =    51.98s Checking existence of `"CLIP" StaticText`
+    t =    52.08s Find the "CLIP" StaticText
+    t =    52.18s Find the "CLIP" StaticText
+    t =    52.29s Checking existence of `StaticText (Element at index 4)`
+    t =    52.33s Find the StaticText (Element at index 4)
+    t =    52.40s Checking existence of `"testcullapp" StaticText`
+    t =    52.44s Find the "testcullapp" StaticText
+    t =    52.49s Find the "testcullapp" StaticText
+    t =    52.54s Checking existence of `StaticText (Element at index 5)`
+    t =    52.58s Find the StaticText (Element at index 5)
+    t =    52.63s Checking existence of `"Sort Order:" StaticText`
+    t =    52.67s Find the "Sort Order:" StaticText
+    t =    52.73s Find the "Sort Order:" StaticText
+    t =    52.78s Checking existence of `StaticText (Element at index 6)`
+    t =    52.83s Find the StaticText (Element at index 6)
+    t =    52.88s Checking existence of `"Workflow:" StaticText`
+    t =    52.92s Find the "Workflow:" StaticText
+    t =    52.98s Find the "Workflow:" StaticText
+    t =    53.03s Checking existence of `StaticText (Element at index 7)`
+    t =    53.08s Find the StaticText (Element at index 7)
+    t =    53.13s Checking existence of `"Preview all videos with LUT:" StaticText`
+    t =    53.18s Find the "Preview all videos with LUT:" StaticText
+    t =    53.23s Find the "Preview all videos with LUT:" StaticText
+    t =    53.29s Checking existence of `StaticText (Element at index 8)`
+    t =    53.33s Find the StaticText (Element at index 8)
+    t =    53.39s Checking existence of `"Nudge Video Cull" StaticText`
+    t =    53.44s Find the "Nudge Video Cull" StaticText
+    t =    53.49s Find the "Nudge Video Cull" StaticText
+    t =    53.55s Find the "Nudge Video Cull" StaticText
+    t =    53.88s Checking existence of `StaticText (Element at index 9)`
+    t =    53.96s Find the StaticText (Element at index 9)
+    t =    54.01s Checking existence of `"Configure your workflow" StaticText`
+    t =    54.06s Find the "Configure your workflow" StaticText
+    t =    54.21s Find the "Configure your workflow" StaticText
+    t =    54.27s Checking existence of `StaticText (Element at index 10)`
+    t =    54.32s Find the StaticText (Element at index 10)
+    t =    54.37s Checking existence of `"Click each step to configure" StaticText`
+    t =    54.41s Find the "Click each step to configure" StaticText
+    t =    54.46s Find the "Click each step to configure" StaticText
+    t =    54.52s Checking existence of `StaticText (Element at index 11)`
+    t =    54.57s Find the StaticText (Element at index 11)
+    t =    54.62s Checking existence of `"Choose workflow mode:" StaticText`
+    t =    54.67s Find the "Choose workflow mode:" StaticText
+    t =    54.71s Find the "Choose workflow mode:" StaticText
+    t =    54.77s Checking existence of `StaticText (Element at index 12)`
+    t =    54.81s Find the StaticText (Element at index 12)
+    t =    54.86s Checking existence of `"✓ Ready to begin" StaticText`
+    t =    54.90s Find the "✓ Ready to begin" StaticText
+    t =    54.95s Find the "✓ Ready to begin" StaticText
+    t =    55.00s Checking existence of `StaticText (Element at index 13)`
+    t =    55.05s Find the StaticText (Element at index 13)
+    t =    55.10s Checking existence of `"0:00" StaticText`
+    t =    55.14s Find the "0:00" StaticText
+    t =    55.19s Find the "0:00" StaticText
+    t =    55.24s Checking existence of `StaticText (Element at index 14)`
+    t =    55.29s Find the StaticText (Element at index 14)
+    t =    55.34s Checking existence of `"0:04" StaticText`
+    t =    55.39s Find the "0:04" StaticText
+    t =    55.45s Find the "0:04" StaticText
+    t =    55.51s Checking existence of `StaticText (Element at index 15)`
+    t =    55.57s Find the StaticText (Element at index 15)
+    t =    55.62s Checking existence of `"0:00" StaticText`
+    t =    55.67s Find the "0:00" StaticText
+    t =    55.72s Find the "0:00" StaticText
+    t =    55.78s Checking existence of `StaticText (Element at index 16)`
+    t =    55.83s Find the StaticText (Element at index 16)
+    t =    55.88s Checking existence of `"0:04" StaticText`
+    t =    55.93s Find the "0:04" StaticText
+    t =    55.98s Find the "0:04" StaticText
+    t =    56.03s Checking existence of `StaticText (Element at index 17)`
+    t =    56.08s Find the StaticText (Element at index 17)
+    t =    56.13s Checking existence of `"Total Clips:" StaticText`
+    t =    56.17s Find the "Total Clips:" StaticText
+    t =    56.23s Find the "Total Clips:" StaticText
+    t =    56.29s Checking existence of `StaticText (Element at index 18)`
+    t =    56.33s Find the StaticText (Element at index 18)
+    t =    56.38s Checking existence of `"47" StaticText`
+    t =    56.43s Find the "47" StaticText
+    t =    56.48s Find the "47" StaticText
+    t =    56.54s Checking existence of `StaticText (Element at index 19)`
+    t =    56.59s Find the StaticText (Element at index 19)
+    t =    56.65s Checking existence of `"Total Duration:" StaticText`
+    t =    56.69s Find the "Total Duration:" StaticText
+    t =    56.86s Find the "Total Duration:" StaticText
+    t =    56.93s Checking existence of `StaticText (Element at index 20)`
+    t =    56.98s Find the StaticText (Element at index 20)
+    t =    57.04s Checking existence of `"15:33 → 15:33" StaticText`
+    t =    57.09s Find the "15:33 → 15:33" StaticText
+    t =    57.14s Find the "15:33 → 15:33" StaticText
+    t =    57.20s Checking existence of `StaticText (Element at index 21)`
+    t =    57.25s Find the StaticText (Element at index 21)
+    t =    57.31s Checking existence of `"Total File Size:" StaticText`
+    t =    57.36s Find the "Total File Size:" StaticText
+    t =    57.41s Find the "Total File Size:" StaticText
+    t =    57.59s Checking existence of `StaticText (Element at index 22)`
+    t =    57.66s Find the StaticText (Element at index 22)
+    t =    57.72s Checking existence of `"27.07 GB → 27.07 GB" StaticText`
+    t =    57.77s Find the "27.07 GB → 27.07 GB" StaticText
+    t =    57.83s Find the "27.07 GB → 27.07 GB" StaticText
+    t =    57.89s Checking existence of `StaticText (Element at index 23)`
+    t =    57.94s Find the StaticText (Element at index 23)
+    t =    57.99s Checking existence of `"Total Space Savings:" StaticText`
+    t =    58.04s Find the "Total Space Savings:" StaticText
+    t =    58.21s Find the "Total Space Savings:" StaticText
+    t =    58.29s Checking existence of `StaticText (Element at index 24)`
+    t =    58.34s Find the StaticText (Element at index 24)
+    t =    58.40s Checking existence of `"Zero KB" StaticText`
+    t =    58.45s Find the "Zero KB" StaticText
+    t =    58.51s Find the "Zero KB" StaticText
+    t =    58.57s Checking existence of `StaticText (Element at index 25)`
+    t =    58.62s Find the StaticText (Element at index 25)
+    t =    58.89s Checking existence of `"Trim" StaticText`
+    t =    58.97s Find the "Trim" StaticText
+    t =    59.03s Find the "Trim" StaticText
+    t =    59.09s Checking existence of `StaticText (Element at index 26)`
+    t =    59.15s Find the StaticText (Element at index 26)
+    t =    59.20s Checking existence of `"0:00" StaticText`
+    t =    59.26s Find the "0:00" StaticText
+    t =    59.31s Find the "0:00" StaticText
+    t =    59.38s Checking existence of `StaticText (Element at index 27)`
+    t =    59.43s Find the StaticText (Element at index 27)
+    t =    59.49s Checking existence of `"0:04" StaticText`
+    t =    59.54s Find the "0:04" StaticText
+    t =    59.59s Find the "0:04" StaticText
+    t =    59.66s Checking existence of `StaticText (Element at index 28)`
+    t =    59.71s Find the StaticText (Element at index 28)
+    t =    59.78s Checking existence of `"Re-Naming" StaticText`
+    t =    59.83s Find the "Re-Naming" StaticText
+    t =    59.89s Find the "Re-Naming" StaticText
+    t =    59.96s Checking existence of `StaticText (Element at index 29)`
+    t =    60.00s Find the StaticText (Element at index 29)
+    t =    60.05s Checking existence of `"Color" StaticText`
+    t =    60.10s Find the "Color" StaticText
+    t =    60.17s Find the "Color" StaticText
+    t =    60.22s Checking existence of `StaticText (Element at index 30)`
+    t =    60.28s Find the StaticText (Element at index 30)
+    t =    60.34s Checking existence of `"Rating" StaticText`
+    t =    60.39s Find the "Rating" StaticText
+    t =    60.45s Find the "Rating" StaticText
+    t =    60.52s Checking existence of `StaticText (Element at index 31)`
+    t =    60.57s Find the StaticText (Element at index 31)
+    t =    60.63s Checking existence of `"Keywords" StaticText`
+    t =    60.69s Find the "Keywords" StaticText
+    t =    60.74s Find the "Keywords" StaticText
+    t =    60.80s Checking existence of `StaticText (Element at index 32)`
+    t =    60.86s Find the StaticText (Element at index 32)
+    t =    60.91s Checking existence of `"File Metadata" StaticText`
+    t =    60.97s Find the "File Metadata" StaticText
+    t =    61.03s Find the "File Metadata" StaticText
+    t =    61.10s Checking existence of `StaticText (Element at index 33)`
+    t =    61.16s Find the StaticText (Element at index 33)
+    t =    61.22s Checking existence of `"20251116_a18659.MP4" StaticText`
+    t =    61.28s Find the "20251116_a18659.MP4" StaticText
+    t =    61.34s Find the "20251116_a18659.MP4" StaticText
+    t =    61.40s Checking existence of `StaticText (Element at index 34)`
+    t =    61.45s Find the StaticText (Element at index 34)
+    t =    61.51s Checking existence of `"/Volumes/X10 Pro/CLIP/20251116_a18659.MP4" StaticText`
+    t =    61.56s Find the "/Volumes/X10 Pro/CLIP/20251116_a18659.MP4" StaticText
+    t =    61.62s Find the "/Volumes/X10 Pro/CLIP/20251116_a18659.MP4" StaticText
+    t =    61.69s Checking existence of `StaticText (Element at index 35)`
+    t =    61.75s Find the StaticText (Element at index 35)
+    t =    61.81s Checking existence of `"Duration:" StaticText`
+    t =    61.86s Find the "Duration:" StaticText
+    t =    62.03s Find the "Duration:" StaticText
+    t =    62.11s Checking existence of `StaticText (Element at index 36)`
+    t =    62.17s Find the StaticText (Element at index 36)
+    t =    62.23s Checking existence of `"00:00:04" StaticText`
+    t =    62.29s Find the "00:00:04" StaticText
+    t =    62.35s Find the "00:00:04" StaticText
+    t =    62.42s Checking existence of `StaticText (Element at index 37)`
+    t =    62.47s Find the StaticText (Element at index 37)
+    t =    62.53s Checking existence of `"Size:" StaticText`
+    t =    62.59s Find the "Size:" StaticText
+    t =    62.76s Find the "Size:" StaticText
+    t =    62.84s Checking existence of `StaticText (Element at index 38)`
+    t =    62.90s Find the StaticText (Element at index 38)
+    t =    62.96s Checking existence of `"336.1 MB" StaticText`
+    t =    63.02s Find the "336.1 MB" StaticText
+    t =    63.08s Find the "336.1 MB" StaticText
+    t =    63.15s Checking existence of `StaticText (Element at index 39)`
+    t =    63.21s Find the StaticText (Element at index 39)
+    t =    63.27s Checking existence of `"Bitrate:" StaticText`
+    t =    63.33s Find the "Bitrate:" StaticText
+    t =    63.39s Find the "Bitrate:" StaticText
+    t =    63.47s Checking existence of `StaticText (Element at index 40)`
+    t =    63.53s Find the StaticText (Element at index 40)
+    t =    63.59s Checking existence of `"62.8 MB/s" StaticText`
+    t =    63.65s Find the "62.8 MB/s" StaticText
+    t =    63.71s Find the "62.8 MB/s" StaticText
+    t =    63.78s Checking existence of `StaticText (Element at index 41)`
+    t =    63.84s Find the StaticText (Element at index 41)
+    t =    63.91s Checking existence of `"Framerate:" StaticText`
+    t =    63.98s Find the "Framerate:" StaticText
+    t =    64.15s Find the "Framerate:" StaticText
+    t =    64.34s Checking existence of `StaticText (Element at index 42)`
+    t =    64.42s Find the StaticText (Element at index 42)
+    t =    64.49s Checking existence of `"23.98 FPS" StaticText`
+    t =    64.56s Find the "23.98 FPS" StaticText
+    t =    64.62s Find the "23.98 FPS" StaticText
+    t =    64.69s Checking existence of `StaticText (Element at index 43)`
+    t =    64.75s Find the StaticText (Element at index 43)
+    t =    64.81s Checking existence of `"Resolution:" StaticText`
+    t =    64.87s Find the "Resolution:" StaticText
+    t =    64.95s Find the "Resolution:" StaticText
+    t =    65.02s Checking existence of `StaticText (Element at index 44)`
+    t =    65.08s Find the StaticText (Element at index 44)
+    t =    65.35s Checking existence of `"7680x4320 (8K)" StaticText`
+    t =    65.44s Find the "7680x4320 (8K)" StaticText
+    t =    65.51s Find the "7680x4320 (8K)" StaticText
+    t =    65.58s Checking existence of `StaticText (Element at index 45)`
+    t =    65.65s Find the StaticText (Element at index 45)
+    t =    65.82s Checking existence of `"Video Codec:" StaticText`
+    t =    65.90s Find the "Video Codec:" StaticText
+    t =    65.97s Find the "Video Codec:" StaticText
+    t =    66.04s Checking existence of `StaticText (Element at index 46)`
+    t =    66.10s Find the StaticText (Element at index 46)
+    t =    66.28s Checking existence of `"H.265/HEVC" StaticText`
+    t =    66.36s Find the "H.265/HEVC" StaticText
+    t =    66.42s Find the "H.265/HEVC" StaticText
+    t =    66.49s Checking existence of `StaticText (Element at index 47)`
+    t =    66.56s Find the StaticText (Element at index 47)
+    t =    66.62s Checking existence of `"Bit Depth:" StaticText`
+    t =    66.68s Find the "Bit Depth:" StaticText
+    t =    66.85s Find the "Bit Depth:" StaticText
+    t =    66.94s Checking existence of `StaticText (Element at index 48)`
+    t =    67.00s Find the StaticText (Element at index 48)
+    t =    67.07s Checking existence of `"10-bit" StaticText`
+    t =    67.13s Find the "10-bit" StaticText
+    t =    67.30s Find the "10-bit" StaticText
+    t =    67.39s Checking existence of `StaticText (Element at index 49)`
+    t =    67.45s Find the StaticText (Element at index 49)
+    t =    67.52s Checking existence of `"Audio Codec:" StaticText`
+    t =    67.58s Find the "Audio Codec:" StaticText
+    t =    67.75s Find the "Audio Codec:" StaticText
+    t =    67.84s Checking existence of `StaticText (Element at index 50)`
+    t =    67.91s Find the StaticText (Element at index 50)
+    t =    67.98s Checking existence of `"PCM" StaticText`
+    t =    68.04s Find the "PCM" StaticText
+    t =    68.22s Find the "PCM" StaticText
+    t =    68.30s Checking existence of `StaticText (Element at index 51)`
+    t =    68.37s Find the StaticText (Element at index 51)
+    t =    68.44s Checking existence of `"Channels:" StaticText`
+    t =    68.50s Find the "Channels:" StaticText
+    t =    68.57s Find the "Channels:" StaticText
+    t =    68.65s Checking existence of `StaticText (Element at index 52)`
+    t =    68.71s Find the StaticText (Element at index 52)
+    t =    68.79s Checking existence of `"Stereo" StaticText`
+    t =    68.85s Find the "Stereo" StaticText
+    t =    68.91s Find the "Stereo" StaticText
+    t =    68.98s Checking existence of `StaticText (Element at index 53)`
+    t =    69.05s Find the StaticText (Element at index 53)
+    t =    69.11s Checking existence of `"Sample Rate:" StaticText`
+    t =    69.18s Find the "Sample Rate:" StaticText
+    t =    69.25s Find the "Sample Rate:" StaticText
+    t =    69.42s Checking existence of `StaticText (Element at index 54)`
+    t =    69.50s Find the StaticText (Element at index 54)
+    t =    69.57s Checking existence of `"48.0 kHz" StaticText`
+    t =    69.64s Find the "48.0 kHz" StaticText
+    t =    69.71s Find the "48.0 kHz" StaticText
+    t =    69.79s Checking existence of `StaticText (Element at index 55)`
+    t =    69.85s Find the StaticText (Element at index 55)
+    t =    69.92s Checking existence of `"Created:" StaticText`
+    t =    69.99s Find the "Created:" StaticText
+    t =    70.17s Find the "Created:" StaticText
+    t =    70.26s Checking existence of `StaticText (Element at index 56)`
+    t =    70.33s Find the StaticText (Element at index 56)
+    t =    70.40s Checking existence of `"11/16/25, 4:36 PM" StaticText`
+    t =    70.47s Find the "11/16/25, 4:36 PM" StaticText
+    t =    70.65s Find the "11/16/25, 4:36 PM" StaticText
+    t =    70.74s Checking existence of `StaticText (Element at index 57)`
+    t =    70.81s Find the StaticText (Element at index 57)
+    t =    70.89s Checking existence of `"Edited:" StaticText`
+    t =    70.95s Find the "Edited:" StaticText
+    t =    71.13s Find the "Edited:" StaticText
+    t =    71.22s Checking existence of `StaticText (Element at index 58)`
+    t =    71.30s Find the StaticText (Element at index 58)
+    t =    71.38s Checking existence of `"11/16/25, 4:36 PM" StaticText`
+    t =    71.44s Find the "11/16/25, 4:36 PM" StaticText
+    t =    71.52s Find the "11/16/25, 4:36 PM" StaticText
+    t =    71.59s Checking existence of `StaticText (Element at index 59)`
+    t =    71.66s Find the StaticText (Element at index 59)
+    t =    71.72s Checking existence of `"Camera Metadata" StaticText`
+    t =    71.79s Find the "Camera Metadata" StaticText
+    t =    71.86s Find the "Camera Metadata" StaticText
+    t =    71.94s Checking existence of `StaticText (Element at index 60)`
+    t =    72.00s Find the StaticText (Element at index 60)
+    t =    72.18s Checking existence of `"XML Sidecar Available" StaticText`
+    t =    72.27s Find the "XML Sidecar Available" StaticText
+    t =    72.34s Find the "XML Sidecar Available" StaticText
+    t =    72.42s Checking existence of `StaticText (Element at index 61)`
+    t =    72.49s Find the StaticText (Element at index 61)
+    t =    72.57s Checking existence of `"Camera:" StaticText`
+    t =    72.63s Find the "Camera:" StaticText
+    t =    72.70s Find the "Camera:" StaticText
+    t =    72.77s Checking existence of `StaticText (Element at index 62)`
+    t =    72.84s Find the StaticText (Element at index 62)
+    t =    72.91s Checking existence of `"Sony ILCE-1M2" StaticText`
+    t =    72.98s Find the "Sony ILCE-1M2" StaticText
+    t =    73.05s Find the "Sony ILCE-1M2" StaticText
+    t =    73.13s Checking existence of `StaticText (Element at index 63)`
+    t =    73.20s Find the StaticText (Element at index 63)
+    t =    73.26s Checking existence of `"Lens:" StaticText`
+    t =    73.33s Find the "Lens:" StaticText
+    t =    73.40s Find the "Lens:" StaticText
+    t =    73.48s Checking existence of `StaticText (Element at index 64)`
+    t =    73.55s Find the StaticText (Element at index 64)
+    t =    73.62s Checking existence of `"85mm F1.4 DG DN | Art 020" StaticText`
+    t =    73.69s Find the "85mm F1.4 DG DN | Art 020" StaticText
+    t =    73.77s Find the "85mm F1.4 DG DN | Art 020" StaticText
+    t =    73.96s Checking existence of `StaticText (Element at index 65)`
+    t =    74.05s Find the StaticText (Element at index 65)
+    t =    74.12s Checking existence of `"Gamma:" StaticText`
+    t =    74.19s Find the "Gamma:" StaticText
+    t =    74.28s Find the "Gamma:" StaticText
+    t =    74.35s Checking existence of `StaticText (Element at index 66)`
+    t =    74.42s Find the StaticText (Element at index 66)
+    t =    74.50s Checking existence of `"s-log3-cine" StaticText`
+    t =    74.57s Find the "s-log3-cine" StaticText
+    t =    74.65s Find the "s-log3-cine" StaticText
+    t =    74.72s Checking existence of `StaticText (Element at index 67)`
+    t =    74.79s Find the StaticText (Element at index 67)
+    t =    74.87s Checking existence of `"Color Space:" StaticText`
+    t =    74.94s Find the "Color Space:" StaticText
+    t =    75.03s Find the "Color Space:" StaticText
+    t =    75.11s Checking existence of `StaticText (Element at index 68)`
+    t =    75.19s Find the StaticText (Element at index 68)
+    t =    75.27s Checking existence of `"s-gamut3-cine" StaticText`
+    t =    75.34s Find the "s-gamut3-cine" StaticText
+    t =    75.42s Find the "s-gamut3-cine" StaticText
+    t =    75.49s Checking existence of `StaticText (Element at index 69)`
+    t =    75.57s Find the StaticText (Element at index 69)
+    t =    75.65s Checking existence of `"Capture FPS:" StaticText`
+    t =    75.72s Find the "Capture FPS:" StaticText
+    t =    75.80s Find the "Capture FPS:" StaticText
+    t =    75.89s Checking existence of `StaticText (Element at index 70)`
+    t =    75.97s Find the StaticText (Element at index 70)
+    t =    76.05s Checking existence of `"23.98p" StaticText`
+    t =    76.13s Find the "23.98p" StaticText
+    t =    76.31s Find the "23.98p" StaticText
+    t =    76.43s Checking existence of `StaticText (Element at index 71)`
+    t =    76.51s Find the StaticText (Element at index 71)
+    t =    76.58s Checking existence of `"Timecode:" StaticText`
+    t =    76.65s Find the "Timecode:" StaticText
+    t =    76.73s Find the "Timecode:" StaticText
+    t =    76.85s Find the "Timecode:" StaticText
+    t =    76.92s Checking existence of `StaticText (Element at index 72)`
+    t =    77.00s Find the StaticText (Element at index 72)
+    t =    77.08s Checking existence of `"23:46:57:00" StaticText`
+    t =    77.16s Find the "23:46:57:00" StaticText
+    t =    77.25s Find the "23:46:57:00" StaticText
+    t =    77.36s Find the "23:46:57:00" StaticText
+    t =    77.44s Checking existence of `StaticText (Element at index 73)`
+    t =    77.52s Find the StaticText (Element at index 73)
+    t =    77.60s Checking existence of `"0:04" StaticText`
+    t =    77.67s Find the "0:04" StaticText
+    t =    77.75s Find the "0:04" StaticText
+    t =    77.94s Checking existence of `StaticText (Element at index 74)`
+    t =    78.02s Find the StaticText (Element at index 74)
+    t =    78.10s Checking existence of `"0:03" StaticText`
+    t =    78.18s Find the "0:03" StaticText
+    t =    78.27s Find the "0:03" StaticText
+    t =    78.35s Checking existence of `StaticText (Element at index 75)`
+    t =    78.42s Find the StaticText (Element at index 75)
+    t =    78.50s Checking existence of `"0:04" StaticText`
+    t =    78.58s Find the "0:04" StaticText
+    t =    78.66s Find the "0:04" StaticText
+    t =    78.75s Checking existence of `StaticText (Element at index 76)`
+    t =    78.83s Find the StaticText (Element at index 76)
+    t =    79.02s Checking existence of `"0:04" StaticText`
+    t =    79.11s Find the "0:04" StaticText
+    t =    79.20s Find the "0:04" StaticText
+    t =    79.28s Checking existence of `StaticText (Element at index 77)`
+    t =    79.36s Find the StaticText (Element at index 77)
+    t =    79.55s Checking existence of `"0:03" StaticText`
+    t =    79.64s Find the "0:03" StaticText
+    t =    79.73s Find the "0:03" StaticText
+    t =    79.82s Checking existence of `StaticText (Element at index 78)`
+    t =    79.89s Find the StaticText (Element at index 78)
+    t =    79.97s Checking existence of `"0:17" StaticText`
+    t =    80.05s Find the "0:17" StaticText
+    t =    80.13s Find the "0:17" StaticText
+    t =    80.22s Checking existence of `StaticText (Element at index 79)`
+    t =    80.29s Find the StaticText (Element at index 79)
+    t =    80.38s Checking existence of `"0:05" StaticText`
+    t =    80.46s Find the "0:05" StaticText
+    t =    80.55s Find the "0:05" StaticText
+    t =    80.75s Checking existence of `StaticText (Element at index 80)`
+    t =    80.85s Find the StaticText (Element at index 80)
+    t =    80.93s Checking existence of `"0:09" StaticText`
+    t =    81.01s Find the "0:09" StaticText
+    t =    81.10s Find the "0:09" StaticText
+    t =    81.19s Checking existence of `StaticText (Element at index 81)`
+    t =    81.27s Find the StaticText (Element at index 81)
+    t =    81.37s Checking existence of `"0:03" StaticText`
+    t =    81.46s Find the "0:03" StaticText
+    t =    81.64s Find the "0:03" StaticText
+    t =    81.75s Checking existence of `StaticText (Element at index 82)`
+    t =    81.83s Find the StaticText (Element at index 82)
+    t =    81.92s Checking existence of `"0:52" StaticText`
+    t =    82.00s Find the "0:52" StaticText
+    t =    82.08s Find the "0:52" StaticText
+    t =    82.35s Find the "0:52" StaticText
+    t =    82.44s Checking existence of `StaticText (Element at index 83)`
+    t =    82.53s Find the StaticText (Element at index 83)
+    t =    82.62s Checking existence of `"0:09" StaticText`
+    t =    82.70s Find the "0:09" StaticText
+    t =    82.78s Find the "0:09" StaticText
+    t =    82.93s Find the "0:09" StaticText
+    t =    83.02s Checking existence of `StaticText (Element at index 84)`
+    t =    83.10s Find the StaticText (Element at index 84)
+    t =    83.18s Checking existence of `"0:33" StaticText`
+    t =    83.26s Find the "0:33" StaticText
+    t =    83.45s Find the "0:33" StaticText
+    t =    83.57s Checking existence of `StaticText (Element at index 85)`
+    t =    83.66s Find the StaticText (Element at index 85)
+    t =    83.74s Checking existence of `"0:33" StaticText`
+    t =    83.83s Find the "0:33" StaticText
+    t =    84.03s Find the "0:33" StaticText
+    t =    84.56s Find the "0:33" StaticText
+    t =    84.66s Checking existence of `StaticText (Element at index 86)`
+    t =    84.75s Find the StaticText (Element at index 86)
+    t =    84.84s Checking existence of `"0:32" StaticText`
+    t =    84.92s Find the "0:32" StaticText
+    t =    85.01s Find the "0:32" StaticText
+    t =    85.41s Find the "0:32" StaticText
+    t =    85.52s Checking existence of `StaticText (Element at index 87)`
+    t =    85.60s Find the StaticText (Element at index 87)
+    t =    85.68s Checking existence of `"0:15" StaticText`
+    t =    85.77s Find the "0:15" StaticText
+    t =    86.06s Find the "0:15" StaticText
+    t =    86.45s Find the "0:15" StaticText
+    t =    86.56s Checking existence of `StaticText (Element at index 88)`
+    t =    86.64s Find the StaticText (Element at index 88)
+    t =    86.74s Checking existence of `"0:20" StaticText`
+    t =    86.82s Find the "0:20" StaticText
+    t =    87.02s Find the "0:20" StaticText
+    t =    87.73s Find the "0:20" StaticText
+    t =    87.84s Checking existence of `StaticText (Element at index 89)`
+    t =    87.94s Find the StaticText (Element at index 89)
+    t =    88.03s Checking existence of `"0:39" StaticText`
+    t =    88.11s Find the "0:39" StaticText
+    t =    88.20s Find the "0:39" StaticText
+    t =    88.66s Find the "0:39" StaticText
+    t =    88.77s Checking existence of `StaticText (Element at index 90)`
+    t =    88.85s Find the StaticText (Element at index 90)
+    t =    88.94s Checking existence of `"0:23" StaticText`
+    t =    89.03s Find the "0:23" StaticText
+    t =    89.12s Find the "0:23" StaticText
+    t =    89.64s Find the "0:23" StaticText
+    t =    89.76s Checking existence of `StaticText (Element at index 91)`
+    t =    89.84s Find the StaticText (Element at index 91)
+    t =    89.94s Checking existence of `"0:16" StaticText`
+    t =    90.02s Find the "0:16" StaticText
+    t =    90.11s Find the "0:16" StaticText
+    t =    90.55s Find the "0:16" StaticText
+    t =    90.67s Checking existence of `StaticText (Element at index 92)`
+    t =    90.75s Find the StaticText (Element at index 92)
+    t =    90.84s Checking existence of `"0:26" StaticText`
+    t =    90.92s Find the "0:26" StaticText
+    t =    91.01s Find the "0:26" StaticText
+    t =    91.78s Find the "0:26" StaticText
+    t =    91.89s Checking existence of `StaticText (Element at index 93)`
+    t =    91.98s Find the StaticText (Element at index 93)
+    t =    92.07s Checking existence of `"0:25" StaticText`
+    t =    92.16s Find the "0:25" StaticText
+    t =    92.25s Find the "0:25" StaticText
+    t =    92.69s Find the "0:25" StaticText
+    t =    92.80s Checking existence of `StaticText (Element at index 94)`
+    t =    92.88s Find the StaticText (Element at index 94)
+    t =    92.97s Checking existence of `"0:17" StaticText`
+    t =    93.06s Find the "0:17" StaticText
+    t =    93.15s Find the "0:17" StaticText
+    t =    93.50s Find the "0:17" StaticText
+    t =    93.61s Checking existence of `StaticText (Element at index 95)`
+    t =    93.69s Find the StaticText (Element at index 95)
+    t =    93.78s Checking existence of `"0:19" StaticText`
+    t =    93.87s Find the "0:19" StaticText
+    t =    93.97s Find the "0:19" StaticText
+    t =    94.36s Find the "0:19" StaticText
+    t =    94.47s Checking existence of `StaticText (Element at index 96)`
+    t =    94.56s Find the StaticText (Element at index 96)
+    t =    94.65s Checking existence of `"0:48" StaticText`
+    t =    94.74s Find the "0:48" StaticText
+    t =    94.84s Find the "0:48" StaticText
+    t =    95.19s Find the "0:48" StaticText
+    t =    95.30s Checking existence of `StaticText (Element at index 97)`
+    t =    95.39s Find the StaticText (Element at index 97)
+    t =    95.48s Checking existence of `"0:30" StaticText`
+    t =    95.57s Find the "0:30" StaticText
+    t =    95.76s Find the "0:30" StaticText
+    t =    96.31s Find the "0:30" StaticText
+    t =    96.42s Checking existence of `StaticText (Element at index 98)`
+    t =    96.51s Find the StaticText (Element at index 98)
+    t =    96.60s Checking existence of `"0:50" StaticText`
+    t =    96.69s Find the "0:50" StaticText
+    t =    96.78s Find the "0:50" StaticText
+    t =    97.33s Find the "0:50" StaticText
+    t =    97.44s Checking existence of `StaticText (Element at index 99)`
+    t =    97.54s Find the StaticText (Element at index 99)
+    t =    97.63s Checking existence of `"0:04" StaticText`
+    t =    97.71s Find the "0:04" StaticText
+    t =    97.81s Find the "0:04" StaticText
+    t =    98.26s Find the "0:04" StaticText
+    t =    98.37s Checking existence of `StaticText (Element at index 100)`
+    t =    98.47s Find the StaticText (Element at index 100)
+    t =    98.66s Checking existence of `"0:29" StaticText`
+    t =    98.77s Find the "0:29" StaticText
+    t =    98.87s Find the "0:29" StaticText
+    t =    99.23s Find the "0:29" StaticText
+    t =    99.34s Checking existence of `StaticText (Element at index 101)`
+    t =    99.44s Find the StaticText (Element at index 101)
+    t =    99.54s Checking existence of `"0:28" StaticText`
+    t =    99.64s Find the "0:28" StaticText
+    t =    99.74s Find the "0:28" StaticText
+    t =   100.11s Find the "0:28" StaticText
+    t =   100.22s Checking existence of `StaticText (Element at index 102)`
+    t =   100.31s Find the StaticText (Element at index 102)
+    t =   100.50s Checking existence of `"0:15" StaticText`
+    t =   100.60s Find the "0:15" StaticText
+    t =   100.69s Find the "0:15" StaticText
+    t =   101.03s Find the "0:15" StaticText
+    t =   101.14s Checking existence of `StaticText (Element at index 103)`
+    t =   101.22s Find the StaticText (Element at index 103)
+    t =   101.33s Checking existence of `"0:21" StaticText`
+    t =   101.42s Find the "0:21" StaticText
+    t =   101.52s Find the "0:21" StaticText
+    t =   102.11s Find the "0:21" StaticText
+    t =   102.23s Checking existence of `StaticText (Element at index 104)`
+    t =   102.33s Find the StaticText (Element at index 104)
+    t =   102.53s Checking existence of `"0:08" StaticText`
+    t =   102.63s Find the "0:08" StaticText
+    t =   102.74s Find the "0:08" StaticText
+    t =   103.18s Find the "0:08" StaticText
+    t =   103.29s Checking existence of `StaticText (Element at index 105)`
+    t =   103.38s Find the StaticText (Element at index 105)
+    t =   103.48s Checking existence of `"0:05" StaticText`
+    t =   103.58s Find the "0:05" StaticText
+    t =   103.68s Find the "0:05" StaticText
+    t =   104.15s Find the "0:05" StaticText
+    t =   104.25s Checking existence of `StaticText (Element at index 106)`
+    t =   104.34s Find the StaticText (Element at index 106)
+    t =   104.44s Checking existence of `"0:16" StaticText`
+    t =   104.53s Find the "0:16" StaticText
+    t =   104.63s Find the "0:16" StaticText
+    t =   104.95s Find the "0:16" StaticText
+    t =   105.06s Checking existence of `StaticText (Element at index 107)`
+    t =   105.15s Find the StaticText (Element at index 107)
+    t =   105.24s Checking existence of `"0:12" StaticText`
+    t =   105.34s Find the "0:12" StaticText
+    t =   105.45s Find the "0:12" StaticText
+    t =   105.88s Find the "0:12" StaticText
+    t =   105.99s Checking existence of `StaticText (Element at index 108)`
+    t =   106.10s Find the StaticText (Element at index 108)
+    t =   106.19s Checking existence of `"0:12" StaticText`
+    t =   106.29s Find the "0:12" StaticText
+    t =   106.39s Find the "0:12" StaticText
+    t =   106.82s Find the "0:12" StaticText
+    t =   106.95s Checking existence of `StaticText (Element at index 109)`
+    t =   107.05s Find the StaticText (Element at index 109)
+    t =   107.16s Checking existence of `"0:15" StaticText`
+    t =   107.25s Find the "0:15" StaticText
+    t =   107.36s Find the "0:15" StaticText
+    t =   107.89s Find the "0:15" StaticText
+    t =   108.01s Checking existence of `StaticText (Element at index 110)`
+    t =   108.11s Find the StaticText (Element at index 110)
+    t =   108.22s Checking existence of `"0:15" StaticText`
+    t =   108.32s Find the "0:15" StaticText
+    t =   108.41s Find the "0:15" StaticText
+    t =   109.23s Find the "0:15" StaticText
+    t =   109.35s Checking existence of `StaticText (Element at index 111)`
+    t =   109.46s Find the StaticText (Element at index 111)
+    t =   109.56s Checking existence of `"0:08" StaticText`
+    t =   109.66s Find the "0:08" StaticText
+    t =   109.76s Find the "0:08" StaticText
+    t =   110.19s Find the "0:08" StaticText
+    t =   110.31s Checking existence of `StaticText (Element at index 112)`
+    t =   110.41s Find the StaticText (Element at index 112)
+    t =   110.51s Checking existence of `"0:12" StaticText`
+    t =   110.60s Find the "0:12" StaticText
+    t =   110.70s Find the "0:12" StaticText
+    t =   111.33s Find the "0:12" StaticText
+    t =   111.45s Checking existence of `StaticText (Element at index 113)`
+    t =   111.54s Find the StaticText (Element at index 113)
+    t =   111.64s Checking existence of `"0:03" StaticText`
+    t =   111.75s Find the "0:03" StaticText
+    t =   111.85s Find the "0:03" StaticText
+    t =   112.26s Find the "0:03" StaticText
+    t =   112.38s Checking existence of `StaticText (Element at index 114)`
+    t =   112.48s Find the StaticText (Element at index 114)
+    t =   112.59s Checking existence of `"0:01" StaticText`
+    t =   112.69s Find the "0:01" StaticText
+    t =   112.78s Find the "0:01" StaticText
+    t =   113.41s Find the "0:01" StaticText
+    t =   113.53s Checking existence of `StaticText (Element at index 115)`
+    t =   113.62s Find the StaticText (Element at index 115)
+    t =   113.72s Checking existence of `"0:53" StaticText`
+    t =   113.81s Find the "0:53" StaticText
+    t =   113.90s Find the "0:53" StaticText
+    t =   114.56s Find the "0:53" StaticText
+    t =   114.68s Checking existence of `StaticText (Element at index 116)`
+    t =   114.77s Find the StaticText (Element at index 116)
+    t =   114.87s Checking existence of `"0:08" StaticText`
+    t =   114.97s Find the "0:08" StaticText
+    t =   115.07s Find the "0:08" StaticText
+    t =   115.52s Find the "0:08" StaticText
+    t =   115.65s Checking existence of `StaticText (Element at index 117)`
+    t =   115.75s Find the StaticText (Element at index 117)
+    t =   115.86s Checking existence of `"0:36" StaticText`
+    t =   115.96s Find the "0:36" StaticText
+    t =   116.06s Find the "0:36" StaticText
+    t =   116.47s Find the "0:36" StaticText
+    t =   116.60s Checking existence of `StaticText (Element at index 118)`
+    t =   116.69s Find the StaticText (Element at index 118)
+    t =   116.80s Checking existence of `"0:48" StaticText`
+    t =   116.89s Find the "0:48" StaticText
+    t =   117.00s Find the "0:48" StaticText
+    t =   117.56s Find the "0:48" StaticText
+    t =   117.68s Checking existence of `StaticText (Element at index 119)`
+    t =   117.79s Find the StaticText (Element at index 119)
+    t =   117.90s Checking existence of `"0:32" StaticText`
+    t =   118.00s Find the "0:32" StaticText
+    t =   118.11s Find the "0:32" StaticText
+    t =   118.41s Find the "0:32" StaticText
+    t =   118.53s Checking existence of `StaticText (Element at index 120)`
+    t =   118.63s Find the StaticText (Element at index 120)
+    t =   118.74s Checking existence of `"7,680×4,320" StaticText`
+    t =   118.84s Find the "7,680×4,320" StaticText
+    t =   118.95s Find the "7,680×4,320" StaticText
+    t =   119.07s Checking existence of `StaticText (Element at index 121)`
+    t =   119.17s Find the StaticText (Element at index 121)
+    t =   119.37s Checking existence of `"7,680×4,320" StaticText`
+    t =   119.49s Find the "7,680×4,320" StaticText
+    t =   119.59s Find the "7,680×4,320" StaticText
+    t =   119.70s Checking existence of `StaticText (Element at index 122)`
+    t =   119.79s Find the StaticText (Element at index 122)
+    t =   119.90s Checking existence of `"7,680×4,320" StaticText`
+    t =   119.99s Find the "7,680×4,320" StaticText
+    t =   120.10s Find the "7,680×4,320" StaticText
+    t =   120.20s Checking existence of `StaticText (Element at index 123)`
+    t =   120.31s Find the StaticText (Element at index 123)
+    t =   120.41s Checking existence of `"7,680×4,320" StaticText`
+    t =   120.51s Find the "7,680×4,320" StaticText
+    t =   120.61s Find the "7,680×4,320" StaticText
+    t =   120.72s Checking existence of `StaticText (Element at index 124)`
+    t =   120.82s Find the StaticText (Element at index 124)
+    t =   120.93s Checking existence of `"7,680×4,320" StaticText`
+    t =   121.03s Find the "7,680×4,320" StaticText
+    t =   121.14s Find the "7,680×4,320" StaticText
+    t =   121.24s Checking existence of `StaticText (Element at index 125)`
+    t =   121.35s Find the StaticText (Element at index 125)
+    t =   121.55s Checking existence of `"7,680×4,320" StaticText`
+    t =   121.67s Find the "7,680×4,320" StaticText
+    t =   121.77s Find the "7,680×4,320" StaticText
+    t =   121.89s Checking existence of `StaticText (Element at index 126)`
+    t =   121.99s Find the StaticText (Element at index 126)
+    t =   122.10s Checking existence of `"7,680×4,320" StaticText`
+    t =   122.21s Find the "7,680×4,320" StaticText
+    t =   122.33s Find the "7,680×4,320" StaticText
+    t =   122.44s Checking existence of `StaticText (Element at index 127)`
+    t =   122.55s Find the StaticText (Element at index 127)
+    t =   122.65s Checking existence of `"7,680×4,320" StaticText`
+    t =   122.76s Find the "7,680×4,320" StaticText
+    t =   122.88s Find the "7,680×4,320" StaticText
+    t =   122.99s Checking existence of `StaticText (Element at index 128)`
+    t =   123.10s Find the StaticText (Element at index 128)
+    t =   123.32s Checking existence of `"7,680×4,320" StaticText`
+    t =   123.43s Find the "7,680×4,320" StaticText
+    t =   123.55s Find the "7,680×4,320" StaticText
+    t =   123.67s Checking existence of `StaticText (Element at index 129)`
+    t =   123.77s Find the StaticText (Element at index 129)
+    t =   123.89s Checking existence of `"3,840×2,160" StaticText`
+    t =   124.01s Find the "3,840×2,160" StaticText
+    t =   124.13s Find the "3,840×2,160" StaticText
+    t =   124.40s Find the "3,840×2,160" StaticText
+    t =   124.51s Checking existence of `StaticText (Element at index 130)`
+    t =   124.62s Find the StaticText (Element at index 130)
+    t =   124.73s Checking existence of `"3,840×2,160" StaticText`
+    t =   124.84s Find the "3,840×2,160" StaticText
+    t =   124.95s Find the "3,840×2,160" StaticText
+    t =   125.13s Find the "3,840×2,160" StaticText
+    t =   125.24s Checking existence of `StaticText (Element at index 131)`
+    t =   125.35s Find the StaticText (Element at index 131)
+    t =   125.46s Checking existence of `"3,840×2,160" StaticText`
+    t =   125.57s Find the "3,840×2,160" StaticText
+    t =   125.78s Find the "3,840×2,160" StaticText
+    t =   125.92s Checking existence of `StaticText (Element at index 132)`
+    t =   126.03s Find the StaticText (Element at index 132)
+    t =   126.14s Checking existence of `"3,840×2,160" StaticText`
+    t =   126.24s Find the "3,840×2,160" StaticText
+    t =   126.36s Find the "3,840×2,160" StaticText
+    t =   127.08s Find the "3,840×2,160" StaticText
+    t =   127.21s Checking existence of `StaticText (Element at index 133)`
+    t =   127.31s Find the StaticText (Element at index 133)
+    t =   127.43s Checking existence of `"3,840×2,160" StaticText`
+    t =   127.54s Find the "3,840×2,160" StaticText
+    t =   127.66s Find the "3,840×2,160" StaticText
+    t =   128.12s Find the "3,840×2,160" StaticText
+    t =   128.24s Checking existence of `StaticText (Element at index 134)`
+    t =   128.34s Find the StaticText (Element at index 134)
+    t =   128.46s Checking existence of `"3,840×2,160" StaticText`
+    t =   128.58s Find the "3,840×2,160" StaticText
+    t =   128.71s Find the "3,840×2,160" StaticText
+    t =   129.01s Find the "3,840×2,160" StaticText
+    t =   129.13s Checking existence of `StaticText (Element at index 135)`
+    t =   129.24s Find the StaticText (Element at index 135)
+    t =   129.36s Checking existence of `"3,840×2,160" StaticText`
+    t =   129.48s Find the "3,840×2,160" StaticText
+    t =   129.60s Find the "3,840×2,160" StaticText
+    t =   130.08s Find the "3,840×2,160" StaticText
+    t =   130.21s Checking existence of `StaticText (Element at index 136)`
+    t =   130.32s Find the StaticText (Element at index 136)
+    t =   130.44s Checking existence of `"3,840×2,160" StaticText`
+    t =   130.55s Find the "3,840×2,160" StaticText
+    t =   130.66s Find the "3,840×2,160" StaticText
+    t =   131.19s Find the "3,840×2,160" StaticText
+    t =   131.32s Checking existence of `StaticText (Element at index 137)`
+    t =   131.43s Find the StaticText (Element at index 137)
+    t =   131.55s Checking existence of `"3,840×2,160" StaticText`
+    t =   131.67s Find the "3,840×2,160" StaticText
+    t =   131.78s Find the "3,840×2,160" StaticText
+    t =   132.44s Find the "3,840×2,160" StaticText
+    t =   132.57s Checking existence of `StaticText (Element at index 138)`
+    t =   132.68s Find the StaticText (Element at index 138)
+    t =   132.80s Checking existence of `"3,840×2,160" StaticText`
+    t =   132.92s Find the "3,840×2,160" StaticText
+    t =   133.03s Find the "3,840×2,160" StaticText
+    t =   133.40s Find the "3,840×2,160" StaticText
+    t =   133.52s Checking existence of `StaticText (Element at index 139)`
+    t =   133.64s Find the StaticText (Element at index 139)
+    t =   133.86s Checking existence of `"3,840×2,160" StaticText`
+    t =   133.98s Find the "3,840×2,160" StaticText
+    t =   134.10s Find the "3,840×2,160" StaticText
+    t =   134.59s Find the "3,840×2,160" StaticText
+    t =   134.73s Checking existence of `StaticText (Element at index 140)`
+    t =   134.83s Find the StaticText (Element at index 140)
+    t =   135.05s Checking existence of `"3,840×2,160" StaticText`
+    t =   135.16s Find the "3,840×2,160" StaticText
+    t =   135.29s Find the "3,840×2,160" StaticText
+    t =   135.78s Find the "3,840×2,160" StaticText
+    t =   135.91s Checking existence of `StaticText (Element at index 141)`
+    t =   136.02s Find the StaticText (Element at index 141)
+    t =   136.14s Checking existence of `"3,840×2,160" StaticText`
+    t =   136.26s Find the "3,840×2,160" StaticText
+    t =   136.48s Find the "3,840×2,160" StaticText
+    t =   136.98s Find the "3,840×2,160" StaticText
+    t =   137.14s Checking existence of `StaticText (Element at index 142)`
+    t =   137.26s Find the StaticText (Element at index 142)
+    t =   137.37s Checking existence of `"3,840×2,160" StaticText`
+    t =   137.49s Find the "3,840×2,160" StaticText
+    t =   137.61s Find the "3,840×2,160" StaticText
+    t =   138.03s Find the "3,840×2,160" StaticText
+    t =   138.17s Checking existence of `StaticText (Element at index 143)`
+    t =   138.29s Find the StaticText (Element at index 143)
+    t =   138.40s Checking existence of `"3,840×2,160" StaticText`
+    t =   138.52s Find the "3,840×2,160" StaticText
+    t =   138.64s Find the "3,840×2,160" StaticText
+    t =   139.16s Find the "3,840×2,160" StaticText
+    t =   139.30s Checking existence of `StaticText (Element at index 144)`
+    t =   139.41s Find the StaticText (Element at index 144)
+    t =   139.53s Checking existence of `"3,840×2,160" StaticText`
+    t =   139.65s Find the "3,840×2,160" StaticText
+    t =   139.77s Find the "3,840×2,160" StaticText
+    t =   140.34s Find the "3,840×2,160" StaticText
+    t =   140.46s Checking existence of `StaticText (Element at index 145)`
+    t =   140.58s Find the StaticText (Element at index 145)
+    t =   140.71s Checking existence of `"3,840×2,160" StaticText`
+    t =   140.83s Find the "3,840×2,160" StaticText
+    t =   140.95s Find the "3,840×2,160" StaticText
+    t =   141.38s Find the "3,840×2,160" StaticText
+    t =   141.51s Checking existence of `StaticText (Element at index 146)`
+    t =   141.63s Find the StaticText (Element at index 146)
+    t =   141.75s Checking existence of `"3,840×2,160" StaticText`
+    t =   141.87s Find the "3,840×2,160" StaticText
+    t =   142.11s Find the "3,840×2,160" StaticText
+    t =   142.65s Find the "3,840×2,160" StaticText
+    t =   142.79s Checking existence of `StaticText (Element at index 147)`
+    t =   142.91s Find the StaticText (Element at index 147)
+    t =   143.04s Checking existence of `"3,840×2,160" StaticText`
+    t =   143.16s Find the "3,840×2,160" StaticText
+    t =   143.28s Find the "3,840×2,160" StaticText
+    t =   144.14s Find the "3,840×2,160" StaticText
+    t =   144.29s Checking existence of `StaticText (Element at index 148)`
+    t =   144.41s Find the StaticText (Element at index 148)
+    t =   144.54s Checking existence of `"3,840×2,160" StaticText`
+    t =   144.66s Find the "3,840×2,160" StaticText
+    t =   144.89s Find the "3,840×2,160" StaticText
+    t =   145.36s Find the "3,840×2,160" StaticText
+    t =   145.50s Checking existence of `StaticText (Element at index 149)`
+    t =   145.62s Find the StaticText (Element at index 149)
+    t =   145.74s Checking existence of `"3,840×2,160" StaticText`
+    t =   145.87s Find the "3,840×2,160" StaticText
+    t =   146.00s Find the "3,840×2,160" StaticText
+    t =   146.64s Find the "3,840×2,160" StaticText
+    t =   146.78s Checking existence of `StaticText (Element at index 150)`
+    t =   146.90s Find the StaticText (Element at index 150)
+    t =   147.03s Checking existence of `"3,840×2,160" StaticText`
+    t =   147.16s Find the "3,840×2,160" StaticText
+    t =   147.28s Find the "3,840×2,160" StaticText
+    t =   147.79s Find the "3,840×2,160" StaticText
+    t =   147.93s Checking existence of `StaticText (Element at index 151)`
+    t =   148.05s Find the StaticText (Element at index 151)
+    t =   148.18s Checking existence of `"3,840×2,160" StaticText`
+    t =   148.31s Find the "3,840×2,160" StaticText
+    t =   148.44s Find the "3,840×2,160" StaticText
+    t =   149.06s Find the "3,840×2,160" StaticText
+    t =   149.21s Checking existence of `StaticText (Element at index 152)`
+    t =   149.33s Find the StaticText (Element at index 152)
+    t =   149.47s Checking existence of `"3,840×2,160" StaticText`
+    t =   149.59s Find the "3,840×2,160" StaticText
+    t =   149.72s Find the "3,840×2,160" StaticText
+    t =   150.19s Find the "3,840×2,160" StaticText
+    t =   150.32s Checking existence of `StaticText (Element at index 153)`
+    t =   150.44s Find the StaticText (Element at index 153)
+    t =   150.58s Checking existence of `"3,840×2,160" StaticText`
+    t =   150.70s Find the "3,840×2,160" StaticText
+    t =   150.83s Find the "3,840×2,160" StaticText
+    t =   151.66s Find the "3,840×2,160" StaticText
+    t =   151.81s Checking existence of `StaticText (Element at index 154)`
+    t =   151.93s Find the StaticText (Element at index 154)
+    t =   152.06s Checking existence of `"3,840×2,160" StaticText`
+    t =   152.18s Find the "3,840×2,160" StaticText
+    t =   152.31s Find the "3,840×2,160" StaticText
+    t =   152.96s Find the "3,840×2,160" StaticText
+    t =   153.11s Checking existence of `StaticText (Element at index 155)`
+    t =   153.24s Find the StaticText (Element at index 155)
+    t =   153.47s Checking existence of `"3,840×2,160" StaticText`
+    t =   153.61s Find the "3,840×2,160" StaticText
+    t =   153.74s Find the "3,840×2,160" StaticText
+    t =   154.23s Find the "3,840×2,160" StaticText
+    t =   154.37s Checking existence of `StaticText (Element at index 156)`
+    t =   154.50s Find the StaticText (Element at index 156)
+    t =   154.63s Checking existence of `"3,840×2,160" StaticText`
+    t =   154.75s Find the "3,840×2,160" StaticText
+    t =   154.88s Find the "3,840×2,160" StaticText
+    t =   155.38s Find the "3,840×2,160" StaticText
+    t =   155.53s Checking existence of `StaticText (Element at index 157)`
+    t =   155.65s Find the StaticText (Element at index 157)
+    t =   155.77s Checking existence of `"3,840×2,160" StaticText`
+    t =   155.90s Find the "3,840×2,160" StaticText
+    t =   156.03s Find the "3,840×2,160" StaticText
+    t =   156.50s Find the "3,840×2,160" StaticText
+    t =   156.64s Checking existence of `StaticText (Element at index 158)`
+    t =   156.77s Find the StaticText (Element at index 158)
+    t =   156.89s Checking existence of `"7,680×4,320" StaticText`
+    t =   157.01s Find the "7,680×4,320" StaticText
+    t =   157.14s Find the "7,680×4,320" StaticText
+    t =   157.61s Find the "7,680×4,320" StaticText
+    t =   157.75s Checking existence of `StaticText (Element at index 159)`
+    t =   157.88s Find the StaticText (Element at index 159)
+    t =   158.02s Checking existence of `"7,680×4,320" StaticText`
+    t =   158.14s Find the "7,680×4,320" StaticText
+    t =   158.28s Find the "7,680×4,320" StaticText
+    t =   158.72s Find the "7,680×4,320" StaticText
+    t =   158.86s Checking existence of `StaticText (Element at index 160)`
+    t =   158.99s Find the StaticText (Element at index 160)
+    t =   159.12s Checking existence of `"7,680×4,320" StaticText`
+    t =   159.25s Find the "7,680×4,320" StaticText
+    t =   159.37s Find the "7,680×4,320" StaticText
+    t =   159.84s Find the "7,680×4,320" StaticText
+    t =   159.99s Checking existence of `StaticText (Element at index 161)`
+    t =   160.12s Find the StaticText (Element at index 161)
+    t =   160.26s Checking existence of `"7,680×4,320" StaticText`
+    t =   160.39s Find the "7,680×4,320" StaticText
+    t =   160.52s Find the "7,680×4,320" StaticText
+    t =   161.14s Find the "7,680×4,320" StaticText
+    t =   161.28s Checking existence of `StaticText (Element at index 162)`
+    t =   161.41s Find the StaticText (Element at index 162)
+    t =   161.53s Checking existence of `"7,680×4,320" StaticText`
+    t =   161.66s Find the "7,680×4,320" StaticText
+    t =   161.80s Find the "7,680×4,320" StaticText
+    t =   162.24s Find the "7,680×4,320" StaticText
+    t =   162.39s Checking existence of `StaticText (Element at index 163)`
+    t =   162.52s Find the StaticText (Element at index 163)
+    t =   162.65s Checking existence of `"7,680×4,320" StaticText`
+    t =   162.77s Find the "7,680×4,320" StaticText
+    t =   162.90s Find the "7,680×4,320" StaticText
+    t =   163.48s Find the "7,680×4,320" StaticText
+    t =   163.64s Checking existence of `StaticText (Element at index 164)`
+    t =   163.76s Find the StaticText (Element at index 164)
+    t =   163.89s Checking existence of `"7,680×4,320" StaticText`
+    t =   164.02s Find the "7,680×4,320" StaticText
+    t =   164.18s Find the "7,680×4,320" StaticText
+    t =   164.60s Find the "7,680×4,320" StaticText
+    t =   164.75s Checking existence of `StaticText (Element at index 165)`
+    t =   164.88s Find the StaticText (Element at index 165)
+    t =   165.02s Checking existence of `"7,680×4,320" StaticText`
+    t =   165.15s Find the "7,680×4,320" StaticText
+    t =   165.28s Find the "7,680×4,320" StaticText
+    t =   165.79s Find the "7,680×4,320" StaticText
+    t =   165.95s Checking existence of `StaticText (Element at index 166)`
+    t =   166.07s Find the StaticText (Element at index 166)
+    t =   166.21s Checking existence of `"7,680×4,320" StaticText`
+    t =   166.34s Find the "7,680×4,320" StaticText
+    t =   166.48s Find the "7,680×4,320" StaticText
+    t =   166.93s Find the "7,680×4,320" StaticText
+    t =   167.08s Checking existence of `StaticText (Element at index 167)`
+    t =   167.21s Find the StaticText (Element at index 167)
+    t =   167.35s Checking existence of `"20251116_a18659.MP4" StaticText`
+    t =   167.48s Find the "20251116_a18659.MP4" StaticText
+    t =   167.62s Find the "20251116_a18659.MP4" StaticText
+    t =   167.76s Checking existence of `StaticText (Element at index 168)`
+    t =   167.90s Find the StaticText (Element at index 168)
+    t =   168.04s Checking existence of `"20251116_a18658.MP4" StaticText`
+    t =   168.17s Find the "20251116_a18658.MP4" StaticText
+    t =   168.40s Find the "20251116_a18658.MP4" StaticText
+    t =   168.55s Checking existence of `StaticText (Element at index 169)`
+    t =   168.68s Find the StaticText (Element at index 169)
+    t =   168.82s Checking existence of `"20251116_a18656.MP4" StaticText`
+    t =   168.95s Find the "20251116_a18656.MP4" StaticText
+    t =   169.09s Find the "20251116_a18656.MP4" StaticText
+    t =   169.23s Checking existence of `StaticText (Element at index 170)`
+    t =   169.36s Find the StaticText (Element at index 170)
+    t =   169.50s Checking existence of `"20251116_a18655.MP4" StaticText`
+    t =   169.64s Find the "20251116_a18655.MP4" StaticText
+    t =   169.78s Find the "20251116_a18655.MP4" StaticText
+    t =   169.92s Checking existence of `StaticText (Element at index 171)`
+    t =   170.05s Find the StaticText (Element at index 171)
+    t =   170.19s Checking existence of `"20251116_a18654.MP4" StaticText`
+    t =   170.32s Find the "20251116_a18654.MP4" StaticText
+    t =   170.46s Find the "20251116_a18654.MP4" StaticText
+    t =   170.61s Checking existence of `StaticText (Element at index 172)`
+    t =   170.74s Find the StaticText (Element at index 172)
+    t =   170.88s Checking existence of `"20251116_a18653.MP4" StaticText`
+    t =   171.02s Find the "20251116_a18653.MP4" StaticText
+    t =   171.15s Find the "20251116_a18653.MP4" StaticText
+    t =   171.30s Checking existence of `StaticText (Element at index 173)`
+    t =   171.44s Find the StaticText (Element at index 173)
+    t =   171.57s Checking existence of `"20251116_a18652.MP4" StaticText`
+    t =   171.70s Find the "20251116_a18652.MP4" StaticText
+    t =   171.84s Find the "20251116_a18652.MP4" StaticText
+    t =   171.99s Checking existence of `StaticText (Element at index 174)`
+    t =   172.12s Find the StaticText (Element at index 174)
+    t =   172.26s Checking existence of `"20251116_a18651.MP4" StaticText`
+    t =   172.40s Find the "20251116_a18651.MP4" StaticText
+    t =   172.54s Find the "20251116_a18651.MP4" StaticText
+    t =   172.67s Checking existence of `StaticText (Element at index 175)`
+    t =   172.81s Find the StaticText (Element at index 175)
+    t =   172.95s Checking existence of `"20251116_a18650.MP4" StaticText`
+    t =   173.08s Find the "20251116_a18650.MP4" StaticText
+    t =   173.23s Find the "20251116_a18650.MP4" StaticText
+    t =   173.37s Checking existence of `StaticText (Element at index 176)`
+    t =   173.50s Find the StaticText (Element at index 176)
+    t =   173.74s Checking existence of `"20251116_a18649.MP4" StaticText`
+    t =   173.89s Find the "20251116_a18649.MP4" StaticText
+    t =   174.03s Find the "20251116_a18649.MP4" StaticText
+    t =   174.25s Checking existence of `StaticText (Element at index 177)`
+    t =   174.39s Find the StaticText (Element at index 177)
+    t =   174.53s Checking existence of `"20251116_a18648.MP4" StaticText`
+    t =   174.67s Find the "20251116_a18648.MP4" StaticText

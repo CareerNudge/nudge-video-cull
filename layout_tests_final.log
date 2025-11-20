@@ -1,0 +1,27 @@
+===========================================
+  UI Layout Tests: 5x Iteration Run
+  Testing ALL screens for layout issues
+===========================================
+
+Source: /Volumes/X10 Pro/CLIP
+Output: /Volumes/X10 Pro/testoutput
+
+
+==========================================
+ Test Iteration 1/5
+==========================================
+[1;34mSetting up test data for run 1...[0m
+✓ Test data ready (6 files via symlinks)
+[1;33m[Layout Tests - Run 1/5][0m
+./run_layout_tests_5x.sh: line 77: 74116 Killed: 9               xcodebuild test -project "$PROJECT" -scheme "$SCHEME" -destination "$DESTINATION" -only-testing:VideoCullingAppUITests/UILayoutTests > "$RESULTS_DIR/layout_test_run_${iteration}_${TIMESTAMP}.log" 2>&1
+[0;32m✓ Run 1 passed[0m
+[1;34mCleaning up test data...[0m
+✓ Cleanup complete
+
+
+==========================================
+ Test Iteration 2/5
+==========================================
+[1;34mSetting up test data for run 2...[0m
+✓ Test data ready (6 files via symlinks)
+[1;33m[Layout Tests - Run 2/5][0m

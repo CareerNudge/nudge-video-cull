@@ -15,32 +15,38 @@ struct StarRatingView: View {
     var onImage = Image(systemName: "star.fill")
     var offColor = Color.gray
     var onColor = Color.yellow
+    var showLabel = true
+    var isDisabled = false
 
     var body: some View {
         HStack {
-            Text(label + ":")
-                .font(.caption.bold())
-                .foregroundColor(.secondary)
-            
-            Spacer()
-            
+            if showLabel {
+                Text(label + ":")
+                    .font(.caption.bold())
+                    .foregroundColor(.secondary)
+
+                Spacer()
+            }
+
             ForEach(1...maximumRating, id: \.self) { number in
                 image(for: number)
                     .resizable()
                     .scaledToFit()
-                    .foregroundColor(number > rating ? offColor : onColor)
+                    .foregroundColor(isDisabled ? Color.gray.opacity(0.3) : (number > rating ? offColor : onColor))
                     .frame(width: 20, height: 20)
                     .onTapGesture {
-                        // Allow tapping the same star to reset to 0
-                        if number == rating {
-                            rating = 0
-                        } else {
-                            rating = Int16(number)
+                        if !isDisabled {
+                            // Allow tapping the same star to reset to 0
+                            if number == rating {
+                                rating = 0
+                            } else {
+                                rating = Int16(number)
+                            }
                         }
                     }
             }
         }
-        .frame(maxWidth: 200)
+        .frame(maxWidth: showLabel ? 200 : .infinity)
     }
 
     func image(for number: Int) -> Image {

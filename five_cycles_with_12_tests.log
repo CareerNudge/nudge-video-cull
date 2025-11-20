@@ -1,0 +1,102 @@
+===========================================
+  Running 5 Complete Test Cycles
+===========================================
+
+==========================================
+  CYCLE 1/5
+==========================================
+
+===========================================
+  Monitored Test Runner
+  Stops on first failure for quick fixing
+===========================================
+
+Source: /Volumes/X10 Pro/CLIP
+Output: /Volumes/X10 Pro/testoutput
+
+==========================================
+  Testing Recent UI Fixes
+==========================================
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testFileStatisticsDisplayActualValues[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testWorkflowNodesCentered[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testTrimMarkersConsolidatedWithPlayhead[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testDeletionFlagPersistence[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testLUTAutoMappingAppliesToPreviews[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testLUTAutoApplyIndicator[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testTrimPlaybackConstraints[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testEnhancedLUTPreviewApplication[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testWelcomeScreenWorkflow[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testCompactWorkflowNodesDisplay[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testFileStatisticsDisplay[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testWorkflowNodeCentering[0m
+[0;32m  ✓ PASSED[0m
+
+
+[0;32m==========================================
+  ✓ ALL TESTS PASSED!
+  Passed: 12
+==========================================\033[0m
+
+✓ CYCLE 1 PASSED
+
+==========================================
+  CYCLE 2/5
+==========================================
+
+===========================================
+  Monitored Test Runner
+  Stops on first failure for quick fixing
+===========================================
+
+Source: /Volumes/X10 Pro/CLIP
+Output: /Volumes/X10 Pro/testoutput
+
+==========================================
+  Testing Recent UI Fixes
+==========================================
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testFileStatisticsDisplayActualValues[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testWorkflowNodesCentered[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testTrimMarkersConsolidatedWithPlayhead[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testDeletionFlagPersistence[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testLUTAutoMappingAppliesToPreviews[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testLUTAutoApplyIndicator[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testTrimPlaybackConstraints[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testEnhancedLUTPreviewApplication[0m

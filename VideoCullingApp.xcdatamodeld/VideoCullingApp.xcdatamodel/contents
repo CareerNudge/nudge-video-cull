@@ -23,6 +23,16 @@
         <attribute name="audioCodec" optional="YES" attributeType="String" defaultValueString=""/>
         <attribute name="audioChannels" optional="YES" attributeType="String" defaultValueString=""/>
         <attribute name="audioSampleRate" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="videoWidth" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="videoHeight" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="cameraManufacturer" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="cameraModel" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="lensModel" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="captureGamma" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="captureColorPrimaries" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="timecode" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="captureFps" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="hasXMLSidecar" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="filePath"/>

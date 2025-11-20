@@ -8,10 +8,10 @@ import CoreData
 import AVFoundation
 
 class FileScannerService {
-    
+
     static let videoExtensions = ["mov", "mp4", "m4v", "avi", "mkv", "mts"]
-    private var viewContext: NSManagedObjectContext
-    
+    nonisolated private let viewContext: NSManagedObjectContext
+
     init(context: NSManagedObjectContext) {
         self.viewContext = context
     }
@@ -19,41 +19,56 @@ class FileScannerService {
     @MainActor
     func scan(
         folderURL: URL,
-        statusUpdate: @escaping @Sendable (String) -> Void
+        statusUpdate: @escaping @Sendable (String) -> Void,
+        progressUpdate: (@Sendable (Int, Int, String) -> Void)? = nil
     ) async {
-        
+
         // 1. Get a list of all files recursively
         statusUpdate("Finding video files...")
         guard let fileURLs = getFileUrls(at: folderURL) else {
             statusUpdate("Error reading folder.")
             return
         }
-        
+
         let videoURLs = fileURLs.filter { FileScannerService.videoExtensions.contains($0.pathExtension.lowercased()) }
         statusUpdate("Found \(videoURLs.count) videos. Analyzing...")
-        
+
         // 2. Get a list of all file paths already in the database
         let existingPaths = await getExistingPaths(context: viewContext)
-        
+
         // 3. Find only the *new* files
         let newURLs = videoURLs.filter { !existingPaths.contains($0.path) }
-        
+
         if newURLs.isEmpty {
             statusUpdate("All \(videoURLs.count) videos are already in the database.")
             return
         }
-        
+
         statusUpdate("Importing \(newURLs.count) new videos...")
-        
+
         // 4. Process new files
         for (index, url) in newURLs.enumerated() {
-            statusUpdate("Analyzing (\(index + 1)/\(newURLs.count)): \(url.lastPathComponent)")
+            // Check for cancellation before processing each file
+            if Task.isCancelled {
+                statusUpdate("Scan cancelled by user.")
+                return
+            }
+
+            let currentIndex = index + 1
+            statusUpdate("Analyzing (\(currentIndex)/\(newURLs.count)): \(url.lastPathComponent)")
+            progressUpdate?(currentIndex, newURLs.count, url.lastPathComponent)
             await createVideoAsset(from: url)
         }
-        
+
         statusUpdate("Scan complete. Saving...")
         await saveContext()
+
+        // Apply auto-mapped LUTs to all matching files (after scan is complete)
+        statusUpdate("Applying LUTs to matching files...")
+        await applyBatchLUTs()
+
         statusUpdate("Idle")
+        progressUpdate?(0, 0, "")
     }
     
     private func getFileUrls(at directoryURL: URL) -> [URL]? {
@@ -125,7 +140,21 @@ class FileScannerService {
             newAsset.audioChannels = metadata.audioChannels
             newAsset.audioSampleRate = metadata.audioSampleRate
 
-            // Set defaults
+            // Video dimensions
+            newAsset.videoWidth = metadata.videoWidth
+            newAsset.videoHeight = metadata.videoHeight
+
+            // Sony XML sidecar metadata
+            newAsset.hasXMLSidecar = metadata.sonyMetadata.hasXMLSidecar
+            newAsset.cameraManufacturer = metadata.sonyMetadata.cameraManufacturer
+            newAsset.cameraModel = metadata.sonyMetadata.cameraModel
+            newAsset.lensModel = metadata.sonyMetadata.lensModel
+            newAsset.captureGamma = metadata.sonyMetadata.captureGamma
+            newAsset.captureColorPrimaries = metadata.sonyMetadata.captureColorPrimaries
+            newAsset.timecode = metadata.sonyMetadata.timecode
+            newAsset.captureFps = metadata.sonyMetadata.captureFps
+
+            // Set defaults BEFORE auto-mapping so auto-mapping can override them
             newAsset.userRating = 0
             newAsset.isFlaggedForDeletion = false
             newAsset.keywords = ""
@@ -134,6 +163,38 @@ class FileScannerService {
             newAsset.trimEndTime = 0.0 // 0.0 means "end of clip"
             newAsset.selectedLUTId = ""
             newAsset.bakeInLUT = false
+
+            // Auto-map LUT based on camera metadata (only if preference is enabled)
+            if metadata.sonyMetadata.hasXMLSidecar {
+                print("📹 Processing file with XML sidecar: \(url.lastPathComponent)")
+                print("   Gamma: \(metadata.sonyMetadata.captureGamma)")
+                print("   Color Space: \(metadata.sonyMetadata.captureColorPrimaries)")
+
+                // Check if auto-apply preference is enabled
+                let shouldAutoApply = UserPreferences.shared.applyDefaultLUTsToPreview
+                print("   applyDefaultLUTsToPreview preference: \(shouldAutoApply)")
+
+                if shouldAutoApply {
+                    let availableLUTs = LUTManager.shared.availableLUTs
+                    print("   Available LUTs count: \(availableLUTs.count)")
+
+                    if let autoLUT = LUTAutoMapper.findBestLUT(
+                        gamma: metadata.sonyMetadata.captureGamma,
+                        colorSpace: metadata.sonyMetadata.captureColorPrimaries,
+                        availableLUTs: availableLUTs
+                    ) {
+                        newAsset.selectedLUTId = autoLUT.id.uuidString
+                        print("   ✅ Auto-selected LUT '\(autoLUT.name)' (ID: \(autoLUT.id.uuidString))")
+                        print("   ✅ Saved to newAsset.selectedLUTId")
+                    } else {
+                        print("   ❌ No LUT auto-mapped")
+                    }
+                } else {
+                    print("   ⚠️ Auto-apply LUTs is disabled in preferences, skipping auto-mapping")
+                }
+            } else {
+                print("📹 Processing file WITHOUT XML sidecar: \(url.lastPathComponent)")
+            }
         }
     }
     
@@ -148,7 +209,10 @@ class FileScannerService {
         bitDepth: String,
         audioCodec: String,
         audioChannels: String,
-        audioSampleRate: Int32
+        audioSampleRate: Int32,
+        videoWidth: Int32,
+        videoHeight: Int32,
+        sonyMetadata: SonyXMLMetadata
     ) {
         var fileSize: Int64 = 0
         var duration: Double = 0
@@ -161,6 +225,9 @@ class FileScannerService {
         var audioCodec = "Unknown"
         var audioChannels = "Unknown"
         var audioSampleRate: Int32 = 0
+        var videoWidth: Int32 = 0
+        var videoHeight: Int32 = 0
+        var sonyMetadata = SonyXMLMetadata()
 
         do {
             let fileAttributes = try FileManager.default.attributesOfItem(atPath: url.path)
@@ -180,6 +247,11 @@ class FileScannerService {
             if let videoTrack = try await asset.loadTracks(withMediaType: .video).first {
                 frameRate = Double(try await videoTrack.load(.nominalFrameRate))
                 bitrate = Int64(try await videoTrack.load(.estimatedDataRate))
+
+                // Get video dimensions
+                let naturalSize = try await videoTrack.load(.naturalSize)
+                videoWidth = Int32(naturalSize.width)
+                videoHeight = Int32(naturalSize.height)
 
                 // Get format descriptions for codec info
                 if let formatDescriptions = try await videoTrack.load(.formatDescriptions) as? [CMFormatDescription],
@@ -223,8 +295,16 @@ class FileScannerService {
             print("Failed to load AVAsset metadata for \(url.lastPathComponent): \(error)")
         }
 
+        // Look for Sony XML sidecar file
+        if let xmlURL = SonyXMLParser.findXMLSidecar(for: url) {
+            if let parsedMetadata = SonyXMLParser.parse(xmlURL: xmlURL) {
+                sonyMetadata = parsedMetadata
+            }
+        }
+
         return (fileSize, duration, frameRate, bitrate, creationDate, lastEditDate,
-                videoCodec, bitDepth, audioCodec, audioChannels, audioSampleRate)
+                videoCodec, bitDepth, audioCodec, audioChannels, audioSampleRate,
+                videoWidth, videoHeight, sonyMetadata)
     }
 
     // Helper to convert codec type to readable string
@@ -280,5 +360,142 @@ class FileScannerService {
                 print("Failed to save context: \(error)")
             }
         }
+    }
+
+    // MARK: - LUT Auto-Application to Matching Files
+
+    /// Applies LUTs to all files with matching gamma/colorSpace combinations in a batch after scanning
+    private func applyBatchLUTs() async {
+        await viewContext.perform {
+            print("🎨 Starting batch LUT application to matching files...")
+
+            // Fetch all video assets
+            let fetchRequest = NSFetchRequest<ManagedVideoAsset>(entityName: "ManagedVideoAsset")
+
+            do {
+                let allAssets = try self.viewContext.fetch(fetchRequest)
+
+                // Group assets by their gamma/colorSpace combination
+                var groups: [String: [ManagedVideoAsset]] = [:]
+
+                for asset in allAssets {
+                    guard let gamma = asset.captureGamma?.lowercased(),
+                          let colorSpace = asset.captureColorPrimaries?.lowercased(),
+                          !gamma.isEmpty, !colorSpace.isEmpty else {
+                        continue
+                    }
+
+                    let normalizedGamma = self.normalizeForMatching(gamma)
+                    let normalizedColorSpace = self.normalizeForMatching(colorSpace)
+                    let key = "\(normalizedGamma)|\(normalizedColorSpace)"
+
+                    if groups[key] == nil {
+                        groups[key] = []
+                    }
+                    groups[key]?.append(asset)
+                }
+
+                // For each group, if any asset has a LUT, apply it to all assets in that group without a LUT
+                var totalApplied = 0
+
+                for (key, assets) in groups {
+                    // Find the first asset with a LUT selected
+                    guard let assetWithLUT = assets.first(where: { $0.selectedLUTId != nil && !($0.selectedLUTId?.isEmpty ?? true) }),
+                          let lutId = assetWithLUT.selectedLUTId else {
+                        continue
+                    }
+
+                    // Apply to all assets in this group that don't have a LUT
+                    for asset in assets {
+                        if asset.selectedLUTId == nil || asset.selectedLUTId?.isEmpty == true {
+                            asset.selectedLUTId = lutId
+                            totalApplied += 1
+                            print("   ✅ Applied LUT to: \(asset.fileName ?? "unknown") (group: \(key))")
+                        }
+                    }
+                }
+
+                if totalApplied > 0 {
+                    if self.viewContext.hasChanges {
+                        try self.viewContext.save()
+                        print("   🎉 Batch applied LUTs to \(totalApplied) file(s)")
+                    }
+                } else {
+                    print("   ℹ️ No files needed LUT batch application")
+                }
+            } catch {
+                print("   ❌ Failed to apply batch LUTs: \(error)")
+            }
+        }
+    }
+
+    /// Applies the same LUT to all other files with matching gamma/colorSpace but no LUT selected
+    @available(*, deprecated, message: "Use applyBatchLUTs instead")
+    private func applyLUTToMatchingFiles(gamma: String?, colorSpace: String?, lutId: String, lutName: String) {
+        guard let gamma = gamma, let colorSpace = colorSpace else {
+            return
+        }
+
+        print("🎨 Applying LUT '\(lutName)' to other files with Gamma: \(gamma), ColorSpace: \(colorSpace)")
+
+        // Normalize gamma and colorSpace for matching (same logic as LUTAutoMapper)
+        let normalizedGamma = normalizeForMatching(gamma.lowercased())
+        let normalizedColorSpace = normalizeForMatching(colorSpace.lowercased())
+
+        // Fetch all video assets that are already persisted (not newly created)
+        let fetchRequest = NSFetchRequest<ManagedVideoAsset>(entityName: "ManagedVideoAsset")
+        // Only fetch assets that have been previously saved (have permanent object IDs)
+        fetchRequest.predicate = NSPredicate(format: "selectedLUTId == nil OR selectedLUTId == %@", "")
+
+        do {
+            let existingAssets = try viewContext.fetch(fetchRequest)
+            var matchedCount = 0
+
+            for asset in existingAssets {
+                // Additional safety: Skip if object is a fault or has been deleted
+                if asset.isFault || asset.isDeleted {
+                    continue
+                }
+
+                // Skip if already has a LUT selected (double-check even though we have predicate)
+                if let selectedLUTId = asset.selectedLUTId, !selectedLUTId.isEmpty {
+                    continue
+                }
+
+                // Check if gamma and colorSpace match
+                if let assetGamma = asset.captureGamma?.lowercased(),
+                   let assetColorSpace = asset.captureColorPrimaries?.lowercased() {
+
+                    let assetNormalizedGamma = normalizeForMatching(assetGamma)
+                    let assetNormalizedColorSpace = normalizeForMatching(assetColorSpace)
+
+                    if assetNormalizedGamma == normalizedGamma && assetNormalizedColorSpace == normalizedColorSpace {
+                        asset.selectedLUTId = lutId
+                        matchedCount += 1
+                        print("   ✅ Applied LUT to: \(asset.fileName ?? "unknown")")
+                    }
+                }
+            }
+
+            if matchedCount > 0 {
+                // Only save if we actually modified something
+                if viewContext.hasChanges {
+                    try viewContext.save()
+                    print("   🎉 Applied LUT to \(matchedCount) matching file(s)")
+                }
+            } else {
+                print("   ℹ️ No other matching files found to apply LUT")
+            }
+        } catch {
+            print("   ❌ Failed to apply LUT to matching files: \(error)")
+        }
+    }
+
+    /// Normalize string for matching by removing hyphens, dots, and spaces
+    private func normalizeForMatching(_ input: String) -> String {
+        return input
+            .replacingOccurrences(of: "-", with: "")
+            .replacingOccurrences(of: ".", with: "")
+            .replacingOccurrences(of: " ", with: "")
     }
 }

@@ -1,0 +1,314 @@
+===========================================
+  Running 5 Cycles with Randomized Order
+===========================================
+
+
+==========================================
+  CYCLE 1/5
+==========================================
+
+[1;34mTest order for cycle 1:[0m
+  1. testWorkflowNodesCentered
+  2. testTrimMarkersConsolidatedWithPlayhead
+  3. testCompactWorkflowNodesDisplay
+  4. testDeletionFlagPersistence
+  5. testWelcomeScreenWorkflow
+  6. testEnhancedLUTPreviewApplication
+  7. testLUTAutoApplyIndicator
+  8. testFileStatisticsDisplay
+  9. testLUTAutoMappingAppliesToPreviews
+  10. testFileStatisticsDisplayActualValues
+  11. testWorkflowNodeCentering
+  12. testTrimPlaybackConstraints
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testWorkflowNodesCentered[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testTrimMarkersConsolidatedWithPlayhead[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testCompactWorkflowNodesDisplay[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testDeletionFlagPersistence[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testWelcomeScreenWorkflow[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testEnhancedLUTPreviewApplication[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testLUTAutoApplyIndicator[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testFileStatisticsDisplay[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testLUTAutoMappingAppliesToPreviews[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testFileStatisticsDisplayActualValues[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testWorkflowNodeCentering[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testTrimPlaybackConstraints[0m
+[0;32m  ✓ PASSED[0m
+
+
+[0;32m==========================================
+  ✓ CYCLE 1 PASSED!
+  Passed: 12
+==========================================\033[0m
+
+
+==========================================
+  CYCLE 2/5
+==========================================
+
+[1;34mTest order for cycle 2:[0m
+  1. testTrimMarkersConsolidatedWithPlayhead
+  2. testFileStatisticsDisplayActualValues
+  3. testWorkflowNodesCentered
+  4. testWorkflowNodeCentering
+  5. testCompactWorkflowNodesDisplay
+  6. testLUTAutoMappingAppliesToPreviews
+  7. testLUTAutoApplyIndicator
+  8. testWelcomeScreenWorkflow
+  9. testDeletionFlagPersistence
+  10. testFileStatisticsDisplay
+  11. testTrimPlaybackConstraints
+  12. testEnhancedLUTPreviewApplication
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testTrimMarkersConsolidatedWithPlayhead[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testFileStatisticsDisplayActualValues[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testWorkflowNodesCentered[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testWorkflowNodeCentering[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testCompactWorkflowNodesDisplay[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testLUTAutoMappingAppliesToPreviews[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testLUTAutoApplyIndicator[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testWelcomeScreenWorkflow[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testDeletionFlagPersistence[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testFileStatisticsDisplay[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testTrimPlaybackConstraints[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testEnhancedLUTPreviewApplication[0m
+[0;32m  ✓ PASSED[0m
+
+
+[0;32m==========================================
+  ✓ CYCLE 2 PASSED!
+  Passed: 12
+==========================================\033[0m
+
+
+==========================================
+  CYCLE 3/5
+==========================================
+
+[1;34mTest order for cycle 3:[0m
+  1. testFileStatisticsDisplay
+  2. testDeletionFlagPersistence
+  3. testEnhancedLUTPreviewApplication
+  4. testCompactWorkflowNodesDisplay
+  5. testWelcomeScreenWorkflow
+  6. testTrimMarkersConsolidatedWithPlayhead
+  7. testWorkflowNodeCentering
+  8. testWorkflowNodesCentered
+  9. testTrimPlaybackConstraints
+  10. testFileStatisticsDisplayActualValues
+  11. testLUTAutoMappingAppliesToPreviews
+  12. testLUTAutoApplyIndicator
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testFileStatisticsDisplay[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testDeletionFlagPersistence[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testEnhancedLUTPreviewApplication[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testCompactWorkflowNodesDisplay[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testWelcomeScreenWorkflow[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testTrimMarkersConsolidatedWithPlayhead[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testWorkflowNodeCentering[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testWorkflowNodesCentered[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testTrimPlaybackConstraints[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testFileStatisticsDisplayActualValues[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testLUTAutoMappingAppliesToPreviews[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testLUTAutoApplyIndicator[0m
+[0;32m  ✓ PASSED[0m
+
+
+[0;32m==========================================
+  ✓ CYCLE 3 PASSED!
+  Passed: 12
+==========================================\033[0m
+
+
+==========================================
+  CYCLE 4/5
+==========================================
+
+[1;34mTest order for cycle 4:[0m
+  1. testEnhancedLUTPreviewApplication
+  2. testFileStatisticsDisplayActualValues
+  3. testCompactWorkflowNodesDisplay
+  4. testLUTAutoApplyIndicator
+  5. testTrimMarkersConsolidatedWithPlayhead
+  6. testWelcomeScreenWorkflow
+  7. testWorkflowNodesCentered
+  8. testLUTAutoMappingAppliesToPreviews
+  9. testTrimPlaybackConstraints
+  10. testFileStatisticsDisplay
+  11. testDeletionFlagPersistence
+  12. testWorkflowNodeCentering
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testEnhancedLUTPreviewApplication[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testFileStatisticsDisplayActualValues[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testCompactWorkflowNodesDisplay[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testLUTAutoApplyIndicator[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testTrimMarkersConsolidatedWithPlayhead[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testWelcomeScreenWorkflow[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testWorkflowNodesCentered[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testLUTAutoMappingAppliesToPreviews[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testTrimPlaybackConstraints[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testFileStatisticsDisplay[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testDeletionFlagPersistence[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testWorkflowNodeCentering[0m
+[0;32m  ✓ PASSED[0m
+
+
+[0;32m==========================================
+  ✓ CYCLE 4 PASSED!
+  Passed: 12
+==========================================\033[0m
+
+
+==========================================
+  CYCLE 5/5
+==========================================
+
+[1;34mTest order for cycle 5:[0m
+  1. testFileStatisticsDisplay
+  2. testWorkflowNodeCentering
+  3. testWelcomeScreenWorkflow
+  4. testTrimPlaybackConstraints
+  5. testFileStatisticsDisplayActualValues
+  6. testDeletionFlagPersistence
+  7. testWorkflowNodesCentered
+  8. testCompactWorkflowNodesDisplay
+  9. testLUTAutoMappingAppliesToPreviews
+  10. testTrimMarkersConsolidatedWithPlayhead
+  11. testEnhancedLUTPreviewApplication
+  12. testLUTAutoApplyIndicator
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testFileStatisticsDisplay[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testWorkflowNodeCentering[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testWelcomeScreenWorkflow[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testTrimPlaybackConstraints[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testFileStatisticsDisplayActualValues[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testDeletionFlagPersistence[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testWorkflowNodesCentered[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/VideoCullingAppUITests.testCompactWorkflowNodesDisplay[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testLUTAutoMappingAppliesToPreviews[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testTrimMarkersConsolidatedWithPlayhead[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testEnhancedLUTPreviewApplication[0m
+[0;32m  ✓ PASSED[0m
+
+[1;33mTesting: VideoCullingAppUITests/UILayoutTests.testLUTAutoApplyIndicator[0m
+[0;32m  ✓ PASSED[0m
+
+
+[0;32m==========================================
+  ✓ CYCLE 5 PASSED!
+  Passed: 12
+==========================================\033[0m
+
+
+===========================================
+  ✓ ALL 5 CYCLES PASSED!
+  Total Tests Run: 60 (12 tests × 5 cycles)
+===========================================

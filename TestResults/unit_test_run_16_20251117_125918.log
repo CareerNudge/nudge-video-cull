@@ -1,0 +1,106 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test -project VideoCullingApp.xcodeproj -scheme VideoCullingApp -destination platform=macOS "-only-testing:VideoCullingAppTests/LUTAutoMapperTests"
+
+2025-11-17 13:01:15.223 xcodebuild[54342:4746905]  DVTDeviceOperation: Encountered a build number "" that is incompatible with DVTBuildVersion.
+2025-11-17 13:01:15.225 xcodebuild[54342:4746852] [MT] DVTDeviceOperation: Encountered a build number "" that is incompatible with DVTBuildVersion.
+2025-11-17 13:01:15.343 xcodebuild[54342:4746852] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00006031-001229A926E1001C, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00006031-001229A926E1001C, name:My Mac }
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (3 targets)
+    Target 'VideoCullingAppTests' in project 'VideoCullingApp'
+        ➜ Explicit dependency on target 'VideoCullingApp' in project 'VideoCullingApp'
+    Target 'VideoCullingAppUITests' in project 'VideoCullingApp'
+        ➜ Explicit dependency on target 'VideoCullingApp' in project 'VideoCullingApp'
+    Target 'VideoCullingApp' in project 'VideoCullingApp' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/momc --dry-run --action generate --swift-version 5.0 --sdkroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk --macosx-deployment-target 13.0 --module VideoCullingApp /Users/romanwilson/projects/videocull/VideoCullingApp/VideoCullingApp.xcdatamodeld /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/DerivedSources/CoreDataGenerated/VideoCullingApp
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: 9ccbedb1034504deaf1ba0b48bb0ec22
+Build description path: /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/XCBuildData/9ccbedb1034504deaf1ba0b48bb0ec22.xcbuilddata
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk /Users/romanwilson/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.1-25B74-3ae1261907bdadc328169391a47051a6.sdkstatcache
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp/VideoCullingApp.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk -o /Users/romanwilson/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx26.1-25B74-3ae1261907bdadc328169391a47051a6.sdkstatcache
+
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/SLog3_SGamut3Cine 3/4_SGamut3CineSLog3_To_Cine+709.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/AppleLog/AppleLogToRec709-v1.0.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/S-Gamut_Slog2/Look_profile_for_resolve_S-Gamut_Slog2/From_SLog2SGumut_To_SLog2-709_.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/S-Gamut_Slog2/Look_profile_for_resolve_S-Gamut_Slog2/From_SLog2SGumut_To_Cine+709.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/AppleLog/AppleLogToLin-v1.0.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/S-Gamut_Slog2/Look_profile_for_resolve_S-Gamut_Slog2/From_SLog2SGumut_To_LC-709_.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/SLog3_SGamut3Cine 3/2_SGamut3CineSLog3_To_LC-709TypeA.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/SLog3_SGamut3Cine 3/3_SGamut3CineSLog3_To_SLog2-709.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/SLog3_SGamut3Cine 3/1_SGamut3CineSLog3_To_LC-709.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/romanwilson/projects/videocull/VideoCullingApp/DefaultLuts/S-Gamut_Slog2/Look_profile_for_resolve_S-Gamut_Slog2/From_SLog2SGumut_To_LC-709TypeA_.cube (in target 'VideoCullingApp' from project 'VideoCullingApp')
+CopySwiftLibs /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/MacOS/VideoCullingApp.debug.dylib --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/Frameworks --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/Library/SystemExtensions --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/Extensions --platform macosx --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+
+ProcessInfoPlistFile /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/Info.plist /Users/romanwilson/projects/videocull/VideoCullingApp/Info.plist (in target 'VideoCullingApp' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-infoPlistUtility /Users/romanwilson/projects/videocull/VideoCullingApp/Info.plist -producttype com.apple.product-type.application -genpkginfo /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PkgInfo -expandbuildsettings -platform macosx -additionalcontentfile /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingApp.build/assetcatalog_generated_info.plist -o /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/Info.plist
+
+ProcessInfoPlistFile /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/Info.plist /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/empty-VideoCullingAppTests.plist (in target 'VideoCullingAppTests' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-infoPlistUtility /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/empty-VideoCullingAppTests.plist -producttype com.apple.product-type.bundle.unit-test -expandbuildsettings -platform macosx -o /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/Info.plist
+
+CopySwiftLibs /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest (in target 'VideoCullingAppTests' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-swiftStdLibTool --copy --verbose --sign 5D50E1DA8DB15D100ECD7DD6AD1CAF0F03C3D96B --scan-executable /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/MacOS/VideoCullingAppTests --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/Frameworks --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/PlugIns --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/Library/SystemExtensions --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/Extensions --platform macosx --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingApp.app/Contents/PlugIns/VideoCullingAppTests.xctest/Contents/Frameworks --strip-bitcode --scan-executable /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libXCTestSwiftSupport.dylib --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppTests.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+
+ProcessInfoPlistFile /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest/Contents/Info.plist /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppUITests.build/empty-VideoCullingAppUITests.plist (in target 'VideoCullingAppUITests' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-infoPlistUtility /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppUITests.build/empty-VideoCullingAppUITests.plist -producttype com.apple.product-type.bundle.ui-testing -expandbuildsettings -platform macosx -additionalcontentfile /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppUITests.build/ProductTypeInfoPlistAdditions.plist -o /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest/Contents/Info.plist
+
+CopySwiftLibs /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest (in target 'VideoCullingAppUITests' from project 'VideoCullingApp')
+    cd /Users/romanwilson/projects/videocull/VideoCullingApp
+    builtin-swiftStdLibTool --copy --verbose --sign 5D50E1DA8DB15D100ECD7DD6AD1CAF0F03C3D96B --scan-executable /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest/Contents/MacOS/VideoCullingAppUITests --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest/Contents/Frameworks --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest/Contents/PlugIns --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest/Contents/Library/SystemExtensions --scan-folder /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest/Contents/Extensions --platform macosx --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Products/Debug/VideoCullingAppUITests-Runner.app/Contents/PlugIns/VideoCullingAppUITests.xctest/Contents/Frameworks --strip-bitcode --scan-executable /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libXCTestSwiftSupport.dylib --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Build/Intermediates.noindex/VideoCullingApp.build/Debug/VideoCullingAppUITests.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+
+2025-11-17 13:01:21.649 xcodebuild[54342:4746852] [MT] IDETestOperationsObserverDebug: 5.339 elapsed -- Testing started completed.
+2025-11-17 13:01:21.649 xcodebuild[54342:4746852] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2025-11-17 13:01:21.649 xcodebuild[54342:4746852] [MT] IDETestOperationsObserverDebug: 5.339 sec, +5.339 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/romanwilson/Library/Developer/Xcode/DerivedData/VideoCullingApp-gorssjuaelhchegcjoftthvccbjj/Logs/Test/Test-VideoCullingApp-2025.11.17_13-01-15--0500.xcresult
+
+** TEST SUCCEEDED **
+
+Testing started
+Test suite 'LUTAutoMapperTests' started on 'My Mac - VideoCullingApp (54365)'
+Test case 'LUTAutoMapperTests.testAppleLogMatching()' passed on 'My Mac - VideoCullingApp (54365)' (0.001 seconds)
+Test case 'LUTAutoMapperTests.testCaseInsensitiveMatching()' passed on 'My Mac - VideoCullingApp (54365)' (0.002 seconds)
+Test case 'LUTAutoMapperTests.testNilColorSpaceReturnsNil()' passed on 'My Mac - VideoCullingApp (54365)' (0.000 seconds)
+Test case 'LUTAutoMapperTests.testNilGammaReturnsNil()' passed on 'My Mac - VideoCullingApp (54365)' (0.000 seconds)
+Test case 'LUTAutoMapperTests.testNoMatchForUnknownProfile()' passed on 'My Mac - VideoCullingApp (54365)' (0.007 seconds)
+Test case 'LUTAutoMapperTests.testNormalizationCombined()' passed on 'My Mac - VideoCullingApp (54365)' (0.001 seconds)
+Test case 'LUTAutoMapperTests.testNormalizationRemovesDots()' passed on 'My Mac - VideoCullingApp (54365)' (0.000 seconds)
+Test case 'LUTAutoMapperTests.testNormalizationRemovesHyphens()' passed on 'My Mac - VideoCullingApp (54365)' (0.000 seconds)
+Test case 'LUTAutoMapperTests.testNormalizationRemovesSpaces()' passed on 'My Mac - VideoCullingApp (54365)' (0.000 seconds)
+Test case 'LUTAutoMapperTests.testPerformanceOfLUTMatching()' passed on 'My Mac - VideoCullingApp (54365)' (0.529 seconds)
+Test case 'LUTAutoMapperTests.testPerformanceOfNormalization()' passed on 'My Mac - VideoCullingApp (54365)' (1.696 seconds)
+Test case 'LUTAutoMapperTests.testSLog2SGamutMatching()' passed on 'My Mac - VideoCullingApp (54365)' (0.031 seconds)
+Test case 'LUTAutoMapperTests.testSLog3SGamut3CineMatching()' passed on 'My Mac - VideoCullingApp (54365)' (0.001 seconds)
