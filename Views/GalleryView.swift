@@ -1167,8 +1167,8 @@ struct CleanVideoPlayerView: View {
                                             let newValue = min(max(0, rawValue), localTrimEnd - 0.01)
                                             localTrimStart = newValue
 
-                                            // Generate preview during drag (with proper task cancellation)
-                                            generateFinalPreview(at: newValue)
+                                            // Don't generate preview during drag to prevent crashes
+                                            // Preview will be generated on mouse release
 
                                             // Update currentPosition if it's now outside the trim range
                                             if currentPosition < newValue {
@@ -1212,8 +1212,8 @@ struct CleanVideoPlayerView: View {
                                             let newValue = min(max(localTrimStart + 0.01, rawValue), 1.0)
                                             localTrimEnd = newValue
 
-                                            // Generate preview during drag (with proper task cancellation)
-                                            generateFinalPreview(at: newValue)
+                                            // Don't generate preview during drag to prevent crashes
+                                            // Preview will be generated on mouse release
 
                                             // Update currentPosition if it's now outside the trim range
                                             if currentPosition > newValue {
@@ -1668,18 +1668,30 @@ struct CleanVideoPlayerView: View {
     // Generate high-quality preview after scrubbing/trimming completes
     // Called only in .onEnded handlers to show final position without task pileup
     private func generateFinalPreview(at normalizedTime: Double) {
+        // Safety check: Don't generate preview if view isn't fully initialized
+        guard imageGenerator != nil,
+              ciContext != nil,
+              player != nil else {
+            print("⚠️ Skipping preview generation - view not fully initialized")
+            return
+        }
+
         // Cancel any existing preview generation task
         scrubPreviewTask?.cancel()
 
         // Generate ONE high-quality preview at final position
         scrubPreviewTask = Task {
-            guard let generator = imageGenerator else { return }
+            guard let generator = imageGenerator else {
+                print("⚠️ Image generator became nil during preview generation")
+                return
+            }
 
             let timeInSeconds = normalizedTime * asset.duration
             let time = CMTime(seconds: timeInSeconds, preferredTimescale: 600)
 
             do {
                 guard let avAsset = (generator.asset as? AVAsset) ?? generator.asset as? AVURLAsset else {
+                    print("⚠️ Could not get AVAsset from generator")
                     return
                 }
 
@@ -1692,7 +1704,10 @@ struct CleanVideoPlayerView: View {
                 )
 
                 // Check if cancelled (user switched videos or started new drag)
-                guard !Task.isCancelled else { return }
+                guard !Task.isCancelled else {
+                    print("Preview generation cancelled")
+                    return
+                }
 
                 let finalImage = await applyLUTToImage(cgImage: cgImage)
 
@@ -1701,7 +1716,7 @@ struct CleanVideoPlayerView: View {
                 }
             } catch {
                 if !Task.isCancelled {
-                    print("Failed to generate final preview: \(error)")
+                    print("⚠️ Failed to generate final preview: \(error)")
                 }
             }
         }
