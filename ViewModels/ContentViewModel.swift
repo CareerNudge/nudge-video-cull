@@ -807,6 +807,60 @@ class ContentViewModel: ObservableObject {
         print("✅ Set 'Bake in LUT' to \(enabled) for \(assets.count) video(s)")
     }
 
+    /// Export only the selected assets to a chosen folder
+    func exportSelectedAssets(_ assets: [ManagedVideoAsset]) {
+        // Show folder picker for output destination
+        let panel = NSOpenPanel()
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
+        panel.canCreateDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.prompt = "Choose Export Folder"
+        panel.message = "Select where to export the selected \(assets.count) file\(assets.count == 1 ? "" : "s")"
+
+        panel.begin { [weak self] response in
+            guard let self = self, response == .OK, let outputURL = panel.url else { return }
+
+            // Start processing in background
+            Task { @MainActor in
+                self.showProcessingModal = true
+                self.currentProcessingFile = "Preparing to export selected files..."
+
+                await self.processingService.processSelectedAssets(
+                    assets,
+                    outputFolderURL: outputURL,
+                    statusUpdate: { status in
+                        Task { @MainActor in
+                            self.currentProcessingFile = status
+                        }
+                    },
+                    progressUpdate: { current, total, fileName in
+                        Task { @MainActor in
+                            self.processingProgress = Double(current) / Double(total)
+                            self.currentProcessingFile = fileName
+                        }
+                    }
+                )
+
+                self.showProcessingModal = false
+                self.processingProgress = 0.0
+
+                // Show completion alert
+                let alert = NSAlert()
+                alert.messageText = "Export Complete"
+                alert.informativeText = "Successfully exported \(assets.count) file\(assets.count == 1 ? "" : "s") to:\n\(outputURL.path)"
+                alert.alertStyle = .informational
+                alert.addButton(withTitle: "OK")
+                alert.addButton(withTitle: "Reveal in Finder")
+
+                let response = alert.runModal()
+                if response == .alertSecondButtonReturn {
+                    NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: outputURL.path)
+                }
+            }
+        }
+    }
+
     // MARK: - Global LUT Application
 
     func applyGlobalLUT(_ lut: LUT?) {

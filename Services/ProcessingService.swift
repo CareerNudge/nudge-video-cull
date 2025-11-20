@@ -210,6 +210,134 @@ class ProcessingService {
         statusUpdate(testMode ? "Test export complete!" : "Processing complete!")
     }
 
+    /// Process only specific selected assets
+    @MainActor
+    func processSelectedAssets(
+        _ assets: [ManagedVideoAsset],
+        outputFolderURL: URL,
+        statusUpdate: @escaping @Sendable (String) -> Void,
+        progressUpdate: @escaping @Sendable (Int, Int, String) -> Void = { _, _, _ in }
+    ) async {
+        if assets.isEmpty {
+            statusUpdate("No assets selected to export.")
+            return
+        }
+
+        // Create output folder if it doesn't exist
+        do {
+            try FileManager.default.createDirectory(at: outputFolderURL, withIntermediateDirectories: true)
+            statusUpdate("Created output folder for selected exports...")
+        } catch {
+            statusUpdate("Error: Could not create output folder: \(error.localizedDescription)")
+            return
+        }
+
+        // Filter out flagged files
+        let assetsToModify = assets.filter { !$0.isFlaggedForDeletion }
+        let totalToProcess = assetsToModify.count
+
+        if totalToProcess == 0 {
+            statusUpdate("All selected files are flagged for deletion. Nothing to export.")
+            return
+        }
+
+        statusUpdate("Exporting \(totalToProcess) selected file\(totalToProcess == 1 ? "" : "s")...")
+
+        for (index, asset) in assetsToModify.enumerated() {
+            // Check for cancellation before processing each file
+            if Task.isCancelled {
+                statusUpdate("Processing cancelled by user.")
+                return
+            }
+
+            let currentIndex = index + 1
+            let statusPrefix = "(\(currentIndex)/\(totalToProcess))"
+
+            // Extract Core Data properties safely before any await calls
+            let (fileName, fileURL, trimStart, trimEnd, bakeLUT, lutId, newFileName) = await viewContext.perform {
+                (
+                    asset.fileName ?? "file",
+                    asset.fileURL,
+                    asset.trimStartTime,
+                    asset.trimEndTime,
+                    asset.bakeInLUT,
+                    asset.selectedLUTId ?? "",
+                    asset.newFileName ?? ""
+                )
+            }
+
+            var currentPath = fileURL
+
+            // Update progress
+            progressUpdate(currentIndex, totalToProcess, fileName)
+
+            // Check if trimming or LUT baking is needed
+            let isTrimmed = trimStart > 0.001 || (trimEnd > 0 && trimEnd < 0.999)
+            let shouldBakeLUT = bakeLUT && !lutId.isEmpty
+            let needsVideoProcessing = isTrimmed || shouldBakeLUT
+
+            if needsVideoProcessing, let path = currentPath {
+                statusUpdate("\(statusPrefix) Processing: \(fileName)")
+
+                do {
+                    if let newPath = try await processVideo(
+                        asset: asset,
+                        currentURL: path,
+                        trim: isTrimmed,
+                        bakeLUT: shouldBakeLUT,
+                        testMode: false,
+                        outputFolder: outputFolderURL
+                    ) {
+                        currentPath = newPath
+                    } else {
+                        statusUpdate("\(statusPrefix) Error processing \(fileName)")
+                    }
+                } catch {
+                    statusUpdate("\(statusPrefix) Error: \(error.localizedDescription)")
+                }
+            } else if let path = currentPath {
+                // No processing needed, just copy to output folder
+                statusUpdate("\(statusPrefix) Copying: \(fileName)")
+
+                let finalFileName = !newFileName.isEmpty ? newFileName + ".\(path.pathExtension)" : path.lastPathComponent
+                let destinationURL = outputFolderURL.appendingPathComponent(finalFileName)
+
+                do {
+                    // Copy file to output
+                    if FileManager.default.fileExists(atPath: destinationURL.path) {
+                        try FileManager.default.removeItem(at: destinationURL)
+                    }
+                    try FileManager.default.copyItem(at: path, to: destinationURL)
+                    currentPath = destinationURL
+                } catch {
+                    statusUpdate("\(statusPrefix) Copy failed: \(error.localizedDescription)")
+                }
+            }
+
+            // Apply renaming if needed (only if outputting to same folder as source)
+            if !newFileName.isEmpty, let finalPath = currentPath {
+                statusUpdate("\(statusPrefix) Renaming: \(fileName)")
+
+                let newName = "\(newFileName).\(finalPath.pathExtension)"
+                let newURL = finalPath.deletingLastPathComponent().appendingPathComponent(newName)
+
+                do {
+                    // Check if target name already exists
+                    if FileManager.default.fileExists(atPath: newURL.path) {
+                        // Remove existing file
+                        try FileManager.default.removeItem(at: newURL)
+                    }
+                    try FileManager.default.moveItem(at: finalPath, to: newURL)
+                } catch {
+                    statusUpdate("\(statusPrefix) Rename failed: \(error.localizedDescription)")
+                }
+            }
+        }
+
+        await saveContext()
+        statusUpdate("Export of selected files complete!")
+    }
+
     // MARK: - AVFoundation Video Processing
 
     private func processVideo(

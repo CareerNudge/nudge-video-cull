@@ -122,6 +122,13 @@ struct GalleryView: View {
             }
         }
 
+        Divider()
+
+        // Export selected files
+        Button("Export Just \(multipleSelected ? "These" : "This") \(assets.count == 1 ? "File" : "\(assets.count) Files")...") {
+            viewModel.exportSelectedAssets(assets)
+        }
+
         if multipleSelected {
             Divider()
             Text("\(assets.count) videos selected")
@@ -515,6 +522,13 @@ struct HorizontalGalleryView: View {
             }
         }
 
+        Divider()
+
+        // Export selected files
+        Button("Export Just \(multipleSelected ? "These" : "This") \(assets.count == 1 ? "File" : "\(assets.count) Files")...") {
+            viewModel.exportSelectedAssets(assets)
+        }
+
         if multipleSelected {
             Divider()
             Text("\(assets.count) videos selected")
@@ -739,18 +753,11 @@ struct HorizontalGalleryView: View {
                                         )
                                         .id(asset.id)
                                         .overlay(
-                                            // Multi-select indicator
+                                            // Multi-select indicator (blue border only)
                                             Group {
                                                 if viewModel.isSelected(asset) {
-                                                    ZStack(alignment: .topTrailing) {
-                                                        RoundedRectangle(cornerRadius: 8)
-                                                            .stroke(Color.blue, lineWidth: 3)
-                                                        Image(systemName: "checkmark.circle.fill")
-                                                            .font(.system(size: 24))
-                                                            .foregroundColor(.blue)
-                                                            .background(Circle().fill(Color.white).frame(width: 20, height: 20))
-                                                            .padding(8)
-                                                    }
+                                                    RoundedRectangle(cornerRadius: 8)
+                                                        .stroke(Color.blue, lineWidth: 3)
                                                 }
                                             }
                                         )
