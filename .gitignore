@@ -30,6 +30,9 @@ DerivedData/
 *.dSYM.zip
 *.dSYM
 
+## Release artifacts
+release/
+
 ## Playgrounds
 timeline.xctimeline
 playground.xcworkspace

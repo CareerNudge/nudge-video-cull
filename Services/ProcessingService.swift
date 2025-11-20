@@ -234,11 +234,15 @@ class ProcessingService {
         let endTime = CMTime(seconds: endTimeValue * duration.seconds, preferredTimescale: duration.timescale)
         let timeRange = CMTimeRange(start: startTime, end: endTime)
 
-        // --- 2. Determine Export Preset ---
+        // --- 2. Get Source Video Properties for Quality Preservation ---
+        let videoProperties = try await getVideoProperties(from: avAsset)
+        print("📹 Source video: \(videoProperties.codec) | \(Int(videoProperties.width))x\(Int(videoProperties.height)) | \(String(format: "%.2f", videoProperties.frameRate)) fps | \(String(format: "%.1f", videoProperties.bitrate / 1_000_000)) Mbps")
+
+        // --- 3. Determine Export Preset ---
         let hasFilter = bakeLUT && !(asset.selectedLUTId ?? "").isEmpty && asset.bakeInLUT
         let preset: String = hasFilter ? AVAssetExportPresetHighestQuality : AVAssetExportPresetPassthrough
 
-        // --- 3. Create Export Session ---
+        // --- 4. Create Export Session ---
         guard let exportSession = AVAssetExportSession(asset: avAsset, presetName: preset) else {
             throw NSError(domain: "App", code: 500, userInfo: [NSLocalizedDescriptionKey: "Could not create AVAssetExportSession."])
         }
@@ -267,7 +271,22 @@ class ProcessingService {
         exportSession.outputFileType = try await avAsset.determineBestExportFileType()
         exportSession.timeRange = timeRange
 
-        // --- 5. Add Video Composition for LUT ---
+        // --- 5. Configure Quality Settings for Re-encoding ---
+        if hasFilter {
+            // When baking LUTs with HighestQuality preset:
+            // - AVFoundation will use H.264 or HEVC codec (App Store compliant)
+            // - Target highest bitrate possible within preset limits
+            // - Note: True lossless requires Passthrough, but that doesn't support filters
+
+            // Set metadata to preserve as much info as possible
+            exportSession.metadata = try await avAsset.load(.metadata)
+
+            print("⚙️ Export preset: \(preset) (re-encoding with LUT)")
+        } else {
+            print("⚙️ Export preset: \(preset) (lossless passthrough)")
+        }
+
+        // --- 6. Add Video Composition for LUT ---
         if hasFilter {
             if let lutId = asset.selectedLUTId,
                !lutId.isEmpty,
@@ -300,6 +319,13 @@ class ProcessingService {
             guard FileManager.default.fileExists(atPath: tempOutputURL.path) else {
                 throw NSError(domain: "App", code: 500, userInfo: [NSLocalizedDescriptionKey: "Export completed but file not found"])
             }
+
+            // Validate output quality
+            await validateExportQuality(
+                sourceProperties: videoProperties,
+                outputURL: tempOutputURL,
+                wasReencoded: hasFilter
+            )
 
             if outputFolder != nil {
                 // Output folder specified: File is already in output folder
@@ -353,6 +379,103 @@ class ProcessingService {
         }
     }
 
+    // MARK: - Video Quality Helpers
+
+    private struct VideoProperties {
+        let codec: String
+        let width: CGFloat
+        let height: CGFloat
+        let frameRate: Float
+        let bitrate: Double
+    }
+
+    private func getVideoProperties(from asset: AVAsset) async throws -> VideoProperties {
+        guard let videoTrack = try await asset.loadTracks(withMediaType: .video).first else {
+            throw NSError(domain: "App", code: 500, userInfo: [NSLocalizedDescriptionKey: "No video track found"])
+        }
+
+        let naturalSize = try await videoTrack.load(.naturalSize)
+        let nominalFrameRate = try await videoTrack.load(.nominalFrameRate)
+        let estimatedDataRate = try await videoTrack.load(.estimatedDataRate)
+
+        // Detect codec from format descriptions
+        var codecName = "Unknown"
+        if let formatDescriptions = try? await videoTrack.load(.formatDescriptions) as? [CMFormatDescription],
+           let formatDescription = formatDescriptions.first {
+            let codecType = CMFormatDescriptionGetMediaSubType(formatDescription)
+            codecName = fourCharCodeToString(codecType)
+        }
+
+        return VideoProperties(
+            codec: codecName,
+            width: naturalSize.width,
+            height: naturalSize.height,
+            frameRate: nominalFrameRate,
+            bitrate: Double(estimatedDataRate)
+        )
+    }
+
+    private func fourCharCodeToString(_ code: FourCharCode) -> String {
+        let bytes: [UInt8] = [
+            UInt8((code >> 24) & 0xFF),
+            UInt8((code >> 16) & 0xFF),
+            UInt8((code >> 8) & 0xFF),
+            UInt8(code & 0xFF)
+        ]
+        return String(bytes: bytes, encoding: .ascii) ?? "Unknown"
+    }
+
+    private func validateExportQuality(
+        sourceProperties: VideoProperties,
+        outputURL: URL,
+        wasReencoded: Bool
+    ) async {
+        do {
+            let outputAsset = AVAsset(url: outputURL)
+            let outputProperties = try await getVideoProperties(from: outputAsset)
+
+            print("\n✅ Export completed:")
+            print("   Source: \(sourceProperties.codec) | \(Int(sourceProperties.width))x\(Int(sourceProperties.height)) | \(String(format: "%.2f", sourceProperties.frameRate)) fps | \(String(format: "%.1f", sourceProperties.bitrate / 1_000_000)) Mbps")
+            print("   Output: \(outputProperties.codec) | \(Int(outputProperties.width))x\(Int(outputProperties.height)) | \(String(format: "%.2f", outputProperties.frameRate)) fps | \(String(format: "%.1f", outputProperties.bitrate / 1_000_000)) Mbps")
+
+            // Validate dimensions
+            if abs(outputProperties.width - sourceProperties.width) > 1 ||
+               abs(outputProperties.height - sourceProperties.height) > 1 {
+                print("   ⚠️ WARNING: Dimensions changed!")
+            } else {
+                print("   ✓ Dimensions preserved")
+            }
+
+            // Validate frame rate
+            if abs(outputProperties.frameRate - sourceProperties.frameRate) > 0.1 {
+                print("   ⚠️ WARNING: Frame rate changed!")
+            } else {
+                print("   ✓ Frame rate preserved")
+            }
+
+            // Codec and bitrate notes
+            if wasReencoded {
+                print("   ℹ️ Re-encoded with LUT (codec may differ from source)")
+
+                // Check if bitrate dropped significantly
+                let bitrateRatio = outputProperties.bitrate / sourceProperties.bitrate
+                if bitrateRatio < 0.7 {
+                    print("   ⚠️ WARNING: Output bitrate is \(Int(bitrateRatio * 100))% of source")
+                    print("      Consider using higher quality source files or check AVAssetExportPresetHighestQuality settings")
+                } else {
+                    print("   ✓ Bitrate maintained at \(Int(bitrateRatio * 100))% of source")
+                }
+            } else {
+                print("   ✓ Lossless passthrough (100% quality preserved)")
+            }
+
+            print("")
+
+        } catch {
+            print("⚠️ Could not validate output quality: \(error.localizedDescription)")
+        }
+    }
+
     // MARK: - LUT Video Composition
 
     private func createLUTComposition(for asset: AVAsset, lutData: LUTData) async throws -> AVVideoComposition {
@@ -363,6 +486,30 @@ class ProcessingService {
 
         let naturalSize = try await videoTrack.load(.naturalSize)
         _ = try await videoTrack.load(.preferredTransform)
+
+        // Read and preserve source frame rate
+        let nominalFrameRate = try await videoTrack.load(.nominalFrameRate)
+        let sourceFrameRate = nominalFrameRate > 0 ? nominalFrameRate : 30.0
+
+        // Calculate frame duration from source frame rate
+        // For precise frame rates like 23.976, use appropriate timescale
+        let frameDuration: CMTime
+        if abs(sourceFrameRate - 23.976) < 0.01 {
+            // 23.976 fps = 24000/1001
+            frameDuration = CMTime(value: 1001, timescale: 24000)
+        } else if abs(sourceFrameRate - 29.97) < 0.01 {
+            // 29.97 fps = 30000/1001
+            frameDuration = CMTime(value: 1001, timescale: 30000)
+        } else if abs(sourceFrameRate - 59.94) < 0.01 {
+            // 59.94 fps = 60000/1001
+            frameDuration = CMTime(value: 1001, timescale: 60000)
+        } else {
+            // Use direct frame rate (24, 25, 30, 60, 120, etc.)
+            let timescale = Int32(sourceFrameRate * 1000)
+            frameDuration = CMTime(value: 1000, timescale: timescale)
+        }
+
+        print("📹 Preserving source frame rate: \(sourceFrameRate) fps")
 
         // Create the color cube filter
         guard let filter = LUTParser.createColorCubeFilter(from: lutData) else {
@@ -379,7 +526,7 @@ class ProcessingService {
         }
 
         composition.renderSize = naturalSize
-        composition.frameDuration = CMTime(value: 1, timescale: 30) // 30 fps
+        composition.frameDuration = frameDuration
 
         return composition
     }

@@ -1,0 +1,12 @@
+#!/bin/bash
+# Source this file to set notarization credentials
+# Usage: source scripts/.notarization_env
+
+export APPLE_ID="roman.g.wilson@gmail.com"
+export APP_SPECIFIC_PASSWORD="$(security find-generic-password -s 'VideoCullingApp_Notarization_Password' -w 2>/dev/null)"
+
+if [ -z "$APP_SPECIFIC_PASSWORD" ]; then
+    echo "⚠️  Could not retrieve password from keychain"
+    echo "Run: ./scripts/setup_credentials.sh"
+    exit 1
+fi

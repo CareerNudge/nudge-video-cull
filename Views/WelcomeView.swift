@@ -20,6 +20,19 @@ struct WelcomeView: View {
     @State private var stagingConfigured = false
     @State private var outputSelected = false
 
+    // Beta expiration date: April 1, 2026
+    private var betaExpirationDate: Date {
+        var components = DateComponents()
+        components.year = 2026
+        components.month = 4
+        components.day = 1
+        return Calendar.current.date(from: components) ?? Date()
+    }
+
+    private var isBetaExpired: Bool {
+        return Date() >= betaExpirationDate
+    }
+
     var body: some View {
         ZStack {
             // Semi-transparent background overlay
@@ -168,15 +181,21 @@ struct WelcomeView: View {
                             )
                         )
                         .cornerRadius(12)
-                        .opacity(allRequiredFieldsConfigured() ? 1.0 : 0.5)
+                        .opacity(canProceed() ? 1.0 : 0.5)
                     }
                     .buttonStyle(.plain)
-                    .disabled(!allRequiredFieldsConfigured())
+                    .disabled(!canProceed())
                     .accessibilityIdentifier("goButton")
                     .padding(.horizontal, 30)
 
                     // Scanning progress indicator
-                    if viewModel.isLoading {
+                    if isBetaExpired {
+                        // Show beta expiration message
+                        Text("Beta version only valid until April 2026")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundColor(.red)
+                            .padding(.bottom, 16)
+                    } else if viewModel.isLoading {
                         VStack(spacing: 8) {
                             HStack(spacing: 8) {
                                 ProgressView()
@@ -238,6 +257,11 @@ struct WelcomeView: View {
         // Ensure folders are selected (scanning will happen after GO is clicked)
         return viewModel.inputFolderURL != nil &&
                viewModel.outputFolderURL != nil
+    }
+
+    private func canProceed() -> Bool {
+        // Check both required fields and beta expiration
+        return !isBetaExpired && allRequiredFieldsConfigured()
     }
 
     private func handleGoButton() {
