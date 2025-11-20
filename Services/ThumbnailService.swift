@@ -9,7 +9,6 @@ import Foundation
 import AVFoundation
 import AppKit
 
-@MainActor
 class ThumbnailService: ObservableObject {
     static let shared = ThumbnailService()
 
@@ -18,7 +17,7 @@ class ThumbnailService: ObservableObject {
     private var pendingTasks: [(priority: Int, task: () async -> Void)] = []
 
     /// Track pending filmstrip thumbnail generations for "Ready" status
-    @Published var pendingFilmstripThumbnails = 0
+    @MainActor @Published var pendingFilmstripThumbnails = 0
 
     private init() {}
 
@@ -40,12 +39,16 @@ class ThumbnailService: ObservableObject {
     ) async throws -> CGImage {
         // Track filmstrip thumbnail generation
         if isFilmstrip {
-            pendingFilmstripThumbnails += 1
+            await MainActor.run {
+                pendingFilmstripThumbnails += 1
+            }
         }
 
         defer {
             if isFilmstrip {
-                pendingFilmstripThumbnails -= 1
+                Task { @MainActor in
+                    pendingFilmstripThumbnails -= 1
+                }
             }
         }
 

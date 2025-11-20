@@ -206,9 +206,6 @@ struct PlayerView: View {
                                         let newValue = min(max(0, rawValue), localTrimEnd - 0.01)
                                         localTrimStart = newValue
 
-                                        // Generate preview frame at new trim position
-                                        generatePreviewFrame(at: newValue)
-
                                         // Update currentPosition if it's now outside the trim range
                                         if currentPosition < newValue {
                                             currentPosition = newValue
@@ -245,9 +242,6 @@ struct PlayerView: View {
                                         let rawValue = value.location.x / trackWidth
                                         let newValue = min(max(localTrimStart + 0.01, rawValue), 1.0)
                                         localTrimEnd = newValue
-
-                                        // Generate preview frame at new trim position
-                                        generatePreviewFrame(at: newValue)
 
                                         // Update currentPosition if it's now outside the trim range
                                         if currentPosition > newValue {

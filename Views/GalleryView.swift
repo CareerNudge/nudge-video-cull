@@ -714,6 +714,7 @@ struct CleanVideoPlayerView: View {
     @State private var previewImage: NSImage? // For scrubbing preview
     @State private var imageGenerator: AVAssetImageGenerator?
     @State private var ciContext: CIContext? // Hardware-accelerated context for LUT application
+    @State private var previewGenerationTask: Task<Void, Never>? // Track preview generation to allow cancellation
     @ObservedObject private var lutManager = LUTManager.shared
     @ObservedObject private var preferences = UserPreferences.shared
     @ObservedObject private var hotkeyManager = HotkeyManager.shared
@@ -930,9 +931,6 @@ struct CleanVideoPlayerView: View {
                                             let newValue = min(max(0, rawValue), localTrimEnd - 0.01)
                                             localTrimStart = newValue
 
-                                            // Generate preview frame at new trim position
-                                            generatePreviewFrame(at: newValue)
-
                                             // Update currentPosition if it's now outside the trim range
                                             if currentPosition < newValue {
                                                 currentPosition = newValue
@@ -943,7 +941,6 @@ struct CleanVideoPlayerView: View {
                                             }
                                         }
                                         .onEnded { _ in
-                                            previewImage = nil
                                             // ✅ Save to Core Data only when drag ends (not during drag)
                                             asset.trimStartTime = localTrimStart
                                             if let context = asset.managedObjectContext {
@@ -970,9 +967,6 @@ struct CleanVideoPlayerView: View {
                                             let newValue = min(max(localTrimStart + 0.01, rawValue), 1.0)
                                             localTrimEnd = newValue
 
-                                            // Generate preview frame at new trim position
-                                            generatePreviewFrame(at: newValue)
-
                                             // Update currentPosition if it's now outside the trim range
                                             if currentPosition > newValue {
                                                 currentPosition = newValue
@@ -983,7 +977,6 @@ struct CleanVideoPlayerView: View {
                                             }
                                         }
                                         .onEnded { _ in
-                                            previewImage = nil
                                             // ✅ Save to Core Data only when drag ends (not during drag)
                                             asset.trimEndTime = localTrimEnd
                                             if let context = asset.managedObjectContext {
@@ -1046,6 +1039,10 @@ struct CleanVideoPlayerView: View {
         .onDisappear {
             // ✅ CRITICAL: Comprehensive cleanup to prevent memory leaks
             print("🧹 CleanVideoPlayerView cleaning up for \(asset.fileName ?? "unknown")")
+
+            // Cancel any pending preview generation
+            previewGenerationTask?.cancel()
+            previewGenerationTask = nil
 
             // Remove time observers (prevents retain cycles)
             removeTimeObserver()
@@ -1115,11 +1112,7 @@ struct CleanVideoPlayerView: View {
                     player.seek(to: seekTime)
                 }
             }
-
-            // Recreate boundary observer with new end point
-            if isPlaying {
-                setupBoundaryObserver()
-            }
+            // Note: Boundary observer will be recreated automatically on next playback start
         }
         .onChange(of: hotkeyManager.togglePlayPauseTrigger) { _ in
             togglePlayPause()
@@ -1393,6 +1386,53 @@ struct CleanVideoPlayerView: View {
                 }
             } catch {
                 print("Failed to generate preview frame: \(error)")
+            }
+        }
+    }
+
+    // Debounced preview generation - cancels previous task and waits before generating
+    private func generateDebouncedPreview(at normalizedTime: Double, delay: TimeInterval = 0.15) {
+        // Cancel any existing preview generation task
+        previewGenerationTask?.cancel()
+
+        // Create new task with delay
+        previewGenerationTask = Task {
+            // Wait for the delay (allows cancellation if user keeps dragging)
+            try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+
+            // Check if cancelled during sleep
+            guard !Task.isCancelled else { return }
+
+            // Generate the preview
+            guard let generator = imageGenerator else { return }
+
+            let timeInSeconds = normalizedTime * asset.duration
+            let time = CMTime(seconds: timeInSeconds, preferredTimescale: 600)
+
+            do {
+                guard let avAsset = (generator.asset as? AVAsset) ?? generator.asset as? AVURLAsset else {
+                    return
+                }
+
+                let cgImage = try await ThumbnailService.shared.generateThumbnail(
+                    for: avAsset,
+                    at: time,
+                    maxSize: CGSize(width: 1920, height: 1080),
+                    immediate: true // High priority for trim preview
+                )
+
+                // Check if cancelled after generation
+                guard !Task.isCancelled else { return }
+
+                let finalImage = await applyLUTToImage(cgImage: cgImage)
+
+                await MainActor.run {
+                    self.previewImage = finalImage
+                }
+            } catch {
+                if !Task.isCancelled {
+                    print("Failed to generate debounced preview: \(error)")
+                }
             }
         }
     }
