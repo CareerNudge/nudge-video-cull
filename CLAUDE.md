@@ -2,6 +2,15 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## ⚠️ CRITICAL: Git Workflow Rules
+
+**DO NOT commit or push changes unless explicitly instructed by the user.**
+
+- Make code changes and fixes as requested
+- Build and test to verify changes work
+- Wait for the user to explicitly ask to commit before running any git commands
+- When the user does ask to commit, follow the standard commit process with proper messages
+
 ## Project Overview
 
 **Nudge Video Cull** is a professional macOS video culling application for efficiently reviewing, trimming, and processing video files with LUT support. Built with SwiftUI, AVFoundation, and Core Data, it's designed to be 100% App Store compliant with no FFmpeg or GPL/LGPL dependencies.

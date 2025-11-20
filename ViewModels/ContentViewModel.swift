@@ -204,15 +204,27 @@ class ContentViewModel: ObservableObject {
         self.loadingStatus = "Loading thumbnails..."
         print("✓ Scan complete - \(self.totalFilesToProcess) files loaded, generating thumbnails...")
 
-        // Wait for initial thumbnails to generate and UI to stabilize
-        // Scale delay based on file count: min 2s, max 10s
-        let fileCount = Double(self.totalFilesToProcess)
-        let delaySeconds = min(10.0, max(2.0, fileCount * 0.1)) // ~0.1s per file
-        try? await Task.sleep(nanoseconds: UInt64(delaySeconds * 1_000_000_000))
+        // Wait for all filmstrip thumbnails to complete (with timeout)
+        let startTime = Date()
+        let maxWaitTime: TimeInterval = 30.0 // 30 second timeout
+
+        while ThumbnailService.shared.pendingFilmstripThumbnails > 0 {
+            let elapsed = Date().timeIntervalSince(startTime)
+            if elapsed > maxWaitTime {
+                print("⚠️ Thumbnail loading timeout after \(maxWaitTime)s. Remaining: \(ThumbnailService.shared.pendingFilmstripThumbnails)")
+                break
+            }
+
+            // Update status with progress
+            let remaining = ThumbnailService.shared.pendingFilmstripThumbnails
+            self.loadingStatus = "Loading thumbnails... (\(remaining) remaining)"
+
+            try? await Task.sleep(nanoseconds: 500_000_000) // Check every 0.5s
+        }
 
         self.isLoading = false
         self.loadingStatus = "Ready"
-        print("✓ Loading complete")
+        print("✓ Loading complete - all thumbnails generated")
     }
 
     // MARK: - Persistent Folder Storage

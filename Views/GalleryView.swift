@@ -9,7 +9,7 @@ import AVFoundation
 
 struct GalleryView: View {
     @State private var currentPlayingIndex: Int? = nil
-    @State private var selectedAssetIndex: Int = 0 // Shared between horizontal and vertical views
+    @State private var selectedAssetIndex: Int = -1 // -1 = no selection until loading completes
     @ObservedObject private var preferences = UserPreferences.shared
     @StateObject private var viewModel: ContentViewModel
     @ObservedObject private var hotkeyManager = HotkeyManager.shared
@@ -74,7 +74,9 @@ struct GalleryView: View {
                     videoAssets: Array(sortedAssets),
                     statistics: statistics,
                     currentPlayingIndex: $currentPlayingIndex,
-                    selectedAssetIndex: $selectedAssetIndex
+                    selectedAssetIndex: $selectedAssetIndex,
+                    isLoading: viewModel.isLoading,
+                    loadingStatus: viewModel.loadingStatus
                 )
             } else {
                 verticalGalleryView
@@ -82,6 +84,17 @@ struct GalleryView: View {
         }
         .onAppear {
             setupHotkeyCallbacks()
+        }
+        .onChange(of: viewModel.isLoading) { isLoading in
+            // When loading completes, wait 1 second then select the first video
+            if !isLoading && !sortedAssets.isEmpty {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    if self.selectedAssetIndex == -1 {
+                        self.selectedAssetIndex = 0
+                        print("✅ Loading complete - selected first video (index 0)")
+                    }
+                }
+            }
         }
         .onChange(of: hotkeyManager.navigateNextTrigger) { _ in
             if selectedAssetIndex < sortedAssets.count - 1 {
@@ -167,7 +180,23 @@ struct GalleryView: View {
                                 .font(.title)
                                 .foregroundColor(.secondary)
                                 .padding(.top, 100)
+                        } else if viewModel.isLoading {
+                            // Show loading placeholder during initial load
+                            VStack(spacing: 20) {
+                                ProgressView()
+                                    .scaleEffect(2.0)
+                                    .padding(.top, 100)
+
+                                Text(viewModel.loadingStatus)
+                                    .font(.title2)
+                                    .foregroundColor(.secondary)
+
+                                Text("Please wait while thumbnails are generated...")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
                         } else {
+                            // Only render video rows after loading is complete
                             ForEach(Array(sortedAssets.enumerated()), id: \.element.id) { index, asset in
                                 VStack(spacing: 0) {
                                     VideoAssetRowView(
@@ -334,6 +363,8 @@ struct HorizontalGalleryView: View {
     let statistics: (totalClips: Int, originalDuration: Double, estimatedDuration: Double, originalSize: Double, estimatedSize: Double)
     @Binding var currentPlayingIndex: Int?
     @Binding var selectedAssetIndex: Int // Now shared with parent
+    let isLoading: Bool // Track initial loading state
+    let loadingStatus: String // Loading status message
     @ObservedObject private var preferences = UserPreferences.shared
 
     // Local state for trim sliders and deletion flag
@@ -343,7 +374,7 @@ struct HorizontalGalleryView: View {
     @State private var scrubPosition: Double? = nil // For scrubbing preview
 
     private var selectedAsset: ManagedVideoAsset? {
-        guard !videoAssets.isEmpty, selectedAssetIndex < videoAssets.count else { return nil }
+        guard !videoAssets.isEmpty, selectedAssetIndex >= 0, selectedAssetIndex < videoAssets.count else { return nil }
         return videoAssets[selectedAssetIndex]
     }
 
@@ -365,7 +396,8 @@ struct HorizontalGalleryView: View {
                 // Main content area
                 HStack(spacing: 0) {
                     // Left side: Large video player (no overlay controls)
-                    if let asset = selectedAsset {
+                    // Only show preview after initial loading is complete
+                    if let asset = selectedAsset, !isLoading {
                         CleanVideoPlayerView(
                             asset: asset,
                             localTrimStart: $localTrimStart,
@@ -379,6 +411,22 @@ struct HorizontalGalleryView: View {
                         )
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .id(selectedAssetIndex) // Force reload when selection changes
+                    } else {
+                        // Show placeholder during loading
+                        Rectangle()
+                            .fill(Color.black)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .overlay(
+                                VStack(spacing: 12) {
+                                    if isLoading {
+                                        ProgressView()
+                                            .scaleEffect(1.5)
+                                        Text(loadingStatus)
+                                            .foregroundColor(.white)
+                                            .font(.headline)
+                                    }
+                                }
+                            )
                     }
 
                     Divider()
@@ -443,38 +491,55 @@ struct HorizontalGalleryView: View {
 
                 // Bottom: Thumbnail filmstrip
                 VStack(spacing: 0) {
-                    ScrollViewReader { proxy in
-                        ScrollView(.horizontal, showsIndicators: true) {
-                            HStack(spacing: 12) {
-                                ForEach(Array(videoAssets.enumerated()), id: \.element.id) { index, asset in
-                                    ThumbnailCardView(
-                                        asset: asset,
-                                        isSelected: index == selectedAssetIndex,
-                                        onTap: {
-                                            withAnimation {
-                                                selectedAssetIndex = index
-                                                currentPlayingIndex = nil
-                                                // Load values for new selection
-                                                if let newAsset = videoAssets[safe: index] {
-                                                    localTrimStart = newAsset.trimStartTime
-                                                    localTrimEnd = newAsset.trimEndTime > 0 ? newAsset.trimEndTime : 1.0
-                                                    localIsFlaggedForDeletion = newAsset.isFlaggedForDeletion
-                                                }
-                                            }
-                                        }
-                                    )
-                                    .id(asset.id)
-                                }
+                    if isLoading {
+                        // Show loading placeholder instead of filmstrip during initial load
+                        HStack {
+                            Spacer()
+                            VStack(spacing: 12) {
+                                ProgressView()
+                                Text(loadingStatus)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
                             }
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 12)
+                            Spacer()
                         }
-                        .accessibilityIdentifier("videoGallery")
                         .frame(height: 200)
                         .background(Color(NSColor.windowBackgroundColor))
-                        .onChange(of: selectedAssetIndex) { newIndex in
-                            if newIndex < videoAssets.count {
-                                proxy.scrollTo(videoAssets[newIndex].id, anchor: .center)
+                    } else {
+                        // Only render filmstrip thumbnails after loading is complete
+                        ScrollViewReader { proxy in
+                            ScrollView(.horizontal, showsIndicators: true) {
+                                HStack(spacing: 12) {
+                                    ForEach(Array(videoAssets.enumerated()), id: \.element.id) { index, asset in
+                                        ThumbnailCardView(
+                                            asset: asset,
+                                            isSelected: index == selectedAssetIndex,
+                                            onTap: {
+                                                withAnimation {
+                                                    selectedAssetIndex = index
+                                                    currentPlayingIndex = nil
+                                                    // Load values for new selection
+                                                    if let newAsset = videoAssets[safe: index] {
+                                                        localTrimStart = newAsset.trimStartTime
+                                                        localTrimEnd = newAsset.trimEndTime > 0 ? newAsset.trimEndTime : 1.0
+                                                        localIsFlaggedForDeletion = newAsset.isFlaggedForDeletion
+                                                    }
+                                                }
+                                            }
+                                        )
+                                        .id(asset.id)
+                                    }
+                                }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 12)
+                            }
+                            .accessibilityIdentifier("videoGallery")
+                            .frame(height: 200)
+                            .background(Color(NSColor.windowBackgroundColor))
+                            .onChange(of: selectedAssetIndex) { newIndex in
+                                if newIndex < videoAssets.count {
+                                    proxy.scrollTo(videoAssets[newIndex].id, anchor: .center)
+                                }
                             }
                         }
                     }
@@ -789,14 +854,7 @@ struct CleanVideoPlayerView: View {
                             player?.pause()
                             isPlaying = false
                         } else {
-                            // If at or near the end, restart from beginning
-                            if currentPosition >= localTrimEnd - 0.01 {
-                                currentPosition = localTrimStart
-                                if let player = player {
-                                    let seekTime = CMTime(seconds: asset.duration * localTrimStart, preferredTimescale: 600)
-                                    player.seek(to: seekTime, toleranceBefore: .zero, toleranceAfter: .zero)
-                                }
-                            }
+                            // startPlayback() handles seek logic automatically
                             startPlayback()
                         }
                     }) {
@@ -1166,14 +1224,7 @@ struct CleanVideoPlayerView: View {
             player?.pause()
             isPlaying = false
         } else {
-            // If at or near the end, restart from beginning
-            if currentPosition >= localTrimEnd - 0.01 {
-                currentPosition = localTrimStart
-                if let player = player {
-                    let seekTime = CMTime(seconds: asset.duration * localTrimStart, preferredTimescale: 600)
-                    player.seek(to: seekTime, toleranceBefore: .zero, toleranceAfter: .zero)
-                }
-            }
+            // startPlayback() handles seek logic automatically
             startPlayback()
         }
         print("⌨️ Play/Pause toggled: \(isPlaying ? "playing" : "paused")")
@@ -1298,11 +1349,12 @@ struct CleanVideoPlayerView: View {
 
             do {
                 let time = CMTime(seconds: 1.0, preferredTimescale: 600)
-                // Use ThumbnailService to throttle concurrent generations
+                // High-quality preview with immediate generation (bypasses throttling)
                 let cgImage = try await ThumbnailService.shared.generateThumbnail(
                     for: avAsset,
                     at: time,
-                    maxSize: CGSize(width: 400, height: 300)
+                    maxSize: CGSize(width: 1920, height: 1080), // Full HD quality
+                    immediate: true // Bypass throttling for instant preview
                 )
                 let finalImage = await applyLUTToImage(cgImage: cgImage)
 
@@ -1323,7 +1375,7 @@ struct CleanVideoPlayerView: View {
 
         Task {
             do {
-                // Use ThumbnailService to throttle concurrent generations
+                // High-quality scrubbing preview with immediate generation
                 guard let avAsset = (generator.asset as? AVAsset) ?? generator.asset as? AVURLAsset else {
                     print("Failed to get AVAsset from generator")
                     return
@@ -1331,7 +1383,8 @@ struct CleanVideoPlayerView: View {
                 let cgImage = try await ThumbnailService.shared.generateThumbnail(
                     for: avAsset,
                     at: time,
-                    maxSize: CGSize(width: 400, height: 300)
+                    maxSize: CGSize(width: 1920, height: 1080), // Full HD quality
+                    immediate: true // Bypass throttling for responsive scrubbing
                 )
                 let finalImage = await applyLUTToImage(cgImage: cgImage)
 
@@ -1444,13 +1497,30 @@ struct CleanVideoPlayerView: View {
         setupTimeObserver()
         setupBoundaryObserver()
 
-        // Then seek to trim start with precise tolerances
-        let startTime = CMTime(seconds: asset.duration * localTrimStart, preferredTimescale: 600)
-        player.seek(to: startTime, toleranceBefore: .zero, toleranceAfter: .zero) { finished in
-            guard finished else { return }
+        // Only seek if we're outside the trim range or very close to the end
+        let currentSeconds = currentPosition * asset.duration
+        let trimStartSeconds = localTrimStart * asset.duration
+        let trimEndSeconds = localTrimEnd * asset.duration
+        let secondsFromEnd = trimEndSeconds - currentSeconds
 
+        let needsSeek = currentPosition < localTrimStart ||  // Before trim start
+                        currentPosition > localTrimEnd ||    // After trim end
+                        secondsFromEnd < 0.2                 // Very close to end
+
+        if needsSeek {
+            // Seek to trim start
+            let startTime = CMTime(seconds: trimStartSeconds, preferredTimescale: 600)
+            player.seek(to: startTime, toleranceBefore: .zero, toleranceAfter: .zero) { finished in
+                guard finished else { return }
+                Task { @MainActor in
+                    self.currentPosition = self.localTrimStart
+                    self.isPlaying = true
+                    player.play()
+                }
+            }
+        } else {
+            // Resume from current position (no seeking)
             Task { @MainActor in
-                // Only start playing if seek completed successfully
                 self.isPlaying = true
                 player.play()
             }
@@ -1681,11 +1751,12 @@ struct ThumbnailCardView: View {
             let avAsset = AVAsset(url: fileURL)
 
             do {
-                // Use ThumbnailService to throttle concurrent generations
+                // Throttled filmstrip thumbnail generation (tracks completion for "Ready" status)
                 let cgImage = try await ThumbnailService.shared.generateThumbnail(
                     for: avAsset,
                     at: .zero,
-                    maxSize: CGSize(width: 320, height: 180)
+                    maxSize: CGSize(width: 320, height: 180),
+                    isFilmstrip: true // Track for completion monitoring
                 )
                 let nsImage = NSImage(cgImage: cgImage, size: NSSize(width: 320, height: 180))
 

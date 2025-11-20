@@ -118,14 +118,7 @@ struct PlayerView: View {
                         player?.pause()
                         isPlaying = false
                     } else {
-                        // If at or near the end, restart from beginning
-                        if currentPosition >= localTrimEnd - 0.01 {
-                            currentPosition = localTrimStart
-                            if let player = player {
-                                let seekTime = CMTime(seconds: asset.duration * localTrimStart, preferredTimescale: 600)
-                                player.seek(to: seekTime, toleranceBefore: .zero, toleranceAfter: .zero)
-                            }
-                        }
+                        // startPlayback() handles seek logic automatically
                         startPlayback()
                     }
                 }) {
@@ -598,14 +591,7 @@ struct PlayerView: View {
             player?.pause()
             isPlaying = false
         } else {
-            // If at or near the end, restart from beginning
-            if currentPosition >= localTrimEnd - 0.01 {
-                currentPosition = localTrimStart
-                if let player = player {
-                    let seekTime = CMTime(seconds: asset.duration * localTrimStart, preferredTimescale: 600)
-                    player.seek(to: seekTime, toleranceBefore: .zero, toleranceAfter: .zero)
-                }
-            }
+            // startPlayback() handles seek logic automatically
             startPlayback()
         }
         print("⌨️ Play/Pause toggled: \(isPlaying ? "playing" : "paused")")
@@ -725,11 +711,12 @@ struct PlayerView: View {
 
             do {
                 let time = CMTime(seconds: 1.0, preferredTimescale: 600)
-                // Use ThumbnailService to throttle concurrent generations
+                // Throttled row thumbnail generation (tracks completion for "Ready" status)
                 let cgImage = try await ThumbnailService.shared.generateThumbnail(
                     for: avAsset,
                     at: time,
-                    maxSize: CGSize(width: 400, height: 300)
+                    maxSize: CGSize(width: 400, height: 300),
+                    isFilmstrip: true // Track for completion monitoring
                 )
 
                 // Apply LUT if selected
@@ -907,13 +894,30 @@ struct PlayerView: View {
         setupTimeObserver()
         setupBoundaryObserver()
 
-        // Then seek to trim start with precise tolerances
-        let startTime = CMTime(seconds: asset.duration * localTrimStart, preferredTimescale: 600)
-        player.seek(to: startTime, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] finished in
-            guard let self = self, finished else { return }
+        // Only seek if we're outside the trim range or very close to the end
+        let currentSeconds = currentPosition * asset.duration
+        let trimStartSeconds = localTrimStart * asset.duration
+        let trimEndSeconds = localTrimEnd * asset.duration
+        let secondsFromEnd = trimEndSeconds - currentSeconds
 
+        let needsSeek = currentPosition < localTrimStart ||  // Before trim start
+                        currentPosition > localTrimEnd ||    // After trim end
+                        secondsFromEnd < 0.2                 // Very close to end
+
+        if needsSeek {
+            // Seek to trim start
+            let startTime = CMTime(seconds: trimStartSeconds, preferredTimescale: 600)
+            player.seek(to: startTime, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] finished in
+                guard let self = self, finished else { return }
+                Task { @MainActor in
+                    self.currentPosition = self.localTrimStart
+                    self.isPlaying = true
+                    player.play()
+                }
+            }
+        } else {
+            // Resume from current position (no seeking)
             Task { @MainActor in
-                // Only start playing if seek completed successfully
                 self.isPlaying = true
                 player.play()
             }
@@ -934,7 +938,7 @@ struct PlayerView: View {
         removeTimeObserver()
 
         // Add periodic observer - ONLY update UI, don't control playback
-        let interval = CMTime(seconds: 0.033, preferredTimescale: 600) // ~30fps update rate
+        let interval = CMTime(seconds: 0.1, preferredTimescale: 600) // ~10fps update rate (reduces UI overhead for smoother playback)
         timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
             guard let self = self else { return }
 

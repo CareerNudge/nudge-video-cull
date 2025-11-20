@@ -17,19 +17,44 @@ class ThumbnailService: ObservableObject {
     private var currentGenerations = 0
     private var pendingTasks: [(priority: Int, task: () async -> Void)] = []
 
+    /// Track pending filmstrip thumbnail generations for "Ready" status
+    @Published var pendingFilmstripThumbnails = 0
+
     private init() {}
 
     /// Generate thumbnail with automatic throttling
+    /// - Parameters:
+    ///   - asset: The video asset
+    ///   - time: Time position for thumbnail
+    ///   - maxSize: Maximum thumbnail dimensions
+    ///   - priority: Priority level (unused currently)
+    ///   - immediate: If true, bypass throttling for instant generation (used for selected video preview)
+    ///   - isFilmstrip: If true, count towards filmstrip completion tracking
     func generateThumbnail(
         for asset: AVAsset,
         at time: CMTime,
         maxSize: CGSize,
-        priority: Int = 0
+        priority: Int = 0,
+        immediate: Bool = false,
+        isFilmstrip: Bool = false
     ) async throws -> CGImage {
-        // Wait if too many concurrent generations
-        while currentGenerations >= maxConcurrentGenerations {
-            try await Task.sleep(nanoseconds: 100_000_000) // 0.1 second
-            if Task.isCancelled { throw CancellationError() }
+        // Track filmstrip thumbnail generation
+        if isFilmstrip {
+            pendingFilmstripThumbnails += 1
+        }
+
+        defer {
+            if isFilmstrip {
+                pendingFilmstripThumbnails -= 1
+            }
+        }
+
+        // Wait if too many concurrent generations (unless immediate mode)
+        if !immediate {
+            while currentGenerations >= maxConcurrentGenerations {
+                try await Task.sleep(nanoseconds: 100_000_000) // 0.1 second
+                if Task.isCancelled { throw CancellationError() }
+            }
         }
 
         currentGenerations += 1
