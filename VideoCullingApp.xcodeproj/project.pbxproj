@@ -21,6 +21,8 @@
 		A100001D000000000000001 /* ManagedVideoAsset+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100001E000000000000001 /* ManagedVideoAsset+Extensions.swift */; };
 		A1000023000000000000001 /* LUTManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000024000000000000001 /* LUTManager.swift */; };
 		A1000025000000000000001 /* LUTManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000026000000000000001 /* LUTManagerView.swift */; };
+		A103C5AF2ECF8C2600F4CC39 /* TipsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A103C5AE2ECF8C2600F4CC39 /* TipsManager.swift */; };
+		A103C5B12ECF8C5300F4CC39 /* tips.json in Resources */ = {isa = PBXBuildFile; fileRef = A103C5B02ECF8C5300F4CC39 /* tips.json */; };
 		A109E7682ECED80000CB6B82 /* PlayerPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = A109E7672ECED80000CB6B82 /* PlayerPool.swift */; };
 		A12EFBC62ECA304000C0CA18 /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12EFBC52ECA304000C0CA18 /* WaveformView.swift */; };
 		A12EFBC82ECA305400C0CA18 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12EFBC72ECA305400C0CA18 /* PreferencesView.swift */; };
@@ -99,6 +101,8 @@
 		A1000022000000000000001 /* VideoCullingApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VideoCullingApp.entitlements; sourceTree = "<group>"; };
 		A1000024000000000000001 /* LUTManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LUTManager.swift; sourceTree = "<group>"; };
 		A1000026000000000000001 /* LUTManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LUTManagerView.swift; sourceTree = "<group>"; };
+		A103C5AE2ECF8C2600F4CC39 /* TipsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsManager.swift; sourceTree = "<group>"; };
+		A103C5B02ECF8C5300F4CC39 /* tips.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tips.json; sourceTree = "<group>"; };
 		A109E7672ECED80000CB6B82 /* PlayerPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerPool.swift; sourceTree = "<group>"; };
 		A12EFBC52ECA304000C0CA18 /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		A12EFBC72ECA305400C0CA18 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
@@ -231,6 +235,7 @@
 		A1000001000000000000006 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A103C5AE2ECF8C2600F4CC39 /* TipsManager.swift */,
 				A109E7672ECED80000CB6B82 /* PlayerPool.swift */,
 				A1DDCE5A2ECE760200966D45 /* ThumbnailService.swift */,
 				A1DDCE582ECE6DE600966D45 /* HotkeyManager.swift */,
@@ -380,6 +385,7 @@
 		A1FFFFFE000000000000001 = {
 			isa = PBXGroup;
 			children = (
+				A103C5B02ECF8C5300F4CC39 /* tips.json */,
 				A12EFC632ECBA8D500C0CA18 /* UILayoutTests.swift */,
 				A12EFC612ECB870800C0CA18 /* VideoCullingAppUITests.swift */,
 				A12EFC5F2ECB852F00C0CA18 /* LUTAutoMapperTests.swift */,
@@ -529,6 +535,7 @@
 				A12EFC182ECA8DC700C0CA18 /* 3_SGamut3CineSLog3_To_SLog2-709.cube in Resources */,
 				A12EFC192ECA8DC700C0CA18 /* 4_SGamut3CineSLog3_To_Cine+709.cube in Resources */,
 				A12EFC292ECA8E2F00C0CA18 /* 4_SGamut3CineSLog3_To_Cine+709.cube in Resources */,
+				A103C5B12ECF8C5300F4CC39 /* tips.json in Resources */,
 				A12EFC2A2ECA8E2F00C0CA18 /* AppleLogToRec709-v1.0.cube in Resources */,
 				A12EFC2B2ECA8E2F00C0CA18 /* From_SLog2SGumut_To_SLog2-709_.cube in Resources */,
 				A12EFC2C2ECA8E2F00C0CA18 /* From_SLog2SGumut_To_Cine+709.cube in Resources */,
@@ -588,6 +595,7 @@
 				A1000015000000000000001 /* StarRatingView.swift in Sources */,
 				A12EFBD22ECA5AC400C0CA18 /* SonyXMLParser.swift in Sources */,
 				A1000017000000000000001 /* FileScannerService.swift in Sources */,
+				A103C5AF2ECF8C2600F4CC39 /* TipsManager.swift in Sources */,
 				A1000019000000000000001 /* ProcessingService.swift in Sources */,
 				A12EFC002ECA5EEF00C0CA18 /* LUTAutoMapper.swift in Sources */,
 				A12EFBC82ECA305400C0CA18 /* PreferencesView.swift in Sources */,

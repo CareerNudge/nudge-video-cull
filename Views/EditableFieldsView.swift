@@ -7,7 +7,8 @@ import SwiftUI
 
 struct EditableFieldsView: View {
     @ObservedObject var asset: ManagedVideoAsset
-    
+    var viewModel: ContentViewModel  // Not @ObservedObject to avoid type-checker complexity
+
     // Local state for UI stability
     @State private var displayFileName: String = ""
     @State private var keywords: String = ""
@@ -15,6 +16,14 @@ struct EditableFieldsView: View {
 
     @ObservedObject private var lutManager = LUTManager.shared
     @State private var selectedLUT: LUT?
+
+    private var selectedAssetsCount: Int {
+        viewModel.selectedAssets.count
+    }
+
+    private var hasMultipleSelection: Bool {
+        selectedAssetsCount > 1
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {

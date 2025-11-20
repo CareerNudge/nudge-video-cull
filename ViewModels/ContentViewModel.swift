@@ -40,12 +40,18 @@ class ContentViewModel: ObservableObject {
     // Cache for external media checks to prevent repeated disk I/O
     private var externalMediaCache: [String: Bool] = [:]
 
+    // Track if initial app load is complete (prevent auto-scan during app launch)
+    private var hasCompletedInitialLoad = false
+
     // First-time user guidance
     @Published var highlightInputFolderButton: Bool = false
     @Published var highlightOutputFolderButton: Bool = false
 
     // FCPXML Export
     @Published var processingComplete: Bool = false
+
+    // Multi-selection support
+    @Published var selectedAssets: Set<NSManagedObjectID> = []
 
     // Workflow mode tracking (synced with UserPreferences)
     var workflowMode: UserPreferences.WorkflowModeOption {
@@ -357,6 +363,9 @@ class ContentViewModel: ObservableObject {
         print("🔄 [RESTORE] Folder restoration complete")
         print("   Final inputFolderURL: \(inputFolderURL?.path ?? "nil")")
         print("   Final outputFolderURL: \(outputFolderURL?.path ?? "nil")\n")
+
+        // Mark initial load as complete to allow auto-scanning on subsequent folder selections
+        hasCompletedInitialLoad = true
     }
 
     func closeCurrentFolder() {
@@ -536,6 +545,26 @@ class ContentViewModel: ObservableObject {
 
             // Stop highlighting output folder button once selected
             self.highlightOutputFolderButton = false
+
+            // If both folders are now set and no assets are loaded, automatically trigger scan
+            // Only do this after initial app load is complete (not during folder restoration)
+            if hasCompletedInitialLoad, let inputURL = inputFolderURL {
+                Task {
+                    // Check if we have any assets
+                    let hasAssets = await viewContext.perform {
+                        let fetchRequest = NSFetchRequest<ManagedVideoAsset>(entityName: "ManagedVideoAsset")
+                        fetchRequest.fetchLimit = 1
+                        return (try? self.viewContext.count(for: fetchRequest)) ?? 0 > 0
+                    }
+
+                    if !hasAssets {
+                        print("   🔄 Both folders selected and no assets loaded - auto-triggering scan")
+                        await scanInputFolder()
+                    } else {
+                        print("   ℹ️ Assets already loaded, scan not triggered")
+                    }
+                }
+            }
         } else {
             print("   ❌ User cancelled destination folder selection")
         }
@@ -690,6 +719,92 @@ class ContentViewModel: ObservableObject {
         self.errorMessage = message
         self.showError = true
         print("Error: \(message)")
+    }
+
+    // MARK: - Multi-Selection Management
+
+    private var lastSelectedIndex: Int?
+
+    func toggleSelection(for asset: ManagedVideoAsset, shiftPressed: Bool = false, allAssets: [ManagedVideoAsset] = []) {
+        if shiftPressed, let lastIndex = lastSelectedIndex, !allAssets.isEmpty {
+            // Shift-click: select range (adds to existing selection)
+            if let currentIndex = allAssets.firstIndex(where: { $0.objectID == asset.objectID }) {
+                selectRange(from: lastIndex, to: currentIndex, in: allAssets)
+            }
+        } else {
+            // Normal click: clear all other selections and select only this item
+            selectedAssets.removeAll()
+            selectedAssets.insert(asset.objectID)
+
+            // Update last selected index
+            if let index = allAssets.firstIndex(where: { $0.objectID == asset.objectID }) {
+                lastSelectedIndex = index
+            }
+        }
+    }
+
+    private func selectRange(from startIndex: Int, to endIndex: Int, in assets: [ManagedVideoAsset]) {
+        let minIndex = min(startIndex, endIndex)
+        let maxIndex = max(startIndex, endIndex)
+
+        for index in minIndex...maxIndex {
+            if index < assets.count {
+                selectedAssets.insert(assets[index].objectID)
+            }
+        }
+
+        lastSelectedIndex = endIndex
+    }
+
+    func clearSelection() {
+        selectedAssets.removeAll()
+        lastSelectedIndex = nil
+    }
+
+    func selectAll() {
+        let fetchRequest = NSFetchRequest<ManagedVideoAsset>(entityName: "ManagedVideoAsset")
+        do {
+            let allAssets = try viewContext.fetch(fetchRequest)
+            selectedAssets = Set(allAssets.map { $0.objectID })
+        } catch {
+            showErrorMessage("Failed to select all: \(error.localizedDescription)")
+        }
+    }
+
+    func isSelected(_ asset: ManagedVideoAsset) -> Bool {
+        return selectedAssets.contains(asset.objectID)
+    }
+
+    // MARK: - Context Menu Actions
+
+    func markForDeletion(assets: [ManagedVideoAsset], flagged: Bool) {
+        for asset in assets {
+            asset.objectWillChange.send()
+            asset.isFlaggedForDeletion = flagged
+        }
+        try? viewContext.save()
+        viewContext.processPendingChanges()
+        print("✅ Marked \(assets.count) video(s) for deletion: \(flagged)")
+    }
+
+    func applyLUTToAssets(assets: [ManagedVideoAsset], lutId: String?) {
+        for asset in assets {
+            asset.objectWillChange.send()
+            asset.selectedLUTId = lutId ?? ""
+        }
+        try? viewContext.save()
+        viewContext.processPendingChanges()
+        print("✅ Applied LUT to \(assets.count) video(s)")
+    }
+
+    func toggleBakeLUT(assets: [ManagedVideoAsset], enabled: Bool) {
+        for asset in assets {
+            asset.objectWillChange.send()
+            asset.bakeInLUT = enabled
+        }
+        try? viewContext.save()
+        viewContext.processPendingChanges()
+        print("✅ Set 'Bake in LUT' to \(enabled) for \(assets.count) video(s)")
     }
 
     // MARK: - Global LUT Application

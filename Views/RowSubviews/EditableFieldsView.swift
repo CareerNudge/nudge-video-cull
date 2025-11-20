@@ -7,6 +7,7 @@ import SwiftUI
 
 struct EditableFieldsView: View {
     @ObservedObject var asset: ManagedVideoAsset
+    var viewModel: ContentViewModel  // Not @ObservedObject to avoid type-checker complexity
     @State private var displayFileName: String = ""
     @State private var keywords: String = ""
     @ObservedObject private var lutManager = LUTManager.shared
@@ -16,9 +17,39 @@ struct EditableFieldsView: View {
     @State private var alsoApplyBakingToMatchingFiles: Bool = false
     @State private var showApplyToAllPrompt: Bool = false
 
+    private var selectedAssetsCount: Int {
+        viewModel.selectedAssets.count
+    }
+
+    private var hasMultipleSelection: Bool {
+        selectedAssetsCount > 1
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             // Top-align all content
+
+            // Multi-selection indicator
+            if hasMultipleSelection {
+                HStack {
+                    Image(systemName: "checkmark.square.fill")
+                        .foregroundColor(.blue)
+                    Text("\(selectedAssetsCount) videos selected")
+                        .font(.subheadline)
+                        .foregroundColor(.blue)
+                    Spacer()
+                    Button("Clear Selection") {
+                        viewModel.clearSelection()
+                    }
+                    .buttonStyle(.borderless)
+                    .font(.caption)
+                }
+                .padding(8)
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(Color.blue.opacity(0.1))
+                )
+            }
 
             // NAMING GROUP
             HStack(alignment: .center, spacing: 12) {
@@ -71,14 +102,23 @@ struct EditableFieldsView: View {
                         asset.selectedLUTId = newLUT?.id.uuidString ?? ""
                         saveContext()
 
+                        // If multiple assets are selected, apply to all of them
+                        if hasMultipleSelection {
+                            applyToSelectedAssets { selectedAsset in
+                                selectedAsset.selectedLUTId = newLUT?.id.uuidString ?? ""
+                            }
+                            print("✅ Applied LUT '\(newLUT?.name ?? "none")' to \(selectedAssetsCount) selected videos")
+                        }
+
                         print("🔍 LUT selection changed in EditableFieldsView")
                         print("   Selected LUT: \(newLUT?.name ?? "nil")")
                         print("   Asset: \(asset.fileName ?? "unknown")")
                         print("   Asset gamma: \(asset.captureGamma ?? "nil")")
                         print("   Asset colorSpace: \(asset.captureColorPrimaries ?? "nil")")
 
-                        // Always apply to matching files when user manually selects a LUT
-                        if let selectedLUT = newLUT,
+                        // Always apply to matching files when user manually selects a LUT (only if NOT multi-selecting)
+                        if !hasMultipleSelection,
+                           let selectedLUT = newLUT,
                            let gamma = asset.captureGamma, !gamma.isEmpty,
                            let colorSpace = asset.captureColorPrimaries, !colorSpace.isEmpty {
 
@@ -110,7 +150,7 @@ struct EditableFieldsView: View {
                             // ALWAYS apply to matching files (regardless of preference setting)
                             print("   🔄 Applying LUT to all matching files...")
                             applyLearnedLUTToMatchingFiles()
-                        } else {
+                        } else if !hasMultipleSelection {
                             print("   ❌ Missing gamma, colorSpace, or LUT not selected")
                         }
                     }
@@ -120,11 +160,17 @@ struct EditableFieldsView: View {
                     .disabled(asset.isFlaggedForDeletion)
                     .onChange(of: asset.bakeInLUT) { newValue in
                         saveContext()
-                        // Show prompt when baking is enabled and has matching gamma/colorSpace
-                        if newValue,
-                           selectedLUT != nil,
-                           let gamma = asset.captureGamma, !gamma.isEmpty,
-                           let colorSpace = asset.captureColorPrimaries, !colorSpace.isEmpty {
+
+                        // If multiple assets are selected, apply to all of them
+                        if hasMultipleSelection {
+                            applyToSelectedAssets { selectedAsset in
+                                selectedAsset.bakeInLUT = newValue
+                            }
+                            print("✅ Applied 'Bake in LUT' (\(newValue)) to \(selectedAssetsCount) selected videos")
+                        }
+
+                        // Show prompt when baking is enabled (only if NOT multi-selecting)
+                        if newValue && !hasMultipleSelection {
                             showApplyToAllPrompt = true
                         } else {
                             showApplyToAllPrompt = false
@@ -133,27 +179,38 @@ struct EditableFieldsView: View {
                     .padding(.leading, 97) // Align with the picker
 
                 // Prompt: Apply baking to all matching gamma/colorSpace files
-                if showApplyToAllPrompt,
-                   asset.bakeInLUT,
-                   let gamma = asset.captureGamma,
-                   let colorSpace = asset.captureColorPrimaries {
+                if showApplyToAllPrompt && asset.bakeInLUT {
+                    let hasMetadata = asset.captureGamma != nil && !asset.captureGamma!.isEmpty &&
+                                     asset.captureColorPrimaries != nil && !asset.captureColorPrimaries!.isEmpty
+                    let hasLUT = selectedLUT != nil
+                    let canApply = hasMetadata && hasLUT
+
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Apply this to all videos with this Gamma/Color-Space?")
                             .font(.subheadline)
                             .foregroundColor(.primary)
 
-                        Text("Gamma: \(gamma) | Color Space: \(colorSpace)")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+                        if hasMetadata, let gamma = asset.captureGamma, let colorSpace = asset.captureColorPrimaries {
+                            Text("Gamma: \(gamma) | Color Space: \(colorSpace)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        } else {
+                            Text("⚠️ This video has no camera metadata (requires Sony XML sidecar)")
+                                .font(.caption)
+                                .foregroundColor(.orange)
+                        }
 
                         HStack(spacing: 12) {
                             Button("Yes") {
-                                applyBakingToMatchingFiles()
+                                if canApply {
+                                    applyBakingToMatchingFiles()
+                                }
                                 showApplyToAllPrompt = false
                             }
                             .buttonStyle(.borderedProminent)
                             .tint(.blue)
                             .controlSize(.small)
+                            .disabled(!canApply)
 
                             Button("No") {
                                 showApplyToAllPrompt = false
@@ -220,7 +277,17 @@ struct EditableFieldsView: View {
 
                 StarRatingView(rating: $asset.userRating, showLabel: false, isDisabled: asset.isFlaggedForDeletion)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .onChange(of: asset.userRating) { _ in saveContext() }
+                    .onChange(of: asset.userRating) { newValue in
+                        saveContext()
+
+                        // If multiple assets are selected, apply to all of them
+                        if hasMultipleSelection {
+                            applyToSelectedAssets { selectedAsset in
+                                selectedAsset.userRating = newValue
+                            }
+                            print("✅ Applied rating \(newValue) to \(selectedAssetsCount) selected videos")
+                        }
+                    }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(12)
@@ -254,6 +321,14 @@ struct EditableFieldsView: View {
                     .onChange(of: keywords) { newValue in
                         asset.keywords = newValue
                         saveContext()
+
+                        // If multiple assets are selected, apply to all of them
+                        if hasMultipleSelection {
+                            applyToSelectedAssets { selectedAsset in
+                                selectedAsset.keywords = newValue
+                            }
+                            print("✅ Applied keywords to \(selectedAssetsCount) selected videos")
+                        }
                     }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
@@ -326,6 +401,22 @@ struct EditableFieldsView: View {
 
     private func saveContext() {
         try? asset.managedObjectContext?.save()
+    }
+
+    // MARK: - Multi-Selection Batch Operations
+
+    private func applyToSelectedAssets(operation: (ManagedVideoAsset) -> Void) {
+        guard let context = asset.managedObjectContext else { return }
+
+        for objectID in viewModel.selectedAssets {
+            if let selectedAsset = try? context.existingObject(with: objectID) as? ManagedVideoAsset {
+                selectedAsset.objectWillChange.send()
+                operation(selectedAsset)
+            }
+        }
+
+        try? context.save()
+        context.processPendingChanges()
     }
 
     private func applyLearnedLUTToMatchingFiles() {

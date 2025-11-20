@@ -219,6 +219,11 @@ struct CompactWorkflowView: View {
                     sourceSpaceGB = size
                     print("📊 Source stats: \(count) files, \(size) GB")
                 }
+            } else {
+                await MainActor.run {
+                    sourceFileCount = 0
+                    sourceSpaceGB = 0.0
+                }
             }
 
             // Staging folder stats
@@ -231,6 +236,11 @@ struct CompactWorkflowView: View {
                     stagingSpaceGB = size
                     print("📊 Staging stats: \(count) files, \(size) GB")
                 }
+            } else {
+                await MainActor.run {
+                    stagingFileCount = 0
+                    stagingSpaceGB = 0.0
+                }
             }
 
             // Output folder stats
@@ -242,6 +252,11 @@ struct CompactWorkflowView: View {
                     outputFileCount = count
                     outputSpaceGB = size
                     print("📊 Output stats: \(count) files, \(size) GB")
+                }
+            } else {
+                await MainActor.run {
+                    outputFileCount = 0
+                    outputSpaceGB = 0.0
                 }
             }
         }

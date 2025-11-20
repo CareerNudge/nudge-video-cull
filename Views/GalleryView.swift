@@ -66,6 +66,70 @@ struct GalleryView: View {
         return (totalClips, originalDuration, estimatedDuration, originalSize, estimatedSize)
     }
 
+    // MARK: - Context Menu Helpers
+
+    private func affectedAssets(for clickedAsset: ManagedVideoAsset) -> [ManagedVideoAsset] {
+        // If the clicked asset is part of a multi-selection, return all selected assets
+        // Otherwise, return just the clicked asset
+        if viewModel.isSelected(clickedAsset) && !viewModel.selectedAssets.isEmpty {
+            return Array(sortedAssets).filter { viewModel.isSelected($0) }
+        } else {
+            return [clickedAsset]
+        }
+    }
+
+    @ViewBuilder
+    private func contextMenuContent(for asset: ManagedVideoAsset) -> some View {
+        let assets = affectedAssets(for: asset)
+        let multipleSelected = assets.count > 1
+
+        // Mark for Deletion / Unmark for Deletion
+        if assets.allSatisfy({ $0.isFlaggedForDeletion }) {
+            Button("Unmark for Deletion") {
+                viewModel.markForDeletion(assets: assets, flagged: false)
+            }
+        } else {
+            Button("Mark for Deletion / Do Not Import") {
+                viewModel.markForDeletion(assets: assets, flagged: true)
+            }
+        }
+
+        Divider()
+
+        // Apply LUT submenu
+        Menu("Apply LUT...") {
+            Button("No LUT") {
+                viewModel.applyLUTToAssets(assets: assets, lutId: nil)
+            }
+
+            Divider()
+
+            ForEach(LUTManager.shared.availableLUTs) { lut in
+                Button(lut.name) {
+                    viewModel.applyLUTToAssets(assets: assets, lutId: lut.id.uuidString)
+                }
+            }
+        }
+
+        // Bake In LUT toggle
+        if assets.allSatisfy({ $0.bakeInLUT }) {
+            Button("Disable Bake In LUT") {
+                viewModel.toggleBakeLUT(assets: assets, enabled: false)
+            }
+        } else {
+            Button("Bake In LUT on Export") {
+                viewModel.toggleBakeLUT(assets: assets, enabled: true)
+            }
+        }
+
+        if multipleSelected {
+            Divider()
+            Text("\(assets.count) videos selected")
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+    }
+
     var body: some View {
         Group {
             // Conditionally render based on orientation preference
@@ -76,7 +140,8 @@ struct GalleryView: View {
                     currentPlayingIndex: $currentPlayingIndex,
                     selectedAssetIndex: $selectedAssetIndex,
                     isLoading: viewModel.isLoading,
-                    loadingStatus: viewModel.loadingStatus
+                    loadingStatus: viewModel.loadingStatus,
+                    viewModel: viewModel
                 )
             } else {
                 verticalGalleryView
@@ -201,6 +266,8 @@ struct GalleryView: View {
                                 VStack(spacing: 0) {
                                     VideoAssetRowView(
                                         asset: asset,
+                                        viewModel: viewModel,
+                                        allAssets: Array(sortedAssets),
                                         onVideoEnded: {
                                             handleVideoEnded(currentIndex: index, proxy: proxy)
                                         },
@@ -219,6 +286,9 @@ struct GalleryView: View {
                                         RoundedRectangle(cornerRadius: 8)
                                             .stroke(selectedAssetIndex == index ? Color.blue : Color.clear, lineWidth: 3)
                                     )
+                                    .contextMenu {
+                                        contextMenuContent(for: asset)
+                                    }
                                 }
                                 .id(asset.id)
                                 .onTapGesture {
@@ -365,6 +435,7 @@ struct HorizontalGalleryView: View {
     @Binding var selectedAssetIndex: Int // Now shared with parent
     let isLoading: Bool // Track initial loading state
     let loadingStatus: String // Loading status message
+    let viewModel: ContentViewModel // For multi-select functionality
     @ObservedObject private var preferences = UserPreferences.shared
 
     // Local state for trim sliders and deletion flag
@@ -386,6 +457,70 @@ struct HorizontalGalleryView: View {
 
     private var isTrimmed: Bool {
         localTrimStart > 0.001 || localTrimEnd < 0.999
+    }
+
+    // MARK: - Context Menu Helpers
+
+    private func affectedAssets(for clickedAsset: ManagedVideoAsset) -> [ManagedVideoAsset] {
+        // If the clicked asset is part of a multi-selection, return all selected assets
+        // Otherwise, return just the clicked asset
+        if viewModel.isSelected(clickedAsset) && !viewModel.selectedAssets.isEmpty {
+            return videoAssets.filter { viewModel.isSelected($0) }
+        } else {
+            return [clickedAsset]
+        }
+    }
+
+    @ViewBuilder
+    private func contextMenuContent(for asset: ManagedVideoAsset) -> some View {
+        let assets = affectedAssets(for: asset)
+        let multipleSelected = assets.count > 1
+
+        // Mark for Deletion / Unmark for Deletion
+        if assets.allSatisfy({ $0.isFlaggedForDeletion }) {
+            Button("Unmark for Deletion") {
+                viewModel.markForDeletion(assets: assets, flagged: false)
+            }
+        } else {
+            Button("Mark for Deletion / Do Not Import") {
+                viewModel.markForDeletion(assets: assets, flagged: true)
+            }
+        }
+
+        Divider()
+
+        // Apply LUT submenu
+        Menu("Apply LUT...") {
+            Button("No LUT") {
+                viewModel.applyLUTToAssets(assets: assets, lutId: nil)
+            }
+
+            Divider()
+
+            ForEach(LUTManager.shared.availableLUTs) { lut in
+                Button(lut.name) {
+                    viewModel.applyLUTToAssets(assets: assets, lutId: lut.id.uuidString)
+                }
+            }
+        }
+
+        // Bake In LUT toggle
+        if assets.allSatisfy({ $0.bakeInLUT }) {
+            Button("Disable Bake In LUT") {
+                viewModel.toggleBakeLUT(assets: assets, enabled: false)
+            }
+        } else {
+            Button("Bake In LUT on Export") {
+                viewModel.toggleBakeLUT(assets: assets, enabled: true)
+            }
+        }
+
+        if multipleSelected {
+            Divider()
+            Text("\(assets.count) videos selected")
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
     }
 
     var body: some View {
@@ -472,7 +607,7 @@ struct HorizontalGalleryView: View {
                         ScrollView {
                             VStack(alignment: .leading, spacing: 16) {
                                 // SECTION 1: Editable fields
-                                EditableFieldsView(asset: asset)
+                                EditableFieldsView(asset: asset, viewModel: viewModel)
 
                                 Divider()
 
@@ -582,6 +717,15 @@ struct HorizontalGalleryView: View {
                                             asset: asset,
                                             isSelected: index == selectedAssetIndex,
                                             onTap: {
+                                                // Check if shift is pressed for range selection
+                                                let shiftPressed = NSEvent.modifierFlags.contains(.shift)
+
+                                                if shiftPressed {
+                                                    // Shift-click: select range
+                                                    viewModel.toggleSelection(for: asset, shiftPressed: true, allAssets: videoAssets)
+                                                }
+
+                                                // Always update the main view to show clicked video
                                                 withAnimation {
                                                     selectedAssetIndex = index
                                                     currentPlayingIndex = nil
@@ -596,6 +740,25 @@ struct HorizontalGalleryView: View {
                                             scale: thumbnailScale
                                         )
                                         .id(asset.id)
+                                        .overlay(
+                                            // Multi-select indicator
+                                            Group {
+                                                if viewModel.isSelected(asset) {
+                                                    ZStack(alignment: .topTrailing) {
+                                                        RoundedRectangle(cornerRadius: 8)
+                                                            .stroke(Color.blue, lineWidth: 3)
+                                                        Image(systemName: "checkmark.circle.fill")
+                                                            .font(.system(size: 24))
+                                                            .foregroundColor(.blue)
+                                                            .background(Circle().fill(Color.white).frame(width: 20, height: 20))
+                                                            .padding(8)
+                                                    }
+                                                }
+                                            }
+                                        )
+                                        .contextMenu {
+                                            contextMenuContent(for: asset)
+                                        }
                                     }
                                 }
                                 .padding(.horizontal, 16 * thumbnailScale)
@@ -1416,6 +1579,12 @@ struct CleanVideoPlayerView: View {
 
                 self.player = newPlayer
                 print("✅ [Gallery] Player acquired from pool with composition for \(asset.fileName ?? "unknown")")
+                print("   Player item status: \(playerItem.status.rawValue) (0=unknown, 1=ready, 2=failed)")
+
+                // Log if player item is not immediately ready
+                if playerItem.status != .readyToPlay {
+                    print("   ⚠️ Player item not immediately ready - will become ready asynchronously")
+                }
             }
         }
 
@@ -1627,7 +1796,26 @@ struct CleanVideoPlayerView: View {
     }
 
     private func startPlayback() {
-        guard let player = player else { return }
+        guard let player = player else {
+            print("❌ Cannot start playback: player is nil")
+            return
+        }
+
+        guard let currentItem = player.currentItem else {
+            print("❌ Cannot start playback: player has no current item")
+            return
+        }
+
+        guard currentItem.status == .readyToPlay else {
+            print("❌ Cannot start playback: player item not ready (status: \(currentItem.status.rawValue))")
+            return
+        }
+
+        // Clear preview image so video player can be displayed
+        previewImage = nil
+
+        print("▶️ Starting playback for \(asset.fileName ?? "unknown")")
+        print("   Current position: \(currentPosition), Trim: \(localTrimStart)-\(localTrimEnd)")
 
         // Set up observers FIRST
         setupTimeObserver()
@@ -1646,19 +1834,26 @@ struct CleanVideoPlayerView: View {
         if needsSeek {
             // Seek to trim start
             let startTime = CMTime(seconds: trimStartSeconds, preferredTimescale: 600)
+            print("   Seeking to trim start: \(trimStartSeconds)s")
             player.seek(to: startTime, toleranceBefore: .zero, toleranceAfter: .zero) { finished in
-                guard finished else { return }
+                guard finished else {
+                    print("❌ Seek failed or was cancelled")
+                    return
+                }
                 Task { @MainActor in
                     self.currentPosition = self.localTrimStart
                     self.isPlaying = true
                     player.play()
+                    print("✅ Playback started after seek")
                 }
             }
         } else {
             // Resume from current position (no seeking)
+            print("   Resuming from current position")
             Task { @MainActor in
                 self.isPlaying = true
                 player.play()
+                print("✅ Playback started without seek")
             }
         }
     }
