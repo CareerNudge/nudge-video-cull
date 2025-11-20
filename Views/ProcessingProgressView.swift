@@ -125,6 +125,11 @@ struct ProcessingProgressView: View {
                         Button(action: {
                             isPresented = false
                             viewModel.processingComplete = false
+                            // Reset progress values when dismissing
+                            viewModel.processingProgress = 0.0
+                            viewModel.currentProcessingFile = ""
+                            viewModel.currentFileIndex = 0
+                            viewModel.totalFilesToProcess = 0
                         }) {
                             HStack {
                                 Image(systemName: "checkmark.circle.fill")

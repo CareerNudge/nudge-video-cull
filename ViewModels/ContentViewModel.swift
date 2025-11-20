@@ -633,17 +633,19 @@ class ContentViewModel: ObservableObject {
                 }
             }
 
-            // Clear status after a delay
+            // Clear status after a delay (only if not showing completion dialog)
             Task {
                 try? await Task.sleep(nanoseconds: 3_000_000_000) // 3 seconds
                 if testMode || self.isCancelling {
                     self.loadingStatus = "Idle"
                 }
-                self.processingProgress = 0.0
-                self.currentProcessingFile = ""
-                self.currentFileIndex = 0
-                self.totalFilesToProcess = 0
+                // Only reset progress values if processing is complete AND modal is dismissed
+                // This prevents "0 of 0" showing while completion dialog is still visible
                 if !self.processingComplete {
+                    self.processingProgress = 0.0
+                    self.currentProcessingFile = ""
+                    self.currentFileIndex = 0
+                    self.totalFilesToProcess = 0
                     self.showProcessingModal = false
                 }
             }
