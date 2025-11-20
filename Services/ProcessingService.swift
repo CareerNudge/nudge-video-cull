@@ -674,13 +674,24 @@ class ProcessingService {
             throw NSError(domain: "App", code: 500, userInfo: [NSLocalizedDescriptionKey: "Failed to create color cube filter"])
         }
 
-        // Create video composition
+        // Create GPU-accelerated CIContext for hardware-accelerated LUT processing
+        // This uses Metal on Apple Silicon for maximum performance
+        let ciContext = CIContext(options: [
+            .workingColorSpace: NSNull(),  // Preserve source color space
+            .outputColorSpace: NSNull(),   // Don't convert output color space
+            .useSoftwareRenderer: false,   // Force GPU (Metal) rendering
+            .priorityRequestLow: false     // High priority for export quality
+        ])
+
+        print("🚀 Using GPU-accelerated rendering (Metal on Apple Silicon)")
+
+        // Create video composition with explicit GPU context
         let composition = AVMutableVideoComposition(asset: asset) { [filter] request in
             let source = request.sourceImage.clampedToExtent()
             filter.setValue(source, forKey: kCIInputImageKey)
 
             let output = filter.outputImage ?? source
-            request.finish(with: output, context: nil)
+            request.finish(with: output, context: ciContext)
         }
 
         composition.renderSize = naturalSize
