@@ -9,6 +9,7 @@ struct ProcessingProgressView: View {
     @ObservedObject var viewModel: ContentViewModel
     @Binding var isPresented: Bool
     @State private var showCancelConfirmation = false
+    @ObservedObject private var tipsManager = TipsManager.shared
 
     var body: some View {
         ZStack {
@@ -64,6 +65,41 @@ struct ProcessingProgressView: View {
                         .foregroundColor(viewModel.processingComplete ? .green : .secondary)
                         .fontWeight(viewModel.processingComplete ? .medium : .regular)
                         .multilineTextAlignment(.center)
+                }
+
+                // Tips and How-To's Display (only show while processing)
+                if !viewModel.processingComplete, let tip = tipsManager.currentTip {
+                    VStack(spacing: 8) {
+                        Divider()
+                            .padding(.vertical, 4)
+
+                        HStack(spacing: 8) {
+                            Image(systemName: "lightbulb.fill")
+                                .font(.system(size: 16))
+                                .foregroundColor(.blue)
+
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(tip.title)
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .foregroundColor(.primary)
+
+                                Text(tip.description)
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.secondary)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+
+                            Spacer()
+                        }
+                        .padding(12)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Color.blue.opacity(0.08))
+                        )
+                    }
+                    .transition(.opacity.combined(with: .move(edge: .bottom)))
+                    .animation(.easeInOut(duration: 0.5), value: tipsManager.currentTip?.id)
                 }
 
                 // Button section - changes based on completion state
@@ -138,6 +174,22 @@ struct ProcessingProgressView: View {
                     .fill(Color(NSColor.windowBackgroundColor))
                     .shadow(color: Color.black.opacity(0.3), radius: 20, x: 0, y: 10)
             )
+            .onAppear {
+                // Start rotating tips when processing view appears
+                if !viewModel.processingComplete {
+                    tipsManager.startRotation(interval: 7.0)
+                }
+            }
+            .onDisappear {
+                // Stop rotating tips when view disappears
+                tipsManager.stopRotation()
+            }
+            .onChange(of: viewModel.processingComplete) { isComplete in
+                // Stop tips rotation when processing completes
+                if isComplete {
+                    tipsManager.stopRotation()
+                }
+            }
         }
     }
 }

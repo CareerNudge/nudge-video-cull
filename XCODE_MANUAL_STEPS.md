@@ -40,6 +40,28 @@ These files MUST be added for the app to build successfully:
   6. Ensure "VideoCullingApp" target is selected
   7. Click "Add"
 
+#### 4. TipsManager.swift ⚠️ REQUIRED
+- **Location:** `Services/TipsManager.swift`
+- **Steps to add:**
+  1. Open Xcode
+  2. Right-click on the "Services" folder in the Project Navigator
+  3. Select "Add Files to VideoCullingApp..."
+  4. Navigate to and select `Services/TipsManager.swift`
+  5. Ensure "Copy items if needed" is checked
+  6. Ensure "VideoCullingApp" target is selected
+  7. Click "Add"
+
+#### 5. tips.json ⚠️ REQUIRED
+- **Location:** `Resources/tips.json`
+- **Steps to add:**
+  1. Open Xcode
+  2. Right-click on the project root (VideoCullingApp) in the Project Navigator
+  3. Select "Add Files to VideoCullingApp..."
+  4. Navigate to and select `Resources/tips.json`
+  5. Ensure "Copy items if needed" is checked
+  6. Ensure "VideoCullingApp" target is selected
+  7. Click "Add"
+
 ### Previously Created (May Already Be Added)
 
 #### 3. FCPXMLExporter.swift

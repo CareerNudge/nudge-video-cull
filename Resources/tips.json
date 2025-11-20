@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Trim Videos",
+    "description": "Drag the triangle handles on the playback bar to trim videos. The blue duration display shows your trimmed length."
+  },
+  {
+    "title": "Apply LUTs",
+    "description": "Select a LUT from the dropdown to preview color grading. Check 'Bake LUT' to apply it permanently during export."
+  },
+  {
+    "title": "Quick Deletion",
+    "description": "Click the red X button or press Delete/Backspace to flag videos for deletion. They'll be removed during processing."
+  },
+  {
+    "title": "Gallery Mode",
+    "description": "Toggle between vertical list and horizontal gallery view using the icon in the video player corner."
+  },
+  {
+    "title": "Keyboard Shortcuts",
+    "description": "Use ↑/↓ arrow keys to navigate between videos, Space to play/pause, and Delete to flag for removal."
+  },
+  {
+    "title": "Sony XML Support",
+    "description": "Place Sony XML sidecar files next to your videos to automatically import camera metadata like S-Log3 settings."
+  },
+  {
+    "title": "LUT Auto-Mapping",
+    "description": "The app learns your LUT preferences! When you apply a LUT to a specific camera profile, it remembers for next time."
+  },
+  {
+    "title": "Rename Videos",
+    "description": "Double-click the filename to rename videos. Choose naming conventions in Preferences for batch operations."
+  },
+  {
+    "title": "Star Ratings",
+    "description": "Click the stars to rate your videos from 1-5. Use ratings to organize and prioritize your best footage."
+  },
+  {
+    "title": "Quality Preservation",
+    "description": "Trimmed videos maintain original quality, codec, and frame rate. LUT baking uses highest quality re-encoding."
+  },
+  {
+    "title": "External Media Staging",
+    "description": "Working from SD cards? Enable staging to copy files to local storage first for faster processing."
+  },
+  {
+    "title": "FCPXML Export",
+    "description": "Export your processed video list to Final Cut Pro XML format. Enable it in the welcome screen or use the button after processing."
+  },
+  {
+    "title": "Test Mode",
+    "description": "Enable Test Mode in Preferences to preview changes without modifying original files. Perfect for experimenting!"
+  },
+  {
+    "title": "Cull In Place",
+    "description": "Set the output folder to the same as input to process videos in place. Be careful—deleted files go to Trash!"
+  },
+  {
+    "title": "Batch Operations",
+    "description": "Process multiple videos at once. Changes to trim points, LUTs, and deletion flags all happen in one processing job."
+  },
+  {
+    "title": "Video Metadata",
+    "description": "View detailed technical specs including resolution, frame rate, codec, and file size for every video."
+  },
+  {
+    "title": "Scrubbing Preview",
+    "description": "Drag the trim handles to see live preview frames. Makes finding the perfect in/out points easy!"
+  },
+  {
+    "title": "Default Folders",
+    "description": "Set default source and output folders in Preferences to skip folder selection and start culling faster."
+  }
+]
