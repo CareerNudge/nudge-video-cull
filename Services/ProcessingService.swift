@@ -377,18 +377,30 @@ class ProcessingService {
             let height = videoProperties.height
             let isHEVC = videoProperties.codec == "hvc1" || videoProperties.codec == "hev1"
 
-            if width >= 3840 || height >= 2160 {
-                // 4K or higher
+            if width >= 7680 || height >= 4320 {
+                // 8K (7680×4320)
+                preset = isHEVC ? AVAssetExportPresetHEVC7680x4320 : AVAssetExportPresetHighestQuality
+                print("⚙️ 8K resolution detected")
+            } else if width >= 6000 || height >= 3000 {
+                // 6K (6144×3456, 6016×3384, etc.)
+                // No specific 6K preset, use 8K for HEVC or HighestQuality for H.264
+                preset = isHEVC ? AVAssetExportPresetHEVC7680x4320 : AVAssetExportPresetHighestQuality
+                print("⚙️ 6K resolution detected")
+            } else if width >= 3840 || height >= 2160 {
+                // 4K (3840×2160 UHD or 4096×2160 DCI 4K)
                 preset = isHEVC ? AVAssetExportPresetHEVC3840x2160 : AVAssetExportPreset3840x2160
+                print("⚙️ 4K resolution detected")
             } else if width >= 1920 || height >= 1080 {
                 // 1080p
                 preset = isHEVC ? AVAssetExportPresetHEVC1920x1080 : AVAssetExportPreset1920x1080
+                print("⚙️ 1080p resolution detected")
             } else {
                 // 720p or lower
                 preset = AVAssetExportPresetHighestQuality
+                print("⚙️ Standard resolution detected")
             }
 
-            print("⚙️ Selected preset: \(preset) (resolution: \(Int(width))x\(Int(height)), codec: \(videoProperties.codec))")
+            print("   Selected preset: \(preset) (resolution: \(Int(width))x\(Int(height)), codec: \(videoProperties.codec))")
         } else {
             preset = AVAssetExportPresetPassthrough
         }
