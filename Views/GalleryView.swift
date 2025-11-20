@@ -720,10 +720,8 @@ struct HorizontalGalleryView: View {
                                                 // Check if shift is pressed for range selection
                                                 let shiftPressed = NSEvent.modifierFlags.contains(.shift)
 
-                                                if shiftPressed {
-                                                    // Shift-click: select range
-                                                    viewModel.toggleSelection(for: asset, shiftPressed: true, allAssets: videoAssets)
-                                                }
+                                                // Always update selection (clears others if shift not pressed)
+                                                viewModel.toggleSelection(for: asset, shiftPressed: shiftPressed, allAssets: videoAssets)
 
                                                 // Always update the main view to show clicked video
                                                 withAnimation {
