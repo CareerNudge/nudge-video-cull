@@ -147,8 +147,9 @@ struct ContentView: View {
             // Apply theme preference
             applyTheme()
 
-            // Always show welcome screen to configure workflow
-            showWelcome = true
+            if !ProcessInfo.processInfo.arguments.contains("-disableWelcomeScreen") {
+                showWelcome = true
+            }
         }
         .onChange(of: UserPreferences.shared.theme) { _ in
             // Apply theme when it changes

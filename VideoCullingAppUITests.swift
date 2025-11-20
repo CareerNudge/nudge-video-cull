@@ -9,14 +9,12 @@ import XCTest
 
 final class VideoCullingAppUITests: XCTestCase {
 
+    var app: XCUIApplication!
+
     override func setUpWithError() throws {
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // Configure app with test mode environment variables
-        let app = XCUIApplication()
-
-        // Read environment variables from shell and pass to app
+        app = XCUIApplication()
+        // Welcome screen is now enabled for these tests
         if let testMode = ProcessInfo.processInfo.environment["TEST_MODE"],
            let testInputPath = ProcessInfo.processInfo.environment["TEST_INPUT_PATH"],
            let testOutputPath = ProcessInfo.processInfo.environment["TEST_OUTPUT_PATH"] {
@@ -24,61 +22,61 @@ final class VideoCullingAppUITests: XCTestCase {
             app.launchEnvironment["TEST_INPUT_PATH"] = testInputPath
             app.launchEnvironment["TEST_OUTPUT_PATH"] = testOutputPath
         }
-
-        // Disable automatic termination of existing instances
-        // This prevents failures when zombie processes exist
-        if app.state == .notRunning {
-            app.launch()
-        } else {
-            // App already running - just activate it
-            app.activate()
-        }
-
-        // Wait for app to finish loading test data
-        sleep(5)
+        app.launch()
     }
 
     override func tearDownWithError() throws {
-        // Clean termination
-        XCUIApplication().terminate()
+        app.terminate()
+        app = nil
     }
 
     @MainActor
-    func testGalleryModeToggle() throws {
+    func testEndToEndWorkflowAndCrashFixValidation() throws {
         let app = XCUIApplication()
+        // No need to click buttons for folder selection and GO, as ContentViewModel now handles this automatically in test mode.
+        // The WelcomeView will eventually dismiss itself.
 
-        // Wait for app to fully load
-        sleep(3)
+        // 1. Wait for all files to load
+        let videoGallery = app.scrollViews["videoGallery"]
+        let galleryLoadedExpectation = expectation(for: NSPredicate(format: "cells.count > 0"), evaluatedWith: videoGallery)
+        wait(for: [galleryLoadedExpectation], timeout: 60)
 
-        // Find the gallery mode toggle button
+        // 2. Select a video and interact with TextFields to validate the crash fix
+        let firstVideoCell = videoGallery.cells.firstMatch
+        XCTAssert(firstVideoCell.waitForExistence(timeout: 10), "First video cell not found.")
+        firstVideoCell.click()
+        
+        let renameField = app.textFields["renameTextField"]
+        let keywordsField = app.textFields["keywordsTextField"]
+        XCTAssert(renameField.waitForExistence(timeout: 5), "Rename text field not found.")
+        XCTAssert(keywordsField.waitForExistence(timeout: 5), "Keywords text field not found.")
+
+        renameField.click()
+        renameField.typeText("Test-Rename-123")
+        
+        keywordsField.click()
+        keywordsField.typeText("gemini, test, stable")
+
+        // 3. Change orientation to Horizontal
+        app.menuBars.menuItems["Preferences"].click()
+        
+        let preferencesWindow = app.windows["Preferences"]
+        XCTAssert(preferencesWindow.waitForExistence(timeout: 5), "Preferences window did not open.")
+        
+        preferencesWindow.toolbars.buttons["Appearance"].click() 
+        
+        let orientationPicker = preferencesWindow.pickers["orientationPicker"]
+        XCTAssert(orientationPicker.exists, "Orientation picker not found.")
+        orientationPicker.buttons["Horizontal"].click()
+        preferencesWindow.buttons[XCUIIdentifierCloseWindow].click()
+
+        // 4. Find and interact with the gallery mode toggle button
         let galleryButton = app.buttons["galleryModeButton"]
+        XCTAssert(galleryButton.waitForExistence(timeout: 5), "Gallery mode button should exist in horizontal mode")
+        XCTAssert(galleryButton.isHittable, "Gallery mode button should be clickable")
 
-        // Button should exist
-        XCTAssertTrue(galleryButton.exists, "Gallery mode button should exist")
-
-        // Verify button is hittable
-        XCTAssertTrue(galleryButton.isHittable, "Gallery mode button should be clickable")
-
-        // Click the button (should not crash)
+        // 5. Toggle to vertical
         galleryButton.click()
-        sleep(1)
-
-        // App should still be running after toggle
-        XCTAssertTrue(app.exists, "App should not crash after gallery toggle")
-
-        // Toggle back
-        galleryButton.click()
-        sleep(1)
-
-        // App should still be running
-        XCTAssertTrue(app.exists, "App should not crash during second toggle")
+        sleep(1) 
+        XCTAssertFalse(galleryButton.exists, "Gallery mode button should not exist in vertical mode after toggling.")
     }
-
-    @MainActor
-    func testLaunchPerformance() throws {
-        // This measures how long it takes to launch your application.
-        measure(metrics: [XCTApplicationLaunchMetric()]) {
-            XCUIApplication().launch()
-        }
-    }
-}

@@ -73,23 +73,7 @@ struct VideoAssetRowView: View {
             // 0.0 in Core Data means "end of clip", which we represent as 1.0 (100%)
             self.localTrimEnd = (asset.trimEndTime == 0) ? 1.0 : asset.trimEndTime
         }
-        .onChange(of: localTrimStart) { newValue in
-            // When slider *finishes* moving, save to Core Data
-            // Note: This requires a slider with an `onEditingChanged` callback
-            // For a simple slider, this will save on every change.
-            asset.trimStartTime = newValue
-            saveContext()
-        }
-        .onChange(of: localTrimEnd) { newValue in
-            // Save trim changes back to Core Data
-            asset.trimEndTime = newValue
-            saveContext()
-        }
-    }
-    
-    private func saveContext() {
-        // A helper to save the context.
-        // In a real app, you'd add error handling and debounce this.
-        try? asset.managedObjectContext?.save()
+        // ✅ REMOVED: onChange handlers that were causing 100+ Core Data saves per second
+        // Save logic moved to PlayerView.swift .onEnded callbacks (lines 216-228, 256-268)
     }
 }

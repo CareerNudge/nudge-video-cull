@@ -95,6 +95,32 @@ struct GalleryView: View {
                 print("⌨️ Hotkey: Navigate previous → index \(selectedAssetIndex)")
             }
         }
+        .onChange(of: hotkeyManager.togglePlayPauseTrigger) { _ in
+            // Trigger play/pause on currently selected video
+            // This will be handled by the CleanVideoPlayerView
+            print("⌨️ Hotkey: Toggle play/pause")
+        }
+        .onChange(of: hotkeyManager.setInPointTrigger) { _ in
+            // Set in point on currently selected video
+            if let asset = sortedAssets[safe: selectedAssetIndex] {
+                // Get current player from CleanVideoPlayerView (via shared state)
+                print("⌨️ Hotkey: Set in point for \(asset.fileName ?? "unknown")")
+            }
+        }
+        .onChange(of: hotkeyManager.setOutPointTrigger) { _ in
+            // Set out point on currently selected video
+            if let asset = sortedAssets[safe: selectedAssetIndex] {
+                print("⌨️ Hotkey: Set out point for \(asset.fileName ?? "unknown")")
+            }
+        }
+        .onChange(of: hotkeyManager.toggleDeletionTrigger) { _ in
+            // Toggle deletion flag on currently selected video
+            if let asset = sortedAssets[safe: selectedAssetIndex] {
+                asset.isFlaggedForDeletion.toggle()
+                try? asset.managedObjectContext?.save()
+                print("⌨️ Hotkey: Toggled deletion for \(asset.fileName ?? "unknown") → \(asset.isFlaggedForDeletion)")
+            }
+        }
     }
 
     private var verticalGalleryView: some View {
@@ -175,6 +201,7 @@ struct GalleryView: View {
                     .padding(.horizontal, 16)
                     .padding(.vertical, 16)
                 }
+                .accessibilityIdentifier("videoGallery")
             }
 
             // Sticky Footer
@@ -442,6 +469,7 @@ struct HorizontalGalleryView: View {
                             .padding(.horizontal, 16)
                             .padding(.vertical, 12)
                         }
+                        .accessibilityIdentifier("videoGallery")
                         .frame(height: 200)
                         .background(Color(NSColor.windowBackgroundColor))
                         .onChange(of: selectedAssetIndex) { newIndex in
@@ -514,19 +542,22 @@ struct HorizontalGalleryView: View {
                 localIsFlaggedForDeletion = asset.isFlaggedForDeletion
             }
         }
-        .background(
-            // Hidden buttons for navigation keyboard shortcuts
+        .overlay(
+            // Hidden buttons for navigation keyboard shortcuts (using opacity instead of hidden())
             HStack {
                 // Left arrow = next video (user's preference)
                 Button("") { navigateToNext() }
                     .keyboardShortcut(.leftArrow, modifiers: [])
-                    .hidden()
+                    .opacity(0)
+                    .frame(width: 0, height: 0)
 
                 // Right arrow = previous video (user's preference)
                 Button("") { navigateToPrevious() }
                     .keyboardShortcut(.rightArrow, modifiers: [])
-                    .hidden()
+                    .opacity(0)
+                    .frame(width: 0, height: 0)
             }
+            .allowsHitTesting(false)
         )
     }
 
@@ -620,6 +651,7 @@ struct CleanVideoPlayerView: View {
     @State private var ciContext: CIContext? // Hardware-accelerated context for LUT application
     @ObservedObject private var lutManager = LUTManager.shared
     @ObservedObject private var preferences = UserPreferences.shared
+    @ObservedObject private var hotkeyManager = HotkeyManager.shared
 
     var body: some View {
         VStack(spacing: 0) {
@@ -815,12 +847,24 @@ struct CleanVideoPlayerView: View {
                                 .position(x: trimStartX + max(0, handleX - trimStartX) / 2, y: 10)
                                 .cornerRadius(2)
 
-                            // Trim Start Handle (triangle pointing right)
+                            // ✅ Vertical line connecting trim start marker to handle below
+                            Rectangle()
+                                .fill(Color.blue.opacity(0.6))
+                                .frame(width: 2, height: 18)
+                                .position(x: trimStartX, y: 19)
+
+                            // ✅ Vertical line connecting trim end marker to handle below
+                            Rectangle()
+                                .fill(Color.blue.opacity(0.6))
+                                .frame(width: 2, height: 18)
+                                .position(x: trimEndX, y: 19)
+
+                            // Trim Start Handle (triangle pointing right) - MOVED BELOW
                             TriangleShape(direction: .right)
                                 .fill(Color.white)
                                 .frame(width: 18, height: 18)
                                 .overlay(TriangleShape(direction: .right).stroke(Color.blue, lineWidth: 2))
-                                .position(x: trimStartX, y: 10)
+                                .position(x: trimStartX, y: 31)
                                 .gesture(
                                     DragGesture()
                                         .onChanged { value in
@@ -842,17 +886,25 @@ struct CleanVideoPlayerView: View {
                                         }
                                         .onEnded { _ in
                                             previewImage = nil
+                                            // ✅ Save to Core Data only when drag ends (not during drag)
                                             asset.trimStartTime = localTrimStart
-                                            try? asset.managedObjectContext?.save()
+                                            if let context = asset.managedObjectContext {
+                                                do {
+                                                    try context.save()
+                                                    print("✅ [Gallery] Saved trim start: \(localTrimStart)")
+                                                } catch {
+                                                    print("❌ [Gallery] Failed to save trim start: \(error)")
+                                                }
+                                            }
                                         }
                                 )
 
-                            // Trim End Handle (triangle pointing left)
+                            // Trim End Handle (triangle pointing left) - MOVED BELOW
                             TriangleShape(direction: .left)
                                 .fill(Color.white)
                                 .frame(width: 18, height: 18)
                                 .overlay(TriangleShape(direction: .left).stroke(Color.blue, lineWidth: 2))
-                                .position(x: trimEndX, y: 10)
+                                .position(x: trimEndX, y: 31)
                                 .gesture(
                                     DragGesture()
                                         .onChanged { value in
@@ -874,8 +926,16 @@ struct CleanVideoPlayerView: View {
                                         }
                                         .onEnded { _ in
                                             previewImage = nil
+                                            // ✅ Save to Core Data only when drag ends (not during drag)
                                             asset.trimEndTime = localTrimEnd
-                                            try? asset.managedObjectContext?.save()
+                                            if let context = asset.managedObjectContext {
+                                                do {
+                                                    try context.save()
+                                                    print("✅ [Gallery] Saved trim end: \(localTrimEnd)")
+                                                } catch {
+                                                    print("❌ [Gallery] Failed to save trim end: \(error)")
+                                                }
+                                            }
                                         }
                                 )
 
@@ -901,9 +961,9 @@ struct CleanVideoPlayerView: View {
                                         }
                                 )
                         }
-                        .frame(width: trackWidth, height: 14)
+                        .frame(width: trackWidth, height: 40)
                     }
-                    .frame(height: 14)
+                    .frame(height: 40)
                     .disabled(isFlaggedForDeletion)
 
                     // Duration
@@ -926,8 +986,35 @@ struct CleanVideoPlayerView: View {
             }
         }
         .onDisappear {
+            // ✅ CRITICAL: Comprehensive cleanup to prevent memory leaks
+            print("🧹 CleanVideoPlayerView cleaning up for \(asset.fileName ?? "unknown")")
+
+            // Remove time observers (prevents retain cycles)
             removeTimeObserver()
-            player?.pause()
+
+            // Stop playback
+            if isPlaying {
+                player?.pause()
+                isPlaying = false
+            }
+
+            // ✅ Return player to pool for reuse (instead of discarding)
+            if let player = player {
+                PlayerPool.shared.releasePlayer(player)
+                self.player = nil
+            }
+
+            // Clear image generator (releases video file handle)
+            imageGenerator = nil
+
+            // Clear CIContext (releases GPU resources)
+            ciContext = nil
+
+            // Clear cached images (releases memory)
+            thumbnail = nil
+            previewImage = nil
+
+            print("✅ CleanVideoPlayerView cleanup complete")
         }
         .onChange(of: asset.selectedLUTId) { newLUTId in
             print("🎨 CleanVideoPlayerView: LUT selection changed for \(asset.fileName ?? "unknown")")
@@ -975,6 +1062,18 @@ struct CleanVideoPlayerView: View {
             if isPlaying {
                 setupBoundaryObserver()
             }
+        }
+        .onChange(of: hotkeyManager.togglePlayPauseTrigger) { _ in
+            togglePlayPause()
+        }
+        .onChange(of: hotkeyManager.setInPointTrigger) { _ in
+            setInPoint()
+        }
+        .onChange(of: hotkeyManager.setOutPointTrigger) { _ in
+            setOutPoint()
+        }
+        .onChange(of: hotkeyManager.toggleDeletionTrigger) { _ in
+            toggleDeletion()
         }
         .background(
             // Hidden buttons for keyboard shortcuts
@@ -1062,6 +1161,24 @@ struct CleanVideoPlayerView: View {
 
     // MARK: - Trim Point Controls
 
+    private func togglePlayPause() {
+        if isPlaying {
+            player?.pause()
+            isPlaying = false
+        } else {
+            // If at or near the end, restart from beginning
+            if currentPosition >= localTrimEnd - 0.01 {
+                currentPosition = localTrimStart
+                if let player = player {
+                    let seekTime = CMTime(seconds: asset.duration * localTrimStart, preferredTimescale: 600)
+                    player.seek(to: seekTime, toleranceBefore: .zero, toleranceAfter: .zero)
+                }
+            }
+            startPlayback()
+        }
+        print("⌨️ Play/Pause toggled: \(isPlaying ? "playing" : "paused")")
+    }
+
     private func setInPoint() {
         // Set trim start to current playhead position
         localTrimStart = currentPosition
@@ -1140,7 +1257,9 @@ struct CleanVideoPlayerView: View {
 
             // Create player AFTER composition is applied
             await MainActor.run {
-                let newPlayer = AVPlayer(playerItem: playerItem)
+                // ✅ Use PlayerPool for better performance and memory usage
+                let newPlayer = PlayerPool.shared.acquirePlayer()
+                newPlayer.replaceCurrentItem(with: playerItem)
 
                 // Enable automatic waiting to minimize stalls for smoother playback
                 newPlayer.automaticallyWaitsToMinimizeStalling = true
@@ -1151,7 +1270,7 @@ struct CleanVideoPlayerView: View {
                 }
 
                 self.player = newPlayer
-                print("✅ Player created with composition for \(asset.fileName ?? "unknown")")
+                print("✅ [Gallery] Player acquired from pool with composition for \(asset.fileName ?? "unknown")")
             }
         }
 

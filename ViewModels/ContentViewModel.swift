@@ -106,7 +106,10 @@ class ContentViewModel: ObservableObject {
         // Check for UI test mode
         if ProcessInfo.processInfo.environment["TEST_MODE"] == "1" {
             Task { @MainActor in
+                print("🧪 TEST_MODE: Detected. Setting up test data and scanning.")
                 await self.setupTestMode()
+                await self.scanInputFolder() // Automatically scan in test mode
+                print("🧪 TEST_MODE: Initial scan triggered.")
             }
         } else {
             // Restore last used folders

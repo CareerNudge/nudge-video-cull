@@ -21,6 +21,7 @@
 		A100001D000000000000001 /* ManagedVideoAsset+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100001E000000000000001 /* ManagedVideoAsset+Extensions.swift */; };
 		A1000023000000000000001 /* LUTManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000024000000000000001 /* LUTManager.swift */; };
 		A1000025000000000000001 /* LUTManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000026000000000000001 /* LUTManagerView.swift */; };
+		A109E7682ECED80000CB6B82 /* PlayerPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = A109E7672ECED80000CB6B82 /* PlayerPool.swift */; };
 		A12EFBC62ECA304000C0CA18 /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12EFBC52ECA304000C0CA18 /* WaveformView.swift */; };
 		A12EFBC82ECA305400C0CA18 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12EFBC72ECA305400C0CA18 /* PreferencesView.swift */; };
 		A12EFBCA2ECA34B600C0CA18 /* LUTParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12EFBC92ECA34B600C0CA18 /* LUTParser.swift */; };
@@ -98,6 +99,7 @@
 		A1000022000000000000001 /* VideoCullingApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VideoCullingApp.entitlements; sourceTree = "<group>"; };
 		A1000024000000000000001 /* LUTManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LUTManager.swift; sourceTree = "<group>"; };
 		A1000026000000000000001 /* LUTManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LUTManagerView.swift; sourceTree = "<group>"; };
+		A109E7672ECED80000CB6B82 /* PlayerPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerPool.swift; sourceTree = "<group>"; };
 		A12EFBC52ECA304000C0CA18 /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		A12EFBC72ECA305400C0CA18 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
 		A12EFBC92ECA34B600C0CA18 /* LUTParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LUTParser.swift; sourceTree = "<group>"; };
@@ -229,6 +231,7 @@
 		A1000001000000000000006 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A109E7672ECED80000CB6B82 /* PlayerPool.swift */,
 				A1DDCE5A2ECE760200966D45 /* ThumbnailService.swift */,
 				A1DDCE582ECE6DE600966D45 /* HotkeyManager.swift */,
 				A12EFBFF2ECA5EEF00C0CA18 /* LUTAutoMapper.swift */,
@@ -581,6 +584,7 @@
 				A12EFBD02ECA522200C0CA18 /* FCPXMLExporter.swift in Sources */,
 				A12EFBCD2ECA3F2D00C0CA18 /* ProcessingProgressView.swift in Sources */,
 				A12EFBCE2ECA3F2D00C0CA18 /* WelcomeView.swift in Sources */,
+				A109E7682ECED80000CB6B82 /* PlayerPool.swift in Sources */,
 				A1000015000000000000001 /* StarRatingView.swift in Sources */,
 				A12EFBD22ECA5AC400C0CA18 /* SonyXMLParser.swift in Sources */,
 				A1000017000000000000001 /* FileScannerService.swift in Sources */,

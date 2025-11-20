@@ -3,9 +3,10 @@
 # Automated UI Test Runner with Real Test Data
 set -e
 
-SOURCE_DATA="/Volumes/X10 Pro/CLIP"
-TEST_OUTPUT="/Volumes/X10 Pro/testoutput"
-TEST_INPUT="$TEST_OUTPUT/test_input"
+# User-specified paths
+SOURCE_DATA="/Users/romanwilson/projects/videocull/VideoCullingApp/testclips"
+TEST_OUTPUT="/Users/romanwilson/projects/videocull/VideoCullingApp/testoutput"
+
 PROJECT="VideoCullingApp.xcodeproj"
 SCHEME="VideoCullingApp"
 DESTINATION="platform=macOS"
@@ -33,57 +34,20 @@ if [ ! -d "$SOURCE_DATA" ]; then
     exit 1
 fi
 
-# Create output directory
+# Create output directory and results directory
 mkdir -p "$TEST_OUTPUT"
 mkdir -p "$RESULTS_DIR"
-
-# Select test files (first 5 videos + XMLs for faster testing)
-TEST_FILES=(
-    "20251116_a18610.MP4"
-    "20251116_a18610M01.XML"
-    "20251116_a18612.MP4"
-    "20251116_a18612M01.XML"
-    "20251116_a18613.MP4"
-    "20251116_a18613M01.XML"
-    "20251116_a18614.MP4"
-    "20251116_a18614M01.XML"
-    "20251116_a18615.MP4"
-    "20251116_a18615M01.XML"
-)
 
 FAILURES=0
 TOTAL_RUNS=0
 
-setup_test_data() {
-    local run_num=$1
-    echo -e "${BLUE}Setting up test data for run $run_num...${NC}"
-
-    # Create fresh test input folder
-    rm -rf "$TEST_INPUT"
-    mkdir -p "$TEST_INPUT"
-
-    # Create symlinks to source files (fast, no copying)
-    for file in "${TEST_FILES[@]}"; do
-        if [ -f "$SOURCE_DATA/$file" ]; then
-            ln -s "$SOURCE_DATA/$file" "$TEST_INPUT/$file"
-        fi
-    done
-
-    echo "✓ Test data ready (${#TEST_FILES[@]} files via symlinks)"
-}
+# No setup_test_data function needed as we use paths directly
 
 cleanup_test_data() {
     echo -e "${BLUE}Cleaning up test data...${NC}"
 
-    # Remove test input folder
-    rm -rf "$TEST_INPUT"
-
-    # Clean up any processed files in output folder (but keep test input staging area)
-    find "$TEST_OUTPUT" -type f -name "*.MP4" -o -name "*.XML" 2>/dev/null | while read file; do
-        if [[ "$file" != *"test_input"* ]]; then
-            rm -f "$file"
-        fi
-    done
+    # Clean up any processed files in output folder
+    rm -rf "${TEST_OUTPUT}/*" 2>/dev/null || true # Ignore errors if folder is empty
 
     echo "✓ Cleanup complete"
 }
@@ -98,7 +62,8 @@ run_ui_tests() {
 
     # Set environment variable for app to detect test mode
     export TEST_MODE=1
-    export TEST_INPUT_PATH="$TEST_INPUT"
+    # Pass the actual source and output paths to the app
+    export TEST_INPUT_PATH="$SOURCE_DATA"
     export TEST_OUTPUT_PATH="$TEST_OUTPUT"
 
     xcodebuild test \
@@ -109,7 +74,7 @@ run_ui_tests() {
         > "$RESULTS_DIR/ui_test_run_${iteration}_${TIMESTAMP}.log" 2>&1
 
     # Check if tests actually passed by looking for TEST FAILED in output
-    if grep -q "\*\* TEST FAILED \*\*" "$RESULTS_DIR/ui_test_run_${iteration}_${TIMESTAMP}.log"; then
+    if grep -q "** TEST FAILED **" "$RESULTS_DIR/ui_test_run_${iteration}_${TIMESTAMP}.log"; then
         echo -e "${RED}✗ Run $iteration FAILED${NC}"
         echo "Log: $RESULTS_DIR/ui_test_run_${iteration}_${TIMESTAMP}.log"
         return 1
@@ -128,13 +93,12 @@ for i in {1..20}; do
     echo " Test Iteration $i/20"
     echo "=========================================="
 
-    # Setup test data
-    setup_test_data $i
+    # No setup_test_data call needed here
 
     # Run UI tests
     if ! run_ui_tests $i; then
         FAILURES=$((FAILURES + 1))
-        cleanup_test_data
+        cleanup_test_data # Clean up on failure
         echo ""
         echo -e "${RED}Stopping due to test failure${NC}"
         exit 1
@@ -157,5 +121,5 @@ echo "Total runs: $TOTAL_RUNS"
 echo "Failures: $FAILURES"
 echo "Success rate: 100%"
 echo ""
-echo "Test data used: ${#TEST_FILES[@]} files (5 videos + 5 XMLs)"
+echo "Test data used: All files in $SOURCE_DATA"
 echo "All logs saved to: $RESULTS_DIR/"

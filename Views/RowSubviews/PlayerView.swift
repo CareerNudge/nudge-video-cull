@@ -188,12 +188,24 @@ struct PlayerView: View {
                                 .position(x: handleX, y: 10)
                         }
 
-                        // Trim Start Handle (triangle pointing right)
+                        // ✅ Vertical line connecting trim start marker to handle below
+                        Rectangle()
+                            .fill(Color.blue.opacity(0.6))
+                            .frame(width: 2, height: 18)
+                            .position(x: trimStartX, y: 19)
+
+                        // ✅ Vertical line connecting trim end marker to handle below
+                        Rectangle()
+                            .fill(Color.blue.opacity(0.6))
+                            .frame(width: 2, height: 18)
+                            .position(x: trimEndX, y: 19)
+
+                        // Trim Start Handle (triangle pointing right) - MOVED BELOW
                         TriangleShape(direction: .right)
                             .fill(Color.white)
                             .frame(width: 18, height: 18)
                             .overlay(TriangleShape(direction: .right).stroke(Color.blue, lineWidth: 2))
-                            .position(x: trimStartX, y: 10)
+                            .position(x: trimStartX, y: 31)
                             .gesture(
                                 DragGesture()
                                     .onChanged { value in
@@ -215,15 +227,25 @@ struct PlayerView: View {
                                     }
                                     .onEnded { _ in
                                         previewImage = nil
+                                        // ✅ Save to Core Data only when drag ends (not during drag)
+                                        asset.trimStartTime = localTrimStart
+                                        if let context = asset.managedObjectContext {
+                                            do {
+                                                try context.save()
+                                                print("✅ Saved trim start: \(localTrimStart)")
+                                            } catch {
+                                                print("❌ Failed to save trim start: \(error)")
+                                            }
+                                        }
                                     }
                             )
 
-                        // Trim End Handle (triangle pointing left)
+                        // Trim End Handle (triangle pointing left) - MOVED BELOW
                         TriangleShape(direction: .left)
                             .fill(Color.white)
                             .frame(width: 18, height: 18)
                             .overlay(TriangleShape(direction: .left).stroke(Color.blue, lineWidth: 2))
-                            .position(x: trimEndX, y: 10)
+                            .position(x: trimEndX, y: 31)
                             .gesture(
                                 DragGesture()
                                     .onChanged { value in
@@ -245,6 +267,16 @@ struct PlayerView: View {
                                     }
                                     .onEnded { _ in
                                         previewImage = nil
+                                        // ✅ Save to Core Data only when drag ends (not during drag)
+                                        asset.trimEndTime = localTrimEnd
+                                        if let context = asset.managedObjectContext {
+                                            do {
+                                                try context.save()
+                                                print("✅ Saved trim end: \(localTrimEnd)")
+                                            } catch {
+                                                print("❌ Failed to save trim end: \(error)")
+                                            }
+                                        }
                                     }
                             )
 
@@ -270,9 +302,9 @@ struct PlayerView: View {
                                     }
                             )
                     }
-                    .frame(width: trackWidth, height: 20)
+                    .frame(width: trackWidth, height: 40)
                 }
-                .frame(height: 20)
+                .frame(height: 40)
 
                 // Duration
                 Text(formatTime(asset.duration * localTrimEnd))
@@ -369,11 +401,41 @@ struct PlayerView: View {
             }
         }
         .onDisappear {
+            // ✅ CRITICAL: Comprehensive cleanup to prevent memory leaks
+            print("🧹 PlayerView cleaning up for \(asset.fileName ?? "unknown")")
+
             // Clear hotkey callbacks when view disappears
             if isSelected {
                 clearHotkeyCallbacks()
             }
+
+            // Remove time observers (prevents retain cycles)
             removeTimeObserver()
+
+            // ⚠️ DON'T remove all NotificationCenter observers here
+            // SwiftUI may reuse views, and we need the LUT learning observer
+            // NotificationCenter observers will be removed automatically when view is deallocated
+
+            // Stop playback and release player resources
+            if isPlaying {
+                player?.pause()
+                isPlaying = false
+            }
+
+            // ✅ Return player to pool for reuse (instead of discarding)
+            if let player = player {
+                PlayerPool.shared.releasePlayer(player)
+                self.player = nil
+            }
+
+            // Clear image generator (releases video file handle)
+            imageGenerator = nil
+
+            // Clear cached images (releases memory)
+            thumbnail = nil
+            previewImage = nil
+
+            print("✅ PlayerView cleanup complete")
         }
         .onChange(of: asset.selectedLUTId) { newLUTId in
             // Regenerate thumbnail when LUT changes
@@ -448,13 +510,17 @@ struct PlayerView: View {
                 }
             }
         }
-        .onChange(of: isSelected) { newSelection in
-            // Update hotkeys when selection changes
-            if newSelection {
-                setupHotkeyCallbacks()
-            } else {
-                clearHotkeyCallbacks()
-            }
+        .onChange(of: hotkeyManager.togglePlayPauseTrigger) { _ in
+            guard isSelected else { return }
+            togglePlayPause()
+        }
+        .onChange(of: hotkeyManager.setInPointTrigger) { _ in
+            guard isSelected else { return }
+            setInPoint()
+        }
+        .onChange(of: hotkeyManager.setOutPointTrigger) { _ in
+            guard isSelected else { return }
+            setOutPoint()
         }
         .background(
             // Hidden buttons for keyboard shortcuts
@@ -527,6 +593,24 @@ struct PlayerView: View {
 
     // MARK: - Trim Point Controls
 
+    private func togglePlayPause() {
+        if isPlaying {
+            player?.pause()
+            isPlaying = false
+        } else {
+            // If at or near the end, restart from beginning
+            if currentPosition >= localTrimEnd - 0.01 {
+                currentPosition = localTrimStart
+                if let player = player {
+                    let seekTime = CMTime(seconds: asset.duration * localTrimStart, preferredTimescale: 600)
+                    player.seek(to: seekTime, toleranceBefore: .zero, toleranceAfter: .zero)
+                }
+            }
+            startPlayback()
+        }
+        print("⌨️ Play/Pause toggled: \(isPlaying ? "playing" : "paused")")
+    }
+
     private func setInPoint() {
         // Set trim start to current playhead position
         localTrimStart = currentPosition
@@ -578,55 +662,9 @@ struct PlayerView: View {
 
     // MARK: - Hotkey Callbacks
 
-    private func setupHotkeyCallbacks() {
-        // Capture necessary values to avoid capturing self
-        let asset = self.asset
-        let player = self.player
-
-        // Play/Pause toggle
-        hotkeyManager.onTogglePlayPause = {
-            Task { @MainActor in
-                // Note: Since PlayerView is a struct, we can't directly modify state from closure
-                player?.play()
-            }
-        }
-
-        // Set in point (trim start)
-        hotkeyManager.onSetInPoint = {
-            Task { @MainActor in
-                // Access asset directly to set trim point
-                if let player = player {
-                    let currentTime = CMTimeGetSeconds(player.currentTime())
-                    let normalizedTime = currentTime / asset.duration
-                    asset.trimStartTime = normalizedTime
-                    try? asset.managedObjectContext?.save()
-                    print("✂️ In point set")
-                }
-            }
-        }
-
-        // Set out point (trim end)
-        hotkeyManager.onSetOutPoint = {
-            Task { @MainActor in
-                if let player = player {
-                    let currentTime = CMTimeGetSeconds(player.currentTime())
-                    let normalizedTime = currentTime / asset.duration
-                    asset.trimEndTime = normalizedTime
-                    try? asset.managedObjectContext?.save()
-                    player.pause()
-                    print("✂️ Out point set")
-                }
-            }
-        }
-    }
-
-    private func clearHotkeyCallbacks() {
-        // Clear only the callbacks this PlayerView owns
-        // Navigation and deletion are handled by GalleryView
-        hotkeyManager.onTogglePlayPause = nil
-        hotkeyManager.onSetInPoint = nil
-        hotkeyManager.onSetOutPoint = nil
-    }
+    // REMOVED: setupHotkeyCallbacks() and clearHotkeyCallbacks()
+    // Hotkeys are now handled via .onChange() observers on @Published triggers in HotkeyManager
+    // This properly works with SwiftUI's struct-based views and @State variables
 
     private func loadThumbnailAndPlayer() {
         guard let url = asset.fileURL else {
@@ -658,7 +696,9 @@ struct PlayerView: View {
 
             // Create player AFTER composition is applied
             await MainActor.run {
-                let newPlayer = AVPlayer(playerItem: playerItem)
+                // ✅ Use PlayerPool for better performance and memory usage
+                let newPlayer = PlayerPool.shared.acquirePlayer()
+                newPlayer.replaceCurrentItem(with: playerItem)
 
                 // Enable automatic waiting to minimize stalls for smoother playback
                 newPlayer.automaticallyWaitsToMinimizeStalling = true
@@ -669,7 +709,7 @@ struct PlayerView: View {
                 }
 
                 self.player = newPlayer
-                print("✅ Player created with composition for \(asset.fileName ?? "unknown")")
+                print("✅ Player acquired from pool with composition for \(asset.fileName ?? "unknown")")
             }
 
             // Generate thumbnail and set up image generator

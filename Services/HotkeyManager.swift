@@ -18,7 +18,13 @@ class HotkeyManager: ObservableObject {
     @Published var navigateNextTrigger: UUID?
     @Published var navigatePreviousTrigger: UUID?
 
-    // Callback closures for hotkey actions (for direct callbacks)
+    // Published triggers for video controls (for SwiftUI views to observe)
+    @Published var togglePlayPauseTrigger: UUID?
+    @Published var setInPointTrigger: UUID?
+    @Published var setOutPointTrigger: UUID?
+    @Published var toggleDeletionTrigger: UUID?
+
+    // Callback closures for hotkey actions (for direct callbacks - DEPRECATED, use @Published triggers instead)
     var onNavigateNext: (() -> Void)?
     var onNavigatePrevious: (() -> Void)?
     var onTogglePlayPause: (() -> Void)?
@@ -70,28 +76,32 @@ class HotkeyManager: ObservableObject {
 
                 if keyCode == preferences.hotkeyPlayPauseCode {
                     Task { @MainActor in
-                        self.onTogglePlayPause?()
+                        self.togglePlayPauseTrigger = UUID()
+                        self.onTogglePlayPause?()  // Keep for backwards compatibility
                     }
                     return nil
                 }
 
                 if characters == preferences.hotkeySetInPoint.lowercased() {
                     Task { @MainActor in
-                        self.onSetInPoint?()
+                        self.setInPointTrigger = UUID()
+                        self.onSetInPoint?()  // Keep for backwards compatibility
                     }
                     return nil
                 }
 
                 if characters == preferences.hotkeySetOutPoint.lowercased() {
                     Task { @MainActor in
-                        self.onSetOutPoint?()
+                        self.setOutPointTrigger = UUID()
+                        self.onSetOutPoint?()  // Keep for backwards compatibility
                     }
                     return nil
                 }
 
                 if characters == preferences.hotkeyToggleDeletion.lowercased() {
                     Task { @MainActor in
-                        self.onToggleDeletion?()
+                        self.toggleDeletionTrigger = UUID()
+                        self.onToggleDeletion?()  // Keep for backwards compatibility
                     }
                     return nil
                 }

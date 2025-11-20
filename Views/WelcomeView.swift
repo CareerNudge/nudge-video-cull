@@ -71,6 +71,7 @@ struct WelcomeView: View {
                                 hoveredStep = hovering ? 1 : nil
                             }
                         )
+                        .accessibilityIdentifier("sourceNodeButton")
 
                         // Arrow
                         FlowArrow(isActive: viewModel.inputFolderURL != nil)
@@ -112,6 +113,7 @@ struct WelcomeView: View {
                                 hoveredStep = hovering ? 3 : nil
                             }
                         )
+                        .accessibilityIdentifier("outputNodeButton")
 
                         // Arrow
                         FlowArrow(isActive: viewModel.outputFolderURL != nil)
@@ -170,6 +172,7 @@ struct WelcomeView: View {
                     }
                     .buttonStyle(.plain)
                     .disabled(!allRequiredFieldsConfigured())
+                    .accessibilityIdentifier("goButton")
                     .padding(.horizontal, 30)
 
                     // Scanning progress indicator

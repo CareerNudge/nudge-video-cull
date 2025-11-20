@@ -571,6 +571,7 @@ struct AppearancePreferencesView: View {
                                     Text(option.rawValue).tag(option)
                                 }
                             }
+                            .accessibilityIdentifier("orientationPicker")
                             .frame(width: 250)
                             .help("Vertical: Videos displayed top-to-bottom in a scrollable list\nHorizontal: Videos displayed in a thumbnail strip with large preview above")
                         }
