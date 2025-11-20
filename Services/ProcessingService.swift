@@ -368,7 +368,30 @@ class ProcessingService {
 
         // --- 3. Determine Export Preset ---
         let hasFilter = bakeLUT && !(asset.selectedLUTId ?? "").isEmpty && asset.bakeInLUT
-        let preset: String = hasFilter ? AVAssetExportPresetHighestQuality : AVAssetExportPresetPassthrough
+
+        // Choose preset based on source resolution and codec to preserve quality
+        let preset: String
+        if hasFilter {
+            // When baking LUT, choose resolution-appropriate preset to better preserve codec
+            let width = videoProperties.width
+            let height = videoProperties.height
+            let isHEVC = videoProperties.codec == "hvc1" || videoProperties.codec == "hev1"
+
+            if width >= 3840 || height >= 2160 {
+                // 4K or higher
+                preset = isHEVC ? AVAssetExportPresetHEVC3840x2160 : AVAssetExportPreset3840x2160
+            } else if width >= 1920 || height >= 1080 {
+                // 1080p
+                preset = isHEVC ? AVAssetExportPresetHEVC1920x1080 : AVAssetExportPreset1920x1080
+            } else {
+                // 720p or lower
+                preset = AVAssetExportPresetHighestQuality
+            }
+
+            print("⚙️ Selected preset: \(preset) (resolution: \(Int(width))x\(Int(height)), codec: \(videoProperties.codec))")
+        } else {
+            preset = AVAssetExportPresetPassthrough
+        }
 
         // --- 4. Create Export Session ---
         guard let exportSession = AVAssetExportSession(asset: avAsset, presetName: preset) else {
@@ -401,17 +424,12 @@ class ProcessingService {
 
         // --- 5. Configure Quality Settings for Re-encoding ---
         if hasFilter {
-            // When baking LUTs with HighestQuality preset:
-            // - AVFoundation will use H.264 or HEVC codec (App Store compliant)
-            // - Target highest bitrate possible within preset limits
-            // - Note: True lossless requires Passthrough, but that doesn't support filters
-
             // Set metadata to preserve as much info as possible
             exportSession.metadata = try await avAsset.load(.metadata)
 
-            print("⚙️ Export preset: \(preset) (re-encoding with LUT)")
+            print("⚙️ Export mode: Re-encoding with LUT")
         } else {
-            print("⚙️ Export preset: \(preset) (lossless passthrough)")
+            print("⚙️ Export mode: Lossless passthrough")
         }
 
         // --- 6. Add Video Composition for LUT ---
