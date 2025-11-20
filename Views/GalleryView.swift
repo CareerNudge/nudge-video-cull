@@ -1466,6 +1466,9 @@ struct CleanVideoPlayerView: View {
         let interval = CMTime(seconds: 0.1, preferredTimescale: 600)
         let duration = asset.duration
         timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { time in
+            // ✅ Only update position when playing to prevent "jumping" after pause
+            guard self.isPlaying else { return }
+
             let currentSeconds = CMTimeGetSeconds(time)
             let normalizedPosition = currentSeconds / duration
 

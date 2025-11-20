@@ -938,6 +938,9 @@ struct PlayerView: View {
         timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
             guard let self = self else { return }
 
+            // ✅ Only update position when playing to prevent "jumping" after pause
+            guard self.isPlaying else { return }
+
             let currentSeconds = CMTimeGetSeconds(time)
             let normalizedPosition = currentSeconds / self.asset.duration
 
