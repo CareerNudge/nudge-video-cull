@@ -44,12 +44,19 @@ class FCPXMLExporter {
     // MARK: - FCPXML Generation
 
     private func generateFCPXML(assets: [ManagedVideoAsset]) -> String {
+        // Determine format from first asset (or use defaults)
+        let formatWidth = assets.first?.videoWidth ?? 1920
+        let formatHeight = assets.first?.videoHeight ?? 1080
+        let formatFrameRate = assets.first?.frameRate ?? 30.0
+        let frameDuration = formatFrameRate > 0 ? "1/\(Int(formatFrameRate))s" : "1001/30000s"
+
         var xml = """
         <?xml version="1.0" encoding="UTF-8"?>
         <!DOCTYPE fcpxml>
 
         <fcpxml version="1.9">
             <resources>
+                <format id="r1" name="FFVideoFormat\(formatWidth)x\(formatHeight)p\(Int(formatFrameRate))" frameDuration="\(frameDuration)" width="\(formatWidth)" height="\(formatHeight)" colorSpace="1-1-1 (Rec. 709)"/>
 
         """
 
@@ -97,7 +104,8 @@ class FCPXMLExporter {
         let frameDuration = "1/\(Int(asset.frameRate))s"
 
         return """
-                <asset id="\(resourceID)" name="\(fileName.xmlEscaped)" src="file://\(filePath.xmlEscaped)" start="0s" duration="\(duration)s" hasVideo="1" hasAudio="1">
+                <asset id="\(resourceID)" name="\(fileName.xmlEscaped)" start="0s" duration="\(duration)s" hasVideo="1" hasAudio="1">
+                    <media-rep kind="original-media" src="file://\(filePath.xmlEscaped)"/>
                     <metadata>
                         <md key="com.apple.proapps.spotlight.kMDItemKeywords" value="\(asset.keywords?.xmlEscaped ?? "")"/>
                         <md key="com.apple.proapps.studio.ratingAnnotation" value="\(asset.userRating)"/>

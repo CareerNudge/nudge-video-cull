@@ -11,13 +11,8 @@ struct GalleryView: View {
     @State private var currentPlayingIndex: Int? = nil
     @State private var selectedAssetIndex: Int = -1 // -1 = no selection until loading completes
     @ObservedObject private var preferences = UserPreferences.shared
-    @StateObject private var viewModel: ContentViewModel
+    @ObservedObject var viewModel: ContentViewModel
     @ObservedObject private var hotkeyManager = HotkeyManager.shared
-
-    init() {
-        let context = PersistenceController.shared.container.viewContext
-        _viewModel = StateObject(wrappedValue: ContentViewModel(context: context))
-    }
 
     // Note: We can't use @FetchRequest with dynamic sort descriptors directly
     // Instead we'll sort the results manually in the body
@@ -206,6 +201,14 @@ struct GalleryView: View {
                 print("⌨️ Hotkey: Toggled deletion for \(asset.fileName ?? "unknown") → \(asset.isFlaggedForDeletion)")
             }
         }
+        .onChange(of: viewModel.sortOrder) { newSortOrder in
+            // When sort order changes, reset selection to first video
+            if !sortedAssets.isEmpty {
+                print("🔄 Sort order changed to \(newSortOrder.rawValue) - selecting first video")
+                selectedAssetIndex = 0
+                currentPlayingIndex = nil
+            }
+        }
     }
 
     private var verticalGalleryView: some View {
@@ -291,7 +294,7 @@ struct GalleryView: View {
                                     )
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 8)
-                                            .stroke(selectedAssetIndex == index ? Color.blue : Color.clear, lineWidth: 3)
+                                            .stroke(selectedAssetIndex == index ? Color.blue : Color.clear, lineWidth: 2)
                                     )
                                     .contextMenu {
                                         contextMenuContent(for: asset)
@@ -757,7 +760,7 @@ struct HorizontalGalleryView: View {
                                             Group {
                                                 if viewModel.isSelected(asset) {
                                                     RoundedRectangle(cornerRadius: 8)
-                                                        .stroke(Color.blue, lineWidth: 3)
+                                                        .stroke(Color.blue, lineWidth: 2)
                                                 }
                                             }
                                         )
@@ -951,6 +954,8 @@ struct CleanVideoPlayerView: View {
     @State private var imageGenerator: AVAssetImageGenerator?
     @State private var ciContext: CIContext? // Hardware-accelerated context for LUT application
     @State private var scrubPreviewTask: Task<Void, Never>? // Track scrubbing preview generation (instant cancellation)
+    @State private var isLoopEnabled = false // Loop playback at trim points
+    @State private var isFullScreen = false // Full screen mode
     @ObservedObject private var lutManager = LUTManager.shared
     @ObservedObject private var preferences = UserPreferences.shared
     @ObservedObject private var hotkeyManager = HotkeyManager.shared
@@ -1048,11 +1053,32 @@ struct CleanVideoPlayerView: View {
                             .allowsHitTesting(false)
                     }
 
-                    // Toggle Gallery Mode button in bottom-right corner
+                    // Toggle Gallery Mode and Full Screen buttons in bottom-right corner
                     VStack {
                         Spacer()
-                        HStack {
+                        HStack(spacing: 8) {
                             Spacer()
+
+                            // Full Screen button
+                            Button(action: {
+                                toggleFullScreen()
+                            }) {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .fill(Color.black.opacity(0.6))
+                                        .frame(width: 30, height: 30)
+
+                                    Image(systemName: isFullScreen ? "arrow.down.right.and.arrow.up.left" : "arrow.up.left.and.arrow.down.right")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 14)
+                                        .foregroundColor(.white)
+                                }
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityIdentifier("fullScreenButton")
+
+                            // Toggle Gallery Mode button
                             Button(action: {
                                 if isPlaying {
                                     player?.pause()
@@ -1075,9 +1101,24 @@ struct CleanVideoPlayerView: View {
                             }
                             .buttonStyle(.plain)
                             .accessibilityIdentifier("galleryModeButton")
-                            .padding(8)
+                            .padding(.trailing, 8)
                         }
+                        .padding(.bottom, 8)
                     }
+                }
+                .contextMenu {
+                    Button(isFullScreen ? "Exit Full Screen" : "View Full Screen") {
+                        toggleFullScreen()
+                    }
+
+                    Button(isLoopEnabled ? "Disable Loop" : "Enable Loop") {
+                        isLoopEnabled.toggle()
+                        print(isLoopEnabled ? "🔁 Loop enabled" : "⏹️ Loop disabled")
+                    }
+                }
+                .onTapGesture(count: 2) {
+                    // Double-click to toggle full screen
+                    toggleFullScreen()
                 }
             }
 
@@ -1153,6 +1194,23 @@ struct CleanVideoPlayerView: View {
                                 .fill(Color.blue.opacity(0.6))
                                 .frame(width: 2, height: 18)
                                 .position(x: trimEndX, y: 19)
+
+                            // Trimmed duration display (centered between trim points)
+                            if localTrimStart > 0.001 || localTrimEnd < 0.999 {
+                                let trimmedDuration = asset.duration * (localTrimEnd - localTrimStart)
+                                let centerX = trimStartX + playableWidth / 2
+
+                                Text(formatTime(trimmedDuration))
+                                    .font(.system(size: 11, weight: .medium))
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(
+                                        Capsule()
+                                            .fill(Color.blue)
+                                    )
+                                    .position(x: centerX, y: 0)
+                            }
 
                             // Trim Start Handle (triangle pointing right) - MOVED BELOW
                             TriangleShape(direction: .right)
@@ -1425,6 +1483,157 @@ struct CleanVideoPlayerView: View {
                 Button("") { resetTrimPoints() }
                     .keyboardShortcut(KeyEquivalent(preferences.hotkeyResetTrimPoints.lowercased().first ?? "f"), modifiers: [])
                     .hidden()
+            }
+        )
+        .overlay(
+            // Full screen video overlay
+            Group {
+                if isFullScreen {
+                    ZStack {
+                        // Black background
+                        Color.black
+                            .ignoresSafeArea()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                        VStack(spacing: 0) {
+                            // Video player
+                            GeometryReader { geometry in
+                                ZStack {
+                                    if isPlaying, let player = player {
+                                        OptimizedVideoPlayerView(player: player)
+                                    } else {
+                                        if let previewImage = previewImage {
+                                            Image(nsImage: previewImage)
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fit)
+                                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                        } else if let thumbnail = thumbnail {
+                                            Image(nsImage: thumbnail)
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fit)
+                                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Playback controls
+                            HStack(spacing: 16) {
+                                // Play/Pause button
+                                Button(action: {
+                                    if isPlaying {
+                                        player?.pause()
+                                        isPlaying = false
+                                    } else {
+                                        startPlayback()
+                                    }
+                                }) {
+                                    Image(systemName: isPlaying ? "pause.fill" : "play.fill")
+                                        .font(.title2)
+                                        .foregroundColor(.white)
+                                        .frame(width: 44, height: 44)
+                                }
+                                .buttonStyle(.plain)
+
+                                // Time display
+                                Text(formatTime(currentPosition * asset.duration))
+                                    .font(.caption)
+                                    .foregroundColor(.white)
+                                    .frame(width: 50)
+
+                                // Progress slider
+                                GeometryReader { geometry in
+                                    let trackWidth = geometry.size.width
+                                    let trimStartX = localTrimStart * trackWidth
+                                    let trimEndX = localTrimEnd * trackWidth
+                                    let playableWidth = trimEndX - trimStartX
+                                    let normalizedPosition = max(0, min(1, (currentPosition - localTrimStart) / (localTrimEnd - localTrimStart)))
+                                    let handleX = trimStartX + (normalizedPosition * playableWidth)
+
+                                    ZStack(alignment: .leading) {
+                                        // Background track
+                                        Rectangle()
+                                            .fill(Color.gray.opacity(0.3))
+                                            .frame(width: trackWidth, height: 6)
+                                            .cornerRadius(3)
+
+                                        // Playable range
+                                        Rectangle()
+                                            .fill(Color.gray.opacity(0.5))
+                                            .frame(width: playableWidth, height: 6)
+                                            .position(x: trimStartX + playableWidth / 2, y: 3)
+                                            .cornerRadius(3)
+
+                                        // Played portion
+                                        Rectangle()
+                                            .fill(Color.white)
+                                            .frame(width: max(0, handleX - trimStartX), height: 6)
+                                            .position(x: trimStartX + max(0, handleX - trimStartX) / 2, y: 3)
+                                            .cornerRadius(3)
+
+                                        // Playhead
+                                        Circle()
+                                            .fill(Color.white)
+                                            .frame(width: 16, height: 16)
+                                            .position(x: handleX, y: 3)
+                                            .gesture(
+                                                DragGesture()
+                                                    .onChanged { value in
+                                                        let rawPosition = value.location.x / trackWidth
+                                                        let constrainedPosition = max(localTrimStart, min(localTrimEnd, rawPosition))
+                                                        currentPosition = constrainedPosition
+                                                        if let player = player {
+                                                            let seekTime = CMTime(seconds: asset.duration * constrainedPosition, preferredTimescale: 600)
+                                                            player.seek(to: seekTime)
+                                                        }
+                                                    }
+                                            )
+                                    }
+                                    .frame(height: 6)
+                                }
+                                .frame(height: 24)
+
+                                // Duration
+                                Text(formatTime(asset.duration * localTrimEnd))
+                                    .font(.caption)
+                                    .foregroundColor(.white)
+                                    .frame(width: 50, alignment: .trailing)
+
+                                // Exit full screen button
+                                Button(action: {
+                                    toggleFullScreen()
+                                }) {
+                                    Image(systemName: "arrow.down.right.and.arrow.up.left")
+                                        .font(.title2)
+                                        .foregroundColor(.white)
+                                        .frame(width: 44, height: 44)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                            .padding(.horizontal, 32)
+                            .padding(.vertical, 20)
+                            .background(Color.black.opacity(0.9))
+                        }
+                    }
+                    .contextMenu {
+                        Button("Exit Full Screen") {
+                            toggleFullScreen()
+                        }
+
+                        Button(isLoopEnabled ? "Disable Loop" : "Enable Loop") {
+                            isLoopEnabled.toggle()
+                        }
+                    }
+                    .background(
+                        // Hidden escape key handler
+                        Button("") {
+                            toggleFullScreen()
+                        }
+                        .keyboardShortcut(.escape, modifiers: [])
+                        .opacity(0)
+                        .frame(width: 0, height: 0)
+                    )
+                }
             }
         )
     }
@@ -1786,6 +1995,13 @@ struct CleanVideoPlayerView: View {
         let naturalSize = try? await videoTrack.load(.naturalSize)
         print("   ✅ Video track loaded: size=\(naturalSize ?? .zero)")
 
+        // Create a CIContext with the same settings as used for still images
+        let renderContext = CIContext(options: [
+            .workingColorSpace: CGColorSpace(name: CGColorSpace.sRGB)!,
+            .useSoftwareRenderer: false, // Force GPU rendering
+            .priorityRequestLow: false // High priority
+        ])
+
         // Create video composition with custom compositor
         let composition = AVMutableVideoComposition(asset: avAsset) { request in
             // Get source frame
@@ -1798,10 +2014,10 @@ struct CleanVideoPlayerView: View {
             if let outputImage = lutFilter.outputImage {
                 // Crop to original extent to avoid edge artifacts
                 let croppedImage = outputImage.cropped(to: request.sourceImage.extent)
-                request.finish(with: croppedImage, context: nil)
+                request.finish(with: croppedImage, context: renderContext)
             } else {
                 // Fallback to source if LUT fails
-                request.finish(with: sourceImage, context: nil)
+                request.finish(with: sourceImage, context: renderContext)
             }
         }
 
@@ -1921,16 +2137,29 @@ struct CleanVideoPlayerView: View {
         // Add boundary observer - fires exactly when we hit the end time (much more efficient)
         boundaryObserver = player.addBoundaryTimeObserver(forTimes: [NSValue(time: endTime)], queue: .main) {
             Task { @MainActor in
-                player.pause()
-                self.isPlaying = false
-
-                // Seek back to trim start for next play
-                let startTime = CMTime(seconds: duration * trimStart, preferredTimescale: 600)
-                player.seek(to: startTime, toleranceBefore: .zero, toleranceAfter: .zero)
-                self.currentPosition = trimStart
-
-                // Notify that video ended
-                videoEndedCallback?()
+                // If loop is enabled, keep playing; otherwise pause
+                if self.isLoopEnabled {
+                    print("🔁 Looping back to start")
+                    // Seek back to trim start
+                    let startTime = CMTime(seconds: duration * trimStart, preferredTimescale: 600)
+                    player.seek(to: startTime, toleranceBefore: .zero, toleranceAfter: .zero) { finished in
+                        if finished {
+                            // Ensure playback continues after seek
+                            player.play()
+                            self.isPlaying = true
+                        }
+                    }
+                    self.currentPosition = trimStart
+                } else {
+                    // Seek back to trim start
+                    let startTime = CMTime(seconds: duration * trimStart, preferredTimescale: 600)
+                    player.seek(to: startTime, toleranceBefore: .zero, toleranceAfter: .zero)
+                    self.currentPosition = trimStart
+                    player.pause()
+                    self.isPlaying = false
+                    // Notify that video ended
+                    videoEndedCallback?()
+                }
             }
         }
     }
@@ -1960,6 +2189,11 @@ struct CleanVideoPlayerView: View {
 
         // Clear player reference
         observerPlayer = nil
+    }
+
+    private func toggleFullScreen() {
+        isFullScreen.toggle()
+        print(isFullScreen ? "🖥️ Entered video full screen" : "🪟 Exited video full screen")
     }
 
     private func formatTime(_ seconds: Double) -> String {
@@ -2044,7 +2278,7 @@ struct ThumbnailCardView: View {
             .cornerRadius(6 * scale)
             .overlay(
                 RoundedRectangle(cornerRadius: 6 * scale)
-                    .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 3 * scale)
+                    .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 2 * scale)
             )
 
             // Metadata overlays

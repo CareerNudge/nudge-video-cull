@@ -12,6 +12,7 @@ struct ContentView: View {
     // 1. View model for handling state and logic
     @StateObject private var viewModel: ContentViewModel
     @ObservedObject private var lutManager = LUTManager.shared
+    @ObservedObject private var preferences = UserPreferences.shared
     @State private var showLUTManager = false
     @State private var showPreferences = false
     @State private var showLoadingProgress = false
@@ -98,6 +99,22 @@ struct ContentView: View {
                         }
                     }
 
+                    Divider()
+                        .frame(height: 24)
+                        .padding(.horizontal, 8)
+
+                    // View Layout Selector
+                    HStack(spacing: 8) {
+                        Text("View Layout:")
+                            .font(.subheadline)
+
+                        Picker("", selection: $preferences.orientation) {
+                            Text("Horizontal").tag(UserPreferences.OrientationOption.horizontal)
+                            Text("Vertical").tag(UserPreferences.OrientationOption.vertical)
+                        }
+                        .frame(width: 120)
+                    }
+
                     Spacer()
 
                     // --- PROCESSING STATUS LOGIC ---
@@ -129,7 +146,7 @@ struct ContentView: View {
             Divider()
 
             // --- MAIN GALLERY ---
-            GalleryView()
+            GalleryView(viewModel: viewModel)
         }
         .frame(minWidth: 1400, minHeight: 700)
         .overlay {

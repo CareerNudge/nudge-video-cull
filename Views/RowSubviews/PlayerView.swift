@@ -193,6 +193,23 @@ struct PlayerView: View {
                             .frame(width: 2, height: 18)
                             .position(x: trimEndX, y: 19)
 
+                        // Trimmed duration display (centered between trim points)
+                        if localTrimStart > 0.001 || localTrimEnd < 0.999 {
+                            let trimmedDuration = asset.duration * (localTrimEnd - localTrimStart)
+                            let centerX = trimStartX + playableWidth / 2
+
+                            Text(formatTime(trimmedDuration))
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(
+                                    Capsule()
+                                        .fill(Color.blue)
+                                )
+                                .position(x: centerX, y: 0)
+                        }
+
                         // Trim Start Handle (triangle pointing right) - MOVED BELOW
                         TriangleShape(direction: .right)
                             .fill(Color.white)
@@ -843,6 +860,13 @@ struct PlayerView: View {
 
         print("   ✅ Video track loaded: size=\(naturalSize ?? .zero)")
 
+        // Create a CIContext with the same settings as used for still images
+        let renderContext = CIContext(options: [
+            .workingColorSpace: CGColorSpace(name: CGColorSpace.sRGB)!,
+            .useSoftwareRenderer: false, // Force GPU rendering
+            .priorityRequestLow: false // High priority
+        ])
+
         // Create video composition with custom compositor
         let composition = AVMutableVideoComposition(asset: avAsset) { request in
             // Get source frame
@@ -855,10 +879,10 @@ struct PlayerView: View {
             if let outputImage = lutFilter.outputImage {
                 // Crop to original extent to avoid edge artifacts
                 let croppedImage = outputImage.cropped(to: request.sourceImage.extent)
-                request.finish(with: croppedImage, context: nil)
+                request.finish(with: croppedImage, context: renderContext)
             } else {
                 // Fallback to source if LUT fails
-                request.finish(with: sourceImage, context: nil)
+                request.finish(with: sourceImage, context: renderContext)
             }
         }
 

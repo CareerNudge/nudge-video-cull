@@ -56,7 +56,7 @@ class UserPreferences: ObservableObject {
     }
 
     // Orientation
-    @Published var orientation: OrientationOption = .vertical {
+    @Published var orientation: OrientationOption = .horizontal {
         didSet { UserDefaults.standard.set(orientation.rawValue, forKey: "orientation") }
     }
 

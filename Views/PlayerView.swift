@@ -763,6 +763,13 @@ struct PlayerView: View {
 
         print("   ✅ Video track loaded: size=\(naturalSize ?? .zero)")
 
+        // Create a CIContext with the same settings as used for still images
+        let renderContext = CIContext(options: [
+            .workingColorSpace: CGColorSpace(name: CGColorSpace.sRGB)!,
+            .useSoftwareRenderer: false, // Force GPU rendering
+            .priorityRequestLow: false // High priority
+        ])
+
         // Create video composition with custom compositor
         let composition = AVMutableVideoComposition(asset: avAsset) { request in
             // Get source frame
@@ -775,10 +782,10 @@ struct PlayerView: View {
             if let outputImage = lutFilter.outputImage {
                 // Crop to original extent to avoid edge artifacts
                 let croppedImage = outputImage.cropped(to: request.sourceImage.extent)
-                request.finish(with: croppedImage, context: nil)
+                request.finish(with: croppedImage, context: renderContext)
             } else {
                 // Fallback to source if LUT fails
-                request.finish(with: sourceImage, context: nil)
+                request.finish(with: sourceImage, context: renderContext)
             }
         }
 
