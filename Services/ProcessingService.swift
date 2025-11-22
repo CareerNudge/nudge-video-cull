@@ -168,7 +168,9 @@ class ProcessingService {
                         destinationFileName = path.lastPathComponent
                     }
 
-                    let destinationURL = outputFolder.appendingPathComponent(destinationFileName)
+                    // Use organized output folder based on creation date if preference is set
+                    let organizedFolder = getOrganizedOutputFolder(baseOutputFolder: outputFolder, asset: asset)
+                    let destinationURL = organizedFolder.appendingPathComponent(destinationFileName)
                     if FileManager.default.fileExists(atPath: destinationURL.path) {
                         try FileManager.default.removeItem(at: destinationURL)
                     }
@@ -300,7 +302,9 @@ class ProcessingService {
                 statusUpdate("\(statusPrefix) Copying: \(fileName)")
 
                 let finalFileName = !newFileName.isEmpty ? newFileName + ".\(path.pathExtension)" : path.lastPathComponent
-                let destinationURL = outputFolderURL.appendingPathComponent(finalFileName)
+                // Use organized output folder based on creation date if preference is set
+                let organizedFolder = getOrganizedOutputFolder(baseOutputFolder: outputFolderURL, asset: asset)
+                let destinationURL = organizedFolder.appendingPathComponent(finalFileName)
 
                 do {
                     // Copy file to output
@@ -422,7 +426,9 @@ class ProcessingService {
             } else {
                 outputFileName = sourceURL.lastPathComponent
             }
-            tempOutputURL = outputFolder.appendingPathComponent(outputFileName)
+            // Use organized output folder based on creation date if preference is set
+            let organizedFolder = getOrganizedOutputFolder(baseOutputFolder: outputFolder, asset: asset)
+            tempOutputURL = organizedFolder.appendingPathComponent(outputFileName)
         } else {
             // No output folder: Use temp directory for in-place replacement
             let tempDir = FileManager.default.temporaryDirectory
@@ -753,6 +759,62 @@ class ProcessingService {
                 print("Failed to save context after processing: \(error)")
             }
         }
+    }
+
+    // MARK: - Export Organization Helper
+
+    /// Determines the destination folder based on export organization preferences
+    /// Creates subfolders if needed based on the video's creation date
+    private func getOrganizedOutputFolder(
+        baseOutputFolder: URL,
+        asset: ManagedVideoAsset
+    ) -> URL {
+        let preferences = UserPreferences.shared
+
+        // If no organization, return base folder
+        guard preferences.exportOrganization != .none else {
+            return baseOutputFolder
+        }
+
+        // Get creation date from asset
+        guard let creationDate = asset.creationDate else {
+            print("⚠️ No creation date for asset, using base output folder")
+            return baseOutputFolder
+        }
+
+        // Create subfolder name based on organization type
+        let dateFormatter = DateFormatter()
+        let subfolderName: String
+
+        switch preferences.exportOrganization {
+        case .none:
+            return baseOutputFolder
+
+        case .byMonth:
+            // Format: "2025-11", "2024-10"
+            dateFormatter.dateFormat = "yyyy-MM"
+            subfolderName = dateFormatter.string(from: creationDate)
+
+        case .byYear:
+            // Format: "2025", "2024"
+            dateFormatter.dateFormat = "yyyy"
+            subfolderName = dateFormatter.string(from: creationDate)
+        }
+
+        // Create subfolder URL
+        let subfolderURL = baseOutputFolder.appendingPathComponent(subfolderName, isDirectory: true)
+
+        // Create subfolder if it doesn't exist
+        do {
+            try FileManager.default.createDirectory(at: subfolderURL, withIntermediateDirectories: true)
+            print("📁 Created/using subfolder: \(subfolderName)")
+        } catch {
+            print("⚠️ Failed to create subfolder '\(subfolderName)': \(error.localizedDescription)")
+            print("   Falling back to base output folder")
+            return baseOutputFolder
+        }
+
+        return subfolderURL
     }
 }
 

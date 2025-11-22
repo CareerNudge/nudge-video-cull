@@ -75,6 +75,11 @@ class UserPreferences: ObservableObject {
         didSet { UserDefaults.standard.set(workflowMode.rawValue, forKey: "workflowMode") }
     }
 
+    // Export Organization
+    @Published var exportOrganization: ExportOrganizationOption = .none {
+        didSet { UserDefaults.standard.set(exportOrganization.rawValue, forKey: "exportOrganization") }
+    }
+
     // Hotkeys (stored as key codes and character strings)
     @Published var hotkeyNavigateNextCode: UInt16 = 124 { // Right Arrow
         didSet { UserDefaults.standard.set(Int(hotkeyNavigateNextCode), forKey: "hotkeyNavigateNextCode") }
@@ -147,6 +152,11 @@ class UserPreferences: ObservableObject {
             self.workflowMode = workflowMode
         }
 
+        if let exportOrgRaw = UserDefaults.standard.string(forKey: "exportOrganization"),
+           let exportOrg = ExportOrganizationOption(rawValue: exportOrgRaw) {
+            self.exportOrganization = exportOrg
+        }
+
         // Load hotkey preferences
         if let navNext = UserDefaults.standard.object(forKey: "hotkeyNavigateNextCode") as? Int {
             hotkeyNavigateNextCode = UInt16(navNext)
@@ -215,6 +225,23 @@ class UserPreferences: ObservableObject {
                 return "Copy and process videos from input to output folder. Original files remain untouched."
             case .cullInPlace:
                 return "Delete unwanted files from input folder. Destructive operation - use with caution!"
+            }
+        }
+    }
+
+    enum ExportOrganizationOption: String, CaseIterable {
+        case none = "None"
+        case byMonth = "Organize by Month (YYYY-MM)"
+        case byYear = "Organize by Year (YYYY)"
+
+        var description: String {
+            switch self {
+            case .none:
+                return "All videos exported to the same folder"
+            case .byMonth:
+                return "Organize into subfolders by month (e.g., 2025-11, 2025-10)"
+            case .byYear:
+                return "Organize into subfolders by year (e.g., 2025, 2024)"
             }
         }
     }
@@ -629,6 +656,58 @@ struct AdvancedPreferencesView: View {
                             Text("\(lutManager.availableLUTs.count) LUTs available")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
+                        }
+                    }
+                    .padding(16)
+                    .background(Color(NSColor.controlBackgroundColor))
+                    .cornerRadius(8)
+                }
+
+                // Section: Export Organization
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Export Organization")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+
+                    VStack(alignment: .leading, spacing: 16) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Text("Organize Exported Videos:")
+                                    .frame(width: 200, alignment: .leading)
+
+                                Picker("", selection: $preferences.exportOrganization) {
+                                    ForEach(UserPreferences.ExportOrganizationOption.allCases, id: \.self) { option in
+                                        Text(option.rawValue).tag(option)
+                                    }
+                                }
+                                .frame(width: 250)
+                                .help("Choose how to organize exported videos into subfolders")
+                            }
+
+                            Text(preferences.exportOrganization.description)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .padding(.leading, 200)
+                        }
+
+                        if preferences.exportOrganization != .none {
+                            Divider()
+
+                            HStack(alignment: .top, spacing: 8) {
+                                Image(systemName: "info.circle")
+                                    .foregroundColor(.blue)
+                                    .font(.system(size: 14))
+
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Subfolders will be created automatically based on each video's creation date.")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                    Text("If a subfolder already exists in the destination, videos will be placed in the existing folder.")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                            .padding(.leading, 16)
                         }
                     }
                     .padding(16)

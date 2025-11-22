@@ -11,6 +11,8 @@ struct GalleryView: View {
     @State private var currentPlayingIndex: Int? = nil
     @State private var selectedAssetIndex: Int = -1 // -1 = no selection until loading completes
     @State private var isFullScreen = false // Full screen mode for video player
+    @State private var sharedPlaybackPosition: Double = 0.0 // Shared between regular and full screen player
+    @State private var sharedPlaybackState: Bool = false // Shared playing state
     @ObservedObject private var preferences = UserPreferences.shared
     @ObservedObject var viewModel: ContentViewModel
     @ObservedObject private var hotkeyManager = HotkeyManager.shared
@@ -145,7 +147,9 @@ struct GalleryView: View {
                     isLoading: viewModel.isLoading,
                     loadingStatus: viewModel.loadingStatus,
                     viewModel: viewModel,
-                    isFullScreen: $isFullScreen
+                    isFullScreen: $isFullScreen,
+                    sharedPlaybackPosition: $sharedPlaybackPosition,
+                    sharedPlaybackState: $sharedPlaybackState
                 )
             } else {
                 verticalGalleryView
@@ -217,7 +221,9 @@ struct GalleryView: View {
                 if isFullScreen, let selectedAsset = sortedAssets[safe: selectedAssetIndex] {
                     FullScreenVideoView(
                         asset: selectedAsset,
-                        isFullScreen: $isFullScreen
+                        isFullScreen: $isFullScreen,
+                        sharedPlaybackPosition: $sharedPlaybackPosition,
+                        sharedPlaybackState: $sharedPlaybackState
                     )
                 }
             }
@@ -460,6 +466,8 @@ struct HorizontalGalleryView: View {
     let loadingStatus: String // Loading status message
     let viewModel: ContentViewModel // For multi-select functionality
     @Binding var isFullScreen: Bool // Full screen state from parent
+    @Binding var sharedPlaybackPosition: Double // Shared playback position
+    @Binding var sharedPlaybackState: Bool // Shared playing state
     @ObservedObject private var preferences = UserPreferences.shared
 
     // Local state for trim sliders and deletion flag
@@ -578,6 +586,8 @@ struct HorizontalGalleryView: View {
                             scrubPosition: $scrubPosition,
                             shouldAutoPlay: currentPlayingIndex == selectedAssetIndex,
                             isFullScreen: $isFullScreen,
+                            sharedPlaybackPosition: $sharedPlaybackPosition,
+                            sharedPlaybackState: $sharedPlaybackState,
                             onVideoEnded: {
                                 handleVideoEnded()
                             }
@@ -605,7 +615,7 @@ struct HorizontalGalleryView: View {
                     // Draggable vertical divider with handle for sidebar
                     HStack(spacing: 0) {
                         Rectangle()
-                            .fill(Color.secondary.opacity(0.2))
+                            .fill(preferences.theme == .pureBlack ? Color.black : Color.secondary.opacity(0.2))
                             .frame(width: 8)
                             .overlay(
                                 // Visual handle indicator
@@ -693,7 +703,7 @@ struct HorizontalGalleryView: View {
                 // Draggable divider with handle
                 VStack(spacing: 0) {
                     Rectangle()
-                        .fill(Color.secondary.opacity(0.2))
+                        .fill(preferences.theme == .pureBlack ? Color.black : Color.secondary.opacity(0.2))
                         .frame(height: 8)
                         .overlay(
                             // Visual handle indicator
@@ -790,6 +800,7 @@ struct HorizontalGalleryView: View {
                             .accessibilityIdentifier("videoGallery")
                             .frame(height: filmstripHeight)
                             .background(preferences.theme == .pureBlack ? Color.black : Color(NSColor.windowBackgroundColor))
+                            .scrollIndicators(.visible, axes: .horizontal)
                             .onChange(of: selectedAssetIndex) { newIndex in
                                 if newIndex < videoAssets.count {
                                     proxy.scrollTo(videoAssets[newIndex].id, anchor: .center)
@@ -957,6 +968,8 @@ struct CleanVideoPlayerView: View {
     @Binding var scrubPosition: Double?
     var shouldAutoPlay: Bool = false
     @Binding var isFullScreen: Bool // Full screen state from parent
+    @Binding var sharedPlaybackPosition: Double // Shared with full screen view
+    @Binding var sharedPlaybackState: Bool // Shared playing state
     var onVideoEnded: (() -> Void)?
 
     @State private var player: AVPlayer?
@@ -1975,6 +1988,8 @@ struct CleanVideoPlayerView: View {
 
             Task { @MainActor in
                 self.currentPosition = normalizedPosition
+                self.sharedPlaybackPosition = normalizedPosition // Keep shared state updated
+                self.sharedPlaybackState = self.isPlaying // Keep playing state updated
             }
         }
 
@@ -2229,12 +2244,17 @@ struct ThumbnailCardView: View {
 struct FullScreenVideoView: View {
     @ObservedObject var asset: ManagedVideoAsset
     @Binding var isFullScreen: Bool
+    @Binding var sharedPlaybackPosition: Double
+    @Binding var sharedPlaybackState: Bool
     @State private var player: AVPlayer?
     @State private var isPlaying = false
     @State private var currentPosition: Double = 0.0
     @State private var localTrimStart: Double = 0.0
     @State private var localTrimEnd: Double = 1.0
     @State private var thumbnail: NSImage?
+    @State private var timeObserver: Any?
+    @State private var boundaryObserver: Any?
+    @State private var isLoopEnabled = false
     @ObservedObject private var lutManager = LUTManager.shared
     @ObservedObject private var preferences = UserPreferences.shared
 
@@ -2258,6 +2278,17 @@ struct FullScreenVideoView: View {
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                         }
                     }
+                    .contentShape(Rectangle()) // Make entire area clickable for context menu
+                    .contextMenu {
+                        Button(isFullScreen ? "Exit Full Screen" : "View Full Screen") {
+                            isFullScreen.toggle()
+                        }
+
+                        Button(isLoopEnabled ? "Disable Loop" : "Enable Loop") {
+                            isLoopEnabled.toggle()
+                            print(isLoopEnabled ? "🔁 Loop enabled" : "⏹️ Loop disabled")
+                        }
+                    }
                 }
 
                 // Playback controls at bottom
@@ -2268,8 +2299,7 @@ struct FullScreenVideoView: View {
                             player?.pause()
                             isPlaying = false
                         } else {
-                            player?.play()
-                            isPlaying = true
+                            startPlayback()
                         }
                     }) {
                         Image(systemName: isPlaying ? "pause.fill" : "play.fill")
@@ -2315,6 +2345,22 @@ struct FullScreenVideoView: View {
                                 .position(x: trimStartX + max(0, handleX - trimStartX) / 2, y: 4)
                                 .cornerRadius(4)
 
+                            // Trim start indicator (blue vertical bar)
+                            if localTrimStart > 0.001 {
+                                Rectangle()
+                                    .fill(Color.blue)
+                                    .frame(width: 3, height: 24)
+                                    .position(x: trimStartX, y: 4)
+                            }
+
+                            // Trim end indicator (blue vertical bar)
+                            if localTrimEnd < 0.999 {
+                                Rectangle()
+                                    .fill(Color.blue)
+                                    .frame(width: 3, height: 24)
+                                    .position(x: trimEndX, y: 4)
+                            }
+
                             // Playhead
                             Circle()
                                 .fill(Color.white)
@@ -2333,7 +2379,7 @@ struct FullScreenVideoView: View {
                                         }
                                 )
                         }
-                        .frame(height: 8)
+                        .frame(height: 30)
                     }
                     .frame(height: 30)
 
@@ -2362,7 +2408,18 @@ struct FullScreenVideoView: View {
         .onAppear {
             localTrimStart = asset.trimStartTime
             localTrimEnd = asset.trimEndTime > 0 ? asset.trimEndTime : 1.0
+            // Restore position and playing state from shared state
+            currentPosition = sharedPlaybackPosition
+            isPlaying = sharedPlaybackState
             loadPlayer()
+        }
+        .onDisappear {
+            // Save position and playing state to shared state before disappearing
+            sharedPlaybackPosition = currentPosition
+            sharedPlaybackState = isPlaying
+            removeObservers()
+            player?.pause()
+            player = nil
         }
         .background(
             // Hidden escape key handler
@@ -2378,12 +2435,34 @@ struct FullScreenVideoView: View {
     private func loadPlayer() {
         let url = URL(fileURLWithPath: asset.filePath ?? "")
         let avAsset = AVAsset(url: url)
-        let playerItem = AVPlayerItem(asset: avAsset)
-        let newPlayer = AVPlayer(playerItem: playerItem)
-        self.player = newPlayer
 
-        // Generate thumbnail
         Task {
+            // Create video composition with LUT if needed
+            let videoComposition = await createVideoComposition(for: avAsset)
+
+            await MainActor.run {
+                let playerItem = AVPlayerItem(asset: avAsset)
+                playerItem.videoComposition = videoComposition
+                let newPlayer = AVPlayer(playerItem: playerItem)
+                self.player = newPlayer
+
+                // Seek to the shared position (preserves position when toggling full screen)
+                // Use shared position if valid, otherwise start at trim start
+                let targetPosition = (currentPosition >= localTrimStart && currentPosition <= localTrimEnd) ? currentPosition : localTrimStart
+                let seekTime = CMTime(seconds: asset.duration * targetPosition, preferredTimescale: 600)
+                newPlayer.seek(to: seekTime, toleranceBefore: .zero, toleranceAfter: .zero)
+
+                // Setup observers
+                setupTimeObserver()
+                setupBoundaryObserver()
+
+                // Start playing if it was playing when entering full screen
+                if isPlaying {
+                    newPlayer.play()
+                }
+            }
+
+            // Generate thumbnail
             do {
                 let generator = AVAssetImageGenerator(asset: avAsset)
                 generator.appliesPreferredTrackTransform = true
@@ -2395,6 +2474,122 @@ struct FullScreenVideoView: View {
             } catch {
                 print("Error generating thumbnail: \(error)")
             }
+        }
+    }
+
+    private func createVideoComposition(for avAsset: AVAsset) async -> AVVideoComposition? {
+        guard let lutIdString = asset.selectedLUTId,
+              !lutIdString.isEmpty,
+              let lutUUID = UUID(uuidString: lutIdString),
+              let selectedLUT = lutManager.availableLUTs.first(where: { $0.id == lutUUID }),
+              let lutFilter = lutManager.createLUTFilter(for: selectedLUT) else {
+            return nil
+        }
+
+        let renderContext = CIContext(options: [
+            .workingColorSpace: CGColorSpace(name: CGColorSpace.sRGB)!,
+            .useSoftwareRenderer: false,
+            .priorityRequestLow: false
+        ])
+
+        let composition = AVMutableVideoComposition(asset: avAsset) { request in
+            let sourceImage = request.sourceImage.clampedToExtent()
+            lutFilter.setValue(sourceImage, forKey: kCIInputImageKey)
+
+            if let outputImage = lutFilter.outputImage {
+                let croppedImage = outputImage.cropped(to: request.sourceImage.extent)
+                request.finish(with: croppedImage, context: renderContext)
+            } else {
+                request.finish(with: sourceImage, context: renderContext)
+            }
+        }
+
+        if let videoTrack = try? await avAsset.loadTracks(withMediaType: .video).first,
+           let naturalSize = try? await videoTrack.load(.naturalSize) {
+            composition.renderSize = naturalSize
+        }
+        composition.frameDuration = CMTime(value: 1, timescale: 30)
+
+        return composition
+    }
+
+    private func setupTimeObserver() {
+        guard let player = player else { return }
+
+        removeObservers()
+
+        let interval = CMTime(seconds: 0.1, preferredTimescale: 600)
+        let duration = asset.duration
+        timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { time in
+            guard self.isPlaying else { return }
+
+            let currentSeconds = CMTimeGetSeconds(time)
+            let normalizedPosition = currentSeconds / duration
+
+            Task { @MainActor in
+                self.currentPosition = normalizedPosition
+                self.sharedPlaybackPosition = normalizedPosition // Keep shared state updated
+            }
+        }
+    }
+
+    private func setupBoundaryObserver() {
+        guard let player = player else { return }
+
+        let endTime = CMTime(seconds: asset.duration * localTrimEnd, preferredTimescale: 600)
+        let duration = asset.duration
+        let trimStart = localTrimStart
+
+        boundaryObserver = player.addBoundaryTimeObserver(forTimes: [NSValue(time: endTime)], queue: .main) {
+            Task { @MainActor in
+                // Seek back to trim start
+                let startTime = CMTime(seconds: duration * trimStart, preferredTimescale: 600)
+
+                // If loop is enabled, keep playing; otherwise pause
+                if self.isLoopEnabled {
+                    print("🔁 Looping back to start")
+                    player.seek(to: startTime, toleranceBefore: .zero, toleranceAfter: .zero) { finished in
+                        if finished {
+                            // Ensure playback continues after seek
+                            player.play()
+                            self.isPlaying = true
+                        }
+                    }
+                    self.currentPosition = trimStart
+                } else {
+                    // Pause at trim end
+                    player.pause()
+                    self.isPlaying = false
+                    player.seek(to: startTime, toleranceBefore: .zero, toleranceAfter: .zero)
+                    self.currentPosition = trimStart
+                }
+            }
+        }
+    }
+
+    private func startPlayback() {
+        guard let player = player else { return }
+
+        // If at or past trim end, seek to trim start
+        if currentPosition >= localTrimEnd {
+            let startTime = CMTime(seconds: asset.duration * localTrimStart, preferredTimescale: 600)
+            player.seek(to: startTime, toleranceBefore: .zero, toleranceAfter: .zero)
+            currentPosition = localTrimStart
+        }
+
+        isPlaying = true
+        player.play()
+    }
+
+    private func removeObservers() {
+        if let observer = timeObserver, let player = player {
+            player.removeTimeObserver(observer)
+            timeObserver = nil
+        }
+
+        if let observer = boundaryObserver, let player = player {
+            player.removeTimeObserver(observer)
+            boundaryObserver = nil
         }
     }
 

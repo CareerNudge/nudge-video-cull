@@ -64,7 +64,11 @@ class ContentViewModel: ObservableObject {
     }
 
     // Sort order for gallery
-    @Published var sortOrder: SortOrder = .oldestFirst
+    @Published var sortOrder: SortOrder = .oldestFirst {
+        didSet {
+            UserDefaults.standard.set(sortOrder.rawValue, forKey: "galleryViewSortOrder")
+        }
+    }
 
     enum SortOrder: String, CaseIterable {
         case newestFirst = "Newest First"
@@ -108,6 +112,12 @@ class ContentViewModel: ObservableObject {
         self.viewContext = context
         self.scannerService = FileScannerService(context: context)
         self.processingService = ProcessingService(context: context)
+
+        // Load saved sort order preference
+        if let savedSortOrder = UserDefaults.standard.string(forKey: "galleryViewSortOrder"),
+           let sortOrder = SortOrder(rawValue: savedSortOrder) {
+            self.sortOrder = sortOrder
+        }
 
         // Check for UI test mode
         if ProcessInfo.processInfo.environment["TEST_MODE"] == "1" {
