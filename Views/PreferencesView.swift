@@ -195,6 +195,7 @@ class UserPreferences: ObservableObject {
 
     enum ThemeOption: String, CaseIterable {
         case dark = "Dark"
+        case pureBlack = "Pure Black"
         case light = "Light"
         case followSystem = "Follow Computer Settings"
     }

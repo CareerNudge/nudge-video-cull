@@ -10,6 +10,7 @@ import AVFoundation
 struct GalleryView: View {
     @State private var currentPlayingIndex: Int? = nil
     @State private var selectedAssetIndex: Int = -1 // -1 = no selection until loading completes
+    @State private var isFullScreen = false // Full screen mode for video player
     @ObservedObject private var preferences = UserPreferences.shared
     @ObservedObject var viewModel: ContentViewModel
     @ObservedObject private var hotkeyManager = HotkeyManager.shared
@@ -143,7 +144,8 @@ struct GalleryView: View {
                     selectedAssetIndex: $selectedAssetIndex,
                     isLoading: viewModel.isLoading,
                     loadingStatus: viewModel.loadingStatus,
-                    viewModel: viewModel
+                    viewModel: viewModel,
+                    isFullScreen: $isFullScreen
                 )
             } else {
                 verticalGalleryView
@@ -209,6 +211,17 @@ struct GalleryView: View {
                 currentPlayingIndex = nil
             }
         }
+        .overlay(
+            // Full screen video overlay - covers entire screen
+            Group {
+                if isFullScreen, let selectedAsset = sortedAssets[safe: selectedAssetIndex] {
+                    FullScreenVideoView(
+                        asset: selectedAsset,
+                        isFullScreen: $isFullScreen
+                    )
+                }
+            }
+        )
     }
 
     private var verticalGalleryView: some View {
@@ -446,6 +459,7 @@ struct HorizontalGalleryView: View {
     let isLoading: Bool // Track initial loading state
     let loadingStatus: String // Loading status message
     let viewModel: ContentViewModel // For multi-select functionality
+    @Binding var isFullScreen: Bool // Full screen state from parent
     @ObservedObject private var preferences = UserPreferences.shared
 
     // Local state for trim sliders and deletion flag
@@ -563,6 +577,7 @@ struct HorizontalGalleryView: View {
                             isFlaggedForDeletion: $localIsFlaggedForDeletion,
                             scrubPosition: $scrubPosition,
                             shouldAutoPlay: currentPlayingIndex == selectedAssetIndex,
+                            isFullScreen: $isFullScreen,
                             onVideoEnded: {
                                 handleVideoEnded()
                             }
@@ -643,7 +658,7 @@ struct HorizontalGalleryView: View {
                                 .padding(12)
                                 .background(
                                     RoundedRectangle(cornerRadius: 8)
-                                        .fill(Color(NSColor.controlBackgroundColor).opacity(0.5))
+                                        .fill((preferences.theme == .pureBlack ? Color.black : Color(NSColor.controlBackgroundColor)).opacity(0.5))
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 8)
                                                 .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
@@ -660,7 +675,7 @@ struct HorizontalGalleryView: View {
                                     .padding(12)
                                     .background(
                                         RoundedRectangle(cornerRadius: 8)
-                                            .fill(Color(NSColor.controlBackgroundColor).opacity(0.5))
+                                            .fill((preferences.theme == .pureBlack ? Color.black : Color(NSColor.controlBackgroundColor)).opacity(0.5))
                                             .overlay(
                                                 RoundedRectangle(cornerRadius: 8)
                                                     .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
@@ -671,7 +686,7 @@ struct HorizontalGalleryView: View {
                             .padding(16)
                         }
                         .frame(width: sidebarWidth)
-                        .background(Color(NSColor.windowBackgroundColor))
+                        .background(preferences.theme == .pureBlack ? Color.black : Color(NSColor.windowBackgroundColor))
                     }
                 }
 
@@ -722,7 +737,7 @@ struct HorizontalGalleryView: View {
                             Spacer()
                         }
                         .frame(height: filmstripHeight)
-                        .background(Color(NSColor.windowBackgroundColor))
+                        .background(preferences.theme == .pureBlack ? Color.black : Color(NSColor.windowBackgroundColor))
                     } else {
                         // Only render filmstrip thumbnails after loading is complete
                         ScrollViewReader { proxy in
@@ -774,7 +789,7 @@ struct HorizontalGalleryView: View {
                             }
                             .accessibilityIdentifier("videoGallery")
                             .frame(height: filmstripHeight)
-                            .background(Color(NSColor.windowBackgroundColor))
+                            .background(preferences.theme == .pureBlack ? Color.black : Color(NSColor.windowBackgroundColor))
                             .onChange(of: selectedAssetIndex) { newIndex in
                                 if newIndex < videoAssets.count {
                                     proxy.scrollTo(videoAssets[newIndex].id, anchor: .center)
@@ -826,7 +841,7 @@ struct HorizontalGalleryView: View {
                     }
                     .padding(.horizontal)
                     .padding(.vertical, 12)
-                    .background(Color(NSColor.controlBackgroundColor))
+                    .background(preferences.theme == .pureBlack ? Color.black : Color(NSColor.controlBackgroundColor))
                 }
             }
         }
@@ -941,6 +956,7 @@ struct CleanVideoPlayerView: View {
     @Binding var isFlaggedForDeletion: Bool
     @Binding var scrubPosition: Double?
     var shouldAutoPlay: Bool = false
+    @Binding var isFullScreen: Bool // Full screen state from parent
     var onVideoEnded: (() -> Void)?
 
     @State private var player: AVPlayer?
@@ -955,7 +971,6 @@ struct CleanVideoPlayerView: View {
     @State private var ciContext: CIContext? // Hardware-accelerated context for LUT application
     @State private var scrubPreviewTask: Task<Void, Never>? // Track scrubbing preview generation (instant cancellation)
     @State private var isLoopEnabled = false // Loop playback at trim points
-    @State private var isFullScreen = false // Full screen mode
     @ObservedObject private var lutManager = LUTManager.shared
     @ObservedObject private var preferences = UserPreferences.shared
     @ObservedObject private var hotkeyManager = HotkeyManager.shared
@@ -1061,7 +1076,7 @@ struct CleanVideoPlayerView: View {
 
                             // Full Screen button
                             Button(action: {
-                                toggleFullScreen()
+                                isFullScreen.toggle()
                             }) {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 4)
@@ -1108,7 +1123,7 @@ struct CleanVideoPlayerView: View {
                 }
                 .contextMenu {
                     Button(isFullScreen ? "Exit Full Screen" : "View Full Screen") {
-                        toggleFullScreen()
+                        isFullScreen.toggle()
                     }
 
                     Button(isLoopEnabled ? "Disable Loop" : "Enable Loop") {
@@ -1118,7 +1133,7 @@ struct CleanVideoPlayerView: View {
                 }
                 .onTapGesture(count: 2) {
                     // Double-click to toggle full screen
-                    toggleFullScreen()
+                    isFullScreen.toggle()
                 }
             }
 
@@ -1348,7 +1363,7 @@ struct CleanVideoPlayerView: View {
                 .padding(.horizontal, 12)
             }
             .padding(.vertical, 12)
-            .background(Color(NSColor.controlBackgroundColor))
+            .background(preferences.theme == .pureBlack ? Color.black : Color(NSColor.controlBackgroundColor))
         }
         .onAppear {
             loadPlayer()
@@ -1483,157 +1498,6 @@ struct CleanVideoPlayerView: View {
                 Button("") { resetTrimPoints() }
                     .keyboardShortcut(KeyEquivalent(preferences.hotkeyResetTrimPoints.lowercased().first ?? "f"), modifiers: [])
                     .hidden()
-            }
-        )
-        .overlay(
-            // Full screen video overlay
-            Group {
-                if isFullScreen {
-                    ZStack {
-                        // Black background
-                        Color.black
-                            .ignoresSafeArea()
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-                        VStack(spacing: 0) {
-                            // Video player
-                            GeometryReader { geometry in
-                                ZStack {
-                                    if isPlaying, let player = player {
-                                        OptimizedVideoPlayerView(player: player)
-                                    } else {
-                                        if let previewImage = previewImage {
-                                            Image(nsImage: previewImage)
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fit)
-                                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                        } else if let thumbnail = thumbnail {
-                                            Image(nsImage: thumbnail)
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fit)
-                                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                        }
-                                    }
-                                }
-                            }
-
-                            // Playback controls
-                            HStack(spacing: 16) {
-                                // Play/Pause button
-                                Button(action: {
-                                    if isPlaying {
-                                        player?.pause()
-                                        isPlaying = false
-                                    } else {
-                                        startPlayback()
-                                    }
-                                }) {
-                                    Image(systemName: isPlaying ? "pause.fill" : "play.fill")
-                                        .font(.title2)
-                                        .foregroundColor(.white)
-                                        .frame(width: 44, height: 44)
-                                }
-                                .buttonStyle(.plain)
-
-                                // Time display
-                                Text(formatTime(currentPosition * asset.duration))
-                                    .font(.caption)
-                                    .foregroundColor(.white)
-                                    .frame(width: 50)
-
-                                // Progress slider
-                                GeometryReader { geometry in
-                                    let trackWidth = geometry.size.width
-                                    let trimStartX = localTrimStart * trackWidth
-                                    let trimEndX = localTrimEnd * trackWidth
-                                    let playableWidth = trimEndX - trimStartX
-                                    let normalizedPosition = max(0, min(1, (currentPosition - localTrimStart) / (localTrimEnd - localTrimStart)))
-                                    let handleX = trimStartX + (normalizedPosition * playableWidth)
-
-                                    ZStack(alignment: .leading) {
-                                        // Background track
-                                        Rectangle()
-                                            .fill(Color.gray.opacity(0.3))
-                                            .frame(width: trackWidth, height: 6)
-                                            .cornerRadius(3)
-
-                                        // Playable range
-                                        Rectangle()
-                                            .fill(Color.gray.opacity(0.5))
-                                            .frame(width: playableWidth, height: 6)
-                                            .position(x: trimStartX + playableWidth / 2, y: 3)
-                                            .cornerRadius(3)
-
-                                        // Played portion
-                                        Rectangle()
-                                            .fill(Color.white)
-                                            .frame(width: max(0, handleX - trimStartX), height: 6)
-                                            .position(x: trimStartX + max(0, handleX - trimStartX) / 2, y: 3)
-                                            .cornerRadius(3)
-
-                                        // Playhead
-                                        Circle()
-                                            .fill(Color.white)
-                                            .frame(width: 16, height: 16)
-                                            .position(x: handleX, y: 3)
-                                            .gesture(
-                                                DragGesture()
-                                                    .onChanged { value in
-                                                        let rawPosition = value.location.x / trackWidth
-                                                        let constrainedPosition = max(localTrimStart, min(localTrimEnd, rawPosition))
-                                                        currentPosition = constrainedPosition
-                                                        if let player = player {
-                                                            let seekTime = CMTime(seconds: asset.duration * constrainedPosition, preferredTimescale: 600)
-                                                            player.seek(to: seekTime)
-                                                        }
-                                                    }
-                                            )
-                                    }
-                                    .frame(height: 6)
-                                }
-                                .frame(height: 24)
-
-                                // Duration
-                                Text(formatTime(asset.duration * localTrimEnd))
-                                    .font(.caption)
-                                    .foregroundColor(.white)
-                                    .frame(width: 50, alignment: .trailing)
-
-                                // Exit full screen button
-                                Button(action: {
-                                    toggleFullScreen()
-                                }) {
-                                    Image(systemName: "arrow.down.right.and.arrow.up.left")
-                                        .font(.title2)
-                                        .foregroundColor(.white)
-                                        .frame(width: 44, height: 44)
-                                }
-                                .buttonStyle(.plain)
-                            }
-                            .padding(.horizontal, 32)
-                            .padding(.vertical, 20)
-                            .background(Color.black.opacity(0.9))
-                        }
-                    }
-                    .contextMenu {
-                        Button("Exit Full Screen") {
-                            toggleFullScreen()
-                        }
-
-                        Button(isLoopEnabled ? "Disable Loop" : "Enable Loop") {
-                            isLoopEnabled.toggle()
-                        }
-                    }
-                    .background(
-                        // Hidden escape key handler
-                        Button("") {
-                            toggleFullScreen()
-                        }
-                        .keyboardShortcut(.escape, modifiers: [])
-                        .opacity(0)
-                        .frame(width: 0, height: 0)
-                    )
-                }
             }
         )
     }
@@ -2191,11 +2055,6 @@ struct CleanVideoPlayerView: View {
         observerPlayer = nil
     }
 
-    private func toggleFullScreen() {
-        isFullScreen.toggle()
-        print(isFullScreen ? "🖥️ Entered video full screen" : "🪟 Exited video full screen")
-    }
-
     private func formatTime(_ seconds: Double) -> String {
         let mins = Int(seconds) / 60
         let secs = Int(seconds) % 60
@@ -2363,5 +2222,185 @@ struct ThumbnailCardView: View {
         let minutes = Int(seconds) / 60
         let secs = Int(seconds) % 60
         return String(format: "%d:%02d", minutes, secs)
+    }
+}
+
+// MARK: - Full Screen Video View
+struct FullScreenVideoView: View {
+    @ObservedObject var asset: ManagedVideoAsset
+    @Binding var isFullScreen: Bool
+    @State private var player: AVPlayer?
+    @State private var isPlaying = false
+    @State private var currentPosition: Double = 0.0
+    @State private var localTrimStart: Double = 0.0
+    @State private var localTrimEnd: Double = 1.0
+    @State private var thumbnail: NSImage?
+    @ObservedObject private var lutManager = LUTManager.shared
+    @ObservedObject private var preferences = UserPreferences.shared
+
+    var body: some View {
+        ZStack {
+            // Black background - fills entire screen
+            Color.black
+                .ignoresSafeArea()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            VStack(spacing: 0) {
+                // Video player - takes up most of the screen
+                GeometryReader { geometry in
+                    ZStack {
+                        if isPlaying, let player = player {
+                            OptimizedVideoPlayerView(player: player)
+                        } else if let thumbnail = thumbnail {
+                            Image(nsImage: thumbnail)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        }
+                    }
+                }
+
+                // Playback controls at bottom
+                HStack(spacing: 20) {
+                    // Play/Pause button
+                    Button(action: {
+                        if isPlaying {
+                            player?.pause()
+                            isPlaying = false
+                        } else {
+                            player?.play()
+                            isPlaying = true
+                        }
+                    }) {
+                        Image(systemName: isPlaying ? "pause.fill" : "play.fill")
+                            .font(.title)
+                            .foregroundColor(.white)
+                            .frame(width: 50, height: 50)
+                    }
+                    .buttonStyle(.plain)
+
+                    // Time display
+                    Text(formatTime(currentPosition * asset.duration))
+                        .font(.body)
+                        .foregroundColor(.white)
+                        .frame(width: 60)
+
+                    // Progress slider
+                    GeometryReader { geometry in
+                        let trackWidth = geometry.size.width
+                        let trimStartX = localTrimStart * trackWidth
+                        let trimEndX = localTrimEnd * trackWidth
+                        let playableWidth = trimEndX - trimStartX
+                        let normalizedPosition = max(0, min(1, (currentPosition - localTrimStart) / (localTrimEnd - localTrimStart)))
+                        let handleX = trimStartX + (normalizedPosition * playableWidth)
+
+                        ZStack(alignment: .leading) {
+                            // Background track
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.4))
+                                .frame(width: trackWidth, height: 8)
+                                .cornerRadius(4)
+
+                            // Playable range
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.6))
+                                .frame(width: playableWidth, height: 8)
+                                .position(x: trimStartX + playableWidth / 2, y: 4)
+                                .cornerRadius(4)
+
+                            // Played portion
+                            Rectangle()
+                                .fill(Color.white)
+                                .frame(width: max(0, handleX - trimStartX), height: 8)
+                                .position(x: trimStartX + max(0, handleX - trimStartX) / 2, y: 4)
+                                .cornerRadius(4)
+
+                            // Playhead
+                            Circle()
+                                .fill(Color.white)
+                                .frame(width: 20, height: 20)
+                                .position(x: handleX, y: 4)
+                                .gesture(
+                                    DragGesture()
+                                        .onChanged { value in
+                                            let rawPosition = value.location.x / trackWidth
+                                            let constrainedPosition = max(localTrimStart, min(localTrimEnd, rawPosition))
+                                            currentPosition = constrainedPosition
+                                            if let player = player {
+                                                let seekTime = CMTime(seconds: asset.duration * constrainedPosition, preferredTimescale: 600)
+                                                player.seek(to: seekTime)
+                                            }
+                                        }
+                                )
+                        }
+                        .frame(height: 8)
+                    }
+                    .frame(height: 30)
+
+                    // Duration
+                    Text(formatTime(asset.duration * localTrimEnd))
+                        .font(.body)
+                        .foregroundColor(.white)
+                        .frame(width: 60, alignment: .trailing)
+
+                    // Exit full screen button
+                    Button(action: {
+                        isFullScreen = false
+                    }) {
+                        Image(systemName: "arrow.down.right.and.arrow.up.left")
+                            .font(.title)
+                            .foregroundColor(.white)
+                            .frame(width: 50, height: 50)
+                    }
+                    .buttonStyle(.plain)
+                }
+                .padding(.horizontal, 40)
+                .padding(.vertical, 24)
+                .background(Color.black.opacity(0.95))
+            }
+        }
+        .onAppear {
+            localTrimStart = asset.trimStartTime
+            localTrimEnd = asset.trimEndTime > 0 ? asset.trimEndTime : 1.0
+            loadPlayer()
+        }
+        .background(
+            // Hidden escape key handler
+            Button("") {
+                isFullScreen = false
+            }
+            .keyboardShortcut(.escape, modifiers: [])
+            .opacity(0)
+            .frame(width: 0, height: 0)
+        )
+    }
+
+    private func loadPlayer() {
+        let url = URL(fileURLWithPath: asset.filePath ?? "")
+        let avAsset = AVAsset(url: url)
+        let playerItem = AVPlayerItem(asset: avAsset)
+        let newPlayer = AVPlayer(playerItem: playerItem)
+        self.player = newPlayer
+
+        // Generate thumbnail
+        Task {
+            do {
+                let generator = AVAssetImageGenerator(asset: avAsset)
+                generator.appliesPreferredTrackTransform = true
+                let time = CMTime(seconds: asset.duration * localTrimStart, preferredTimescale: 600)
+                let cgImage = try generator.copyCGImage(at: time, actualTime: nil)
+                await MainActor.run {
+                    self.thumbnail = NSImage(cgImage: cgImage, size: NSSize(width: cgImage.width, height: cgImage.height))
+                }
+            } catch {
+                print("Error generating thumbnail: \(error)")
+            }
+        }
+    }
+
+    private func formatTime(_ seconds: Double) -> String {
+        let mins = Int(seconds) / 60
+        let secs = Int(seconds) % 60
+        return String(format: "%d:%02d", mins, secs)
     }
 }

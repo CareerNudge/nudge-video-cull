@@ -9,6 +9,9 @@ struct ProcessingProgressView: View {
     @ObservedObject var viewModel: ContentViewModel
     @Binding var isPresented: Bool
     @State private var showCancelConfirmation = false
+    @State private var showDeleteConfirmation = false
+    @State private var folderToDelete: String = ""
+    @State private var folderNameToDelete: String = ""
     @ObservedObject private var tipsManager = TipsManager.shared
 
     var body: some View {
@@ -65,6 +68,76 @@ struct ProcessingProgressView: View {
                         .foregroundColor(viewModel.processingComplete ? .green : .secondary)
                         .fontWeight(viewModel.processingComplete ? .medium : .regular)
                         .multilineTextAlignment(.center)
+                }
+
+                // Folder Flow Visualization (only show when complete)
+                if viewModel.processingComplete {
+                    VStack(spacing: 8) {
+                        Divider()
+                            .padding(.vertical, 4)
+
+                        HStack(spacing: 12) {
+                            // Source Folder
+                            VStack(spacing: 4) {
+                                Text("Source")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.secondary)
+
+                                if let sourcePath = viewModel.inputFolderURL?.path {
+                                    Button(action: {
+                                        deleteFolderConfirmation(path: sourcePath, name: "Source")
+                                    }) {
+                                        Text("Click here to delete this folder")
+                                            .font(.caption2)
+                                            .foregroundColor(.blue)
+                                            .underline()
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }
+
+                            Image(systemName: "arrow.right")
+                                .foregroundColor(.secondary)
+
+                            // Staging Folder (if used)
+                            if let stagingPath = viewModel.stagingFolderURL?.path {
+                                VStack(spacing: 4) {
+                                    Text("Staging")
+                                        .font(.caption)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.secondary)
+
+                                    Button(action: {
+                                        deleteFolderConfirmation(path: stagingPath, name: "Staging")
+                                    }) {
+                                        Text("Click here to delete this folder")
+                                            .font(.caption2)
+                                            .foregroundColor(.blue)
+                                            .underline()
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+
+                                Image(systemName: "arrow.right")
+                                    .foregroundColor(.secondary)
+                            }
+
+                            // Output Folder
+                            VStack(spacing: 4) {
+                                Text("Output")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.secondary)
+
+                                // No delete option for Output
+                                Text("")
+                                    .font(.caption2)
+                                    .frame(height: 12)
+                            }
+                        }
+                        .padding(.horizontal, 8)
+                    }
                 }
 
                 // Tips and How-To's Display (only show while processing)
@@ -195,6 +268,46 @@ struct ProcessingProgressView: View {
                     tipsManager.stopRotation()
                 }
             }
+            .alert("Delete \(folderNameToDelete) Folder", isPresented: $showDeleteConfirmation) {
+                Button("Cancel", role: .cancel) { }
+                Button("Delete", role: .destructive) {
+                    deleteFolder(path: folderToDelete)
+                }
+            } message: {
+                Text("Are you sure you want to delete the \(folderNameToDelete) folder and all its contents? This action cannot be undone.")
+            }
+        }
+    }
+
+    private func deleteFolderConfirmation(path: String, name: String) {
+        folderToDelete = path
+        folderNameToDelete = name
+        showDeleteConfirmation = true
+    }
+
+    private func deleteFolder(path: String) {
+        let fileManager = FileManager.default
+        do {
+            try fileManager.removeItem(atPath: path)
+            print("✅ Successfully deleted folder: \(path)")
+
+            // Show alert or notification
+            let alert = NSAlert()
+            alert.messageText = "Folder Deleted"
+            alert.informativeText = "The \(folderNameToDelete) folder has been successfully deleted."
+            alert.alertStyle = .informational
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
+        } catch {
+            print("❌ Failed to delete folder: \(error)")
+
+            // Show error alert
+            let alert = NSAlert()
+            alert.messageText = "Delete Failed"
+            alert.informativeText = "Could not delete the \(folderNameToDelete) folder: \(error.localizedDescription)"
+            alert.alertStyle = .critical
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
         }
     }
 }

@@ -141,13 +141,14 @@ struct ContentView: View {
                 .padding(.horizontal)
                 .padding(.bottom, 8)
             }
-            .background(.bar)
+            .background(preferences.theme == .pureBlack ? AnyShapeStyle(Color.black) : AnyShapeStyle(.bar))
 
             Divider()
 
             // --- MAIN GALLERY ---
             GalleryView(viewModel: viewModel)
         }
+        .background(preferences.theme == .pureBlack ? Color.black : Color(NSColor.windowBackgroundColor))
         .frame(minWidth: 1400, minHeight: 700)
         .overlay {
             // Processing Progress Modal
@@ -323,6 +324,8 @@ struct ContentView: View {
 
         switch preferences.theme {
         case .dark:
+            NSApp.appearance = NSAppearance(named: .darkAqua)
+        case .pureBlack:
             NSApp.appearance = NSAppearance(named: .darkAqua)
         case .light:
             NSApp.appearance = NSAppearance(named: .aqua)
